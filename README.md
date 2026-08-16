@@ -4,10 +4,11 @@ Domain-independent latency optimization for multi-agent retrieval-augmented gene
 
 Repository contains only optimization primitives:
 
+- confidence-gated local routing with LLM fallback;
+- typed single-tool dispatch with argument validation;
 - persistent bounded HTTP connection pools;
 - concurrent duplicate-request coalescing without completed-result caching;
 - verified speculative execution with authoritative fallback;
-- accuracy-gated vLLM server profiles;
 - deterministic top-k selection over ranked retrieval results;
 - role-specific output-token budgets;
 - comparison-context caps;
@@ -31,18 +32,11 @@ pytest -q
 
 ## Minimal use
 
-```python
-from cnu_rag_optimization import OptimizationPolicy, select_ranked_documents
-
-policy = OptimizationPolicy(selector_top_k=5)
-selection = select_ranked_documents(reranked_documents, top_k=policy.selector_top_k)
-```
-
-Use `llm_options(role, policy)` when building provider requests. Use `route_query` after an integrating application extracts provider-neutral features such as source count, direct-lookup intent, and analysis intent.
+See [examples/integration.py](examples/integration.py). Integrating application supplies domain-specific entity and intent matches; library applies conservative gates and falls back without executing a tool when evidence is incomplete.
 
 ## Accuracy-first rule
 
-Speed gain is accepted only after same-query pseudo-gold regression passes. Default server gate requires 100% request success, document-ID recall, Top-1 agreement, and exact canonical response agreement. Domain-expert labels remain required to claim real correctness.
+Speed gain is accepted only after same-query pseudo-gold regression passes. Default application gate requires 100% request success plus predefined document-rank and answer-similarity thresholds. Domain-expert labels remain required to claim real correctness.
 
 Methods that reduced latency but failed strict fidelity are retained as rejected ablations, not proposed results.
 
@@ -52,27 +46,25 @@ Validation used one large-domain retrieval system as a case study: 400 queries, 
 
 | Method | Mean latency | p50 | p95 | Pseudo-gold fidelity | Decision |
 |---|---:|---:|---:|---:|---|
-| Current control | 15.67 s | 17.20 s | 35.79 s | 0.975 self-repeat | Reference |
-| Global selector + token budget | 11.27 s | 12.39 s | 24.62 s | 0.931 | Rejected |
-| Multi-source selector + token budget | 13.45 s | 15.72 s | 27.59 s | 0.958 | Rejected |
+| Seeded control | 16.53 s | 16.15 s | 37.78 s | Reference | Control |
+| Confidence route + typed dispatch | 14.85 s | 15.45 s | 35.62 s | 0.9763 | Accepted |
 
-Transport and server optimizations keep request payloads and target model unchanged. Candidate profiles: prefix caching, chunked-prefill scheduling, and target-verified n-gram decoding.
+Remote inference engine remained unchanged. Candidate reduced LLM calls from 2,007 to 1,375 (-31.5%), mean latency 10.1%, p95 5.7%, and p99 16.2%. Document-ID Recall was 0.9804, nDCG@10 0.9778, Top-1 agreement 0.9650, and answer similarity 0.9756.
 
 ## One-line method examples
 
 | Method | Example |
 |---|---|
+| Confidence routing | Route only when one intent plus explicit entity, domain, and action evidence all match; otherwise use existing LLM router. |
+| Typed dispatch | Call sole selected search tool with validated structured arguments instead of asking LLM to echo them. |
 | HTTP keep-alive | Reuse one bounded client for LLM, embedding, and reranker calls. |
 | Single-flight | Two simultaneous identical questions share one in-flight request; no answer remains cached. |
 | Verified speculation | Generate early, reuse only when authoritative document IDs match; otherwise run baseline generation. |
 | Parallel enrichment | Fetch metadata while final answer generates, then merge unchanged results. |
-| Prefix cache | Reuse static agent-system-prompt KV blocks across requests. |
-| Chunked prefill | Tune prefill token budget while preserving model and prompts. |
-| Speculative decoding | Draft tokens via n-gram and let target model verify every accepted token. |
 
 Full aggregate methodology: [docs/EVALUATION.md](docs/EVALUATION.md).
 
-Server-side accuracy gate and deployment matrix: [docs/ACCURACY_FIRST_SERVER_EXPERIMENTS.md](docs/ACCURACY_FIRST_SERVER_EXPERIMENTS.md).
+Application-side experiment and rejected ablations: [docs/APPLICATION_SIDE_EXPERIMENTS.md](docs/APPLICATION_SIDE_EXPERIMENTS.md).
 
 ## Integration boundary
 

@@ -1,40 +1,45 @@
-"""Provider-neutral integration example."""
+"""Provider-neutral confidence routing and typed dispatch example."""
+
+import asyncio
 
 from cnu_rag_optimization import (
+    ConfidenceRoutingFeatures,
     OptimizationPolicy,
-    QueryFeatures,
-    llm_options,
-    route_query,
-    select_ranked_documents,
-    should_use_selector,
+    decide_confident_route,
+    try_typed_single_tool_dispatch,
 )
 
 
 policy = OptimizationPolicy()
-features = QueryFeatures(
-    prompt_chars=42,
-    source_count=2,
-    direct_lookup=False,
-    analysis_requested=True,
+decision = decide_confident_route(
+    ConfidenceRoutingFeatures(
+        candidate_route="retrieval",
+        candidate_count=1,
+        entity_count=1,
+        domain_term_matched=True,
+        action_term_matched=True,
+    ),
+    policy,
 )
-decision = route_query(features, policy)
 
-ranked_documents = [
-    {"id": "document-1", "title": "Rank 1", "score": 0.91},
-    {"id": "document-2", "title": "Rank 2", "score": 0.87},
-]
 
-if should_use_selector(features.source_count, policy):
-    selection = select_ranked_documents(
-        ranked_documents,
-        top_k=policy.selector_top_k,
+async def search(arguments: dict[str, object]) -> dict[str, object]:
+    return {"query": arguments["query"], "document_ids": ["document-1"]}
+
+
+async def main() -> None:
+    if not decision.use_local_route:
+        print("fallback to existing LLM router")
+        return
+    result = await try_typed_single_tool_dispatch(
+        available_tools={"search": search},
+        candidate_tool="search",
+        arguments={"query": "find entity records"},
+        argument_validator=lambda args: bool(args.get("query")),
+        policy=policy,
     )
-    selected_ids = selection.selected_ids
-else:
-    selected_ids = ()  # Integrator may invoke its existing LLM selector here.
+    print(decision)
+    print(result)
 
-comparison_options = llm_options("comparison", policy)
 
-print(decision)
-print(selected_ids)
-print(comparison_options)
+asyncio.run(main())

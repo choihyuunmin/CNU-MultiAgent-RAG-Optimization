@@ -40,12 +40,17 @@ class TokenBudgets:
 class OptimizationPolicy:
     """Feature flags kept independent from any production RAG implementation."""
 
-    selector_enabled: bool = True
+    # Accuracy-first defaults. Aggressive selector, token-budget, and fast-path
+    # variants remain available for ablation but are disabled after regression
+    # evaluation failed the default fidelity gate.
+    selector_enabled: bool = False
     selector_scope: SelectorScope = SelectorScope.ALL
     selector_top_k: int = 5
-    token_budget_enabled: bool = True
+    token_budget_enabled: bool = False
     comparison_input_max_chars: int = 600
-    fast_path_enabled: bool = True
+    fast_path_enabled: bool = False
+    confidence_routing_enabled: bool = True
+    typed_dispatch_enabled: bool = True
     fast_path_max_chars: int = 120
     budgets: TokenBudgets = field(default_factory=TokenBudgets)
 

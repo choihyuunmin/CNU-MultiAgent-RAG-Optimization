@@ -4,22 +4,24 @@ import pytest
 
 from cnu_rag_optimization import (
     AsyncSingleFlight,
+    ConfidenceRoutingFeatures,
     HTTPTransportPolicy,
     OptimizationPolicy,
     QueryFeatures,
     SelectorScope,
     SpeculativeDraft,
-    VLLM_PROFILES,
     build_async_client,
     cap_comparison_documents,
     compare_regression_records,
     compact_documents,
+    decide_confident_route,
     llm_options,
     parallel_enrich,
     route_query,
     run_verified_speculation,
     select_ranked_documents,
     should_use_selector,
+    try_typed_single_tool_dispatch,
 )
 
 
@@ -46,7 +48,7 @@ def test_selector_rejects_invalid_top_k() -> None:
 
 
 def test_token_budgets_are_role_specific() -> None:
-    policy = OptimizationPolicy()
+    policy = OptimizationPolicy(token_budget_enabled=True)
     assert llm_options("preparation", policy) == {"max_tokens": 384}
     assert llm_options("comparison", policy) == {"max_tokens": 2048}
     assert llm_options("unknown", policy) == {}
@@ -75,7 +77,7 @@ def test_document_compaction_caps_count_and_fields() -> None:
 def test_direct_lookup_uses_fast_path() -> None:
     decision = route_query(
         QueryFeatures(prompt_chars=40, source_count=1, direct_lookup=True),
-        OptimizationPolicy(),
+        OptimizationPolicy(fast_path_enabled=True),
     )
     assert decision.complexity == "simple_lookup"
     assert decision.execution_path == "single_rag"
@@ -97,7 +99,10 @@ def test_analysis_stays_on_multi_agent_path() -> None:
 
 
 def test_multi_source_selector_scope() -> None:
-    policy = OptimizationPolicy(selector_scope=SelectorScope.MULTI_SOURCE)
+    policy = OptimizationPolicy(
+        selector_enabled=True,
+        selector_scope=SelectorScope.MULTI_SOURCE,
+    )
     assert not should_use_selector(1, policy)
     assert should_use_selector(2, policy)
 
@@ -236,12 +241,91 @@ def test_regression_metrics_fail_closed_on_changed_answer() -> None:
     assert metrics.exact_response_rate == 0.5
 
 
-def test_vllm_profiles_all_require_exact_output_gate() -> None:
-    assert {profile.name for profile in VLLM_PROFILES} == {
-        "V0_CONTROL",
-        "V1_PREFIX_CACHE",
-        "V2_CHUNKED_8192",
-        "V3_NGRAM_3",
-        "V4_NGRAM_5",
+def test_accuracy_first_defaults_disable_rejected_ablations() -> None:
+    policy = OptimizationPolicy()
+    assert not policy.selector_enabled
+    assert not policy.token_budget_enabled
+    assert not policy.fast_path_enabled
+    assert policy.confidence_routing_enabled
+    assert policy.typed_dispatch_enabled
+
+
+def test_confidence_router_accepts_only_complete_evidence() -> None:
+    decision = decide_confident_route(
+        ConfidenceRoutingFeatures(
+            candidate_route="retrieval",
+            candidate_count=1,
+            entity_count=2,
+            domain_term_matched=True,
+            action_term_matched=True,
+        )
+    )
+    assert decision.use_local_route
+    assert decision.route == "retrieval"
+
+
+@pytest.mark.parametrize(
+    ("override", "reason"),
+    [
+        ({"candidate_count": 2}, "route_not_unique"),
+        ({"entity_count": 0}, "entity_missing"),
+        ({"domain_term_matched": False}, "domain_term_missing"),
+        ({"action_term_matched": False}, "action_term_missing"),
+        ({"excluded_intent": True}, "excluded_intent"),
+        ({"ambiguous": True}, "ambiguous"),
+        ({"has_prior_context": True}, "context_required"),
+    ],
+)
+def test_confidence_router_falls_back_on_uncertainty(override, reason) -> None:
+    values = {
+        "candidate_route": "retrieval",
+        "candidate_count": 1,
+        "entity_count": 1,
+        "domain_term_matched": True,
+        "action_term_matched": True,
     }
-    assert all(profile.exact_output_gate for profile in VLLM_PROFILES)
+    values.update(override)
+    decision = decide_confident_route(ConfidenceRoutingFeatures(**values))
+    assert not decision.use_local_route
+    assert decision.route is None
+    assert decision.reason == reason
+
+
+def test_typed_dispatch_calls_only_valid_unique_tool() -> None:
+    calls: list[dict[str, object]] = []
+
+    async def search(arguments: dict[str, object]) -> dict[str, object]:
+        calls.append(arguments)
+        return {"ids": ["document-1"]}
+
+    result = asyncio.run(
+        try_typed_single_tool_dispatch(
+            available_tools={"search": search},
+            candidate_tool="search",
+            arguments={"query": "explicit lookup"},
+            argument_validator=lambda args: bool(args.get("query")),
+        )
+    )
+    assert result.dispatched
+    assert result.value == {"ids": ["document-1"]}
+    assert calls == [{"query": "explicit lookup"}]
+
+
+def test_typed_dispatch_falls_back_without_calling_tool() -> None:
+    calls = 0
+
+    async def tool(_: dict[str, object]) -> str:
+        nonlocal calls
+        calls += 1
+        return "unexpected"
+
+    result = asyncio.run(
+        try_typed_single_tool_dispatch(
+            available_tools={"search": tool, "stats": tool},
+            candidate_tool="search",
+            arguments={"query": "x"},
+        )
+    )
+    assert not result.dispatched
+    assert result.reason == "tool_not_unique"
+    assert calls == 0

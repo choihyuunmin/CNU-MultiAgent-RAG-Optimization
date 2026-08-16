@@ -1,6 +1,11 @@
 """CNU multi-agent RAG inference optimization primitives."""
 
 from .budget import cap_comparison_documents, compact_documents, llm_options
+from .confidence import (
+    ConfidenceRoutingDecision,
+    ConfidenceRoutingFeatures,
+    decide_confident_route,
+)
 from .config import OptimizationPolicy, SelectorScope, TokenBudgets
 from .parallel import parallel_enrich
 from .regression import RegressionMetrics, compare_regression_records
@@ -9,16 +14,18 @@ from .selector import SelectionResult, select_ranked_documents
 from .singleflight import AsyncSingleFlight, SingleFlightResult
 from .telemetry import LLMCallMetrics, measure_async_call
 from .transport import HTTPTransportPolicy, build_async_client
+from .typed_dispatch import TypedDispatchResult, try_typed_single_tool_dispatch
 from .verified import (
     SpeculativeDraft,
     VerifiedSpeculationResult,
     run_verified_speculation,
 )
-from .vllm_profiles import VLLM_PROFILES, VLLMProfile
 
 __all__ = [
     "LLMCallMetrics",
     "HTTPTransportPolicy",
+    "ConfidenceRoutingDecision",
+    "ConfidenceRoutingFeatures",
     "OptimizationPolicy",
     "QueryFeatures",
     "RegressionMetrics",
@@ -28,14 +35,14 @@ __all__ = [
     "SingleFlightResult",
     "SpeculativeDraft",
     "TokenBudgets",
-    "VLLMProfile",
-    "VLLM_PROFILES",
+    "TypedDispatchResult",
     "VerifiedSpeculationResult",
     "AsyncSingleFlight",
     "build_async_client",
     "cap_comparison_documents",
     "compare_regression_records",
     "compact_documents",
+    "decide_confident_route",
     "llm_options",
     "measure_async_call",
     "parallel_enrich",
@@ -43,4 +50,5 @@ __all__ = [
     "run_verified_speculation",
     "select_ranked_documents",
     "should_use_selector",
+    "try_typed_single_tool_dispatch",
 ]

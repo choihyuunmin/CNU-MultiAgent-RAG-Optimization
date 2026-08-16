@@ -33,20 +33,16 @@ Pseudo-gold regression measures behavioral preservation. It is not domain-expert
 
 Application-level candidates require: success rate 1.00, document-ID Recall at least 0.98, nDCG@10 at least 0.97, Top-1 agreement at least 0.95, answer similarity at least 0.97, and aggregate pseudo-gold fidelity at least 0.97. Server-only candidates use stricter exact-output gates where deterministic execution permits it.
 
-## Aggregate result
+## Aggregate result: accepted application-side method
 
-| Variant | Mean | p50 | p95 | Throughput | Fidelity | Decision |
-|---|---:|---:|---:|---:|---:|---|
-| Current control recheck | 15.67 s | 17.20 s | 35.79 s | 0.254 req/s | 0.975 self-repeat | Reference |
-| Token/input budget | 15.65 s | 16.32 s | 35.89 s | 0.254 req/s | 0.968 | Rejected |
-| Global selector + budget | 11.27 s | 12.39 s | 24.62 s | 0.353 req/s | 0.931 | Rejected |
-| Multi-source selector + budget | 13.45 s | 15.72 s | 27.59 s | 0.296 req/s | 0.958 | Rejected |
+| Variant | Mean | p50 | p95 | p99 | Throughput | Fidelity | Decision |
+|---|---:|---:|---:|---:|---:|---:|---|
+| Seeded control | 16.525 s | 16.150 s | 37.775 s | 52.504 s | 0.240 req/s | Reference | Control |
+| Confidence route + typed dispatch | 14.850 s | 15.453 s | 35.620 s | 43.998 s | 0.268 req/s | 0.9763 | Accepted |
 
-Global selector + budget reduced mean latency by 28.1% (95% bootstrap CI 24.9% to 31.1%) and increased throughput by 39.1%. Prompt tokens fell 33.4%, total vLLM inference time fell 32.9%, and prefix-cache hit rate rose from 57.75% to 82.10%.
+Candidate reduced LLM calls from 2,007 to 1,375. Document-ID Recall 0.9804, nDCG@10 0.9778, Top-1 agreement 0.9650, and answer similarity 0.9756 passed predefined aggregate gates.
 
-This speed result is an ablation finding only. Fidelity 0.931 fails acceptance criteria; it is not a recommended configuration.
-
-Queue time fell from 2.255 ms/request to 0.880 ms/request but was already negligible. Main bottleneck was inference, so reducing calls and tokens produced most gain.
+Application queue p95 stayed near 0.1 ms. Main remaining bottleneck was remote inference. Inference engine, model, scheduler, and decoding settings were not changed.
 
 ## Transfer to other domains
 
