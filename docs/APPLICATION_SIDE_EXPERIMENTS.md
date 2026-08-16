@@ -48,6 +48,10 @@ Candidate reduced LLM calls 31.5%, mean latency 10.1%, p95 5.7%, and p99 16.2%. 
 
 All predefined aggregate gates passed. Pseudo-gold regression proves preservation relative to current output, not domain-expert correctness.
 
+Unchanged control rerun against an earlier control produced Recall 0.9756, nDCG@10 0.9746, Top-1 0.9650, answer similarity 0.9711, and aggregate fidelity 0.9726. Candidate metrics were equal or higher on every measure, so observed differences did not exceed measured repeat-run variability.
+
+By difficulty, candidate mean latency changed from 1.254 to 1.309 seconds for simple single-agent lookup, 19.385 to 15.768 for conditional retrieval, 24.494 to 24.460 for cross-source comparison, and 20.965 to 17.863 for complex analysis. Optimization targets redundant multi-agent calls; already-single-call queries receive no benefit.
+
 ## Rejected application variants
 
 | Variant | One-line behavior | Reason rejected |

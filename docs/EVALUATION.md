@@ -42,6 +42,8 @@ Application-level candidates require: success rate 1.00, document-ID Recall at l
 
 Candidate reduced LLM calls from 2,007 to 1,375. Document-ID Recall 0.9804, nDCG@10 0.9778, Top-1 agreement 0.9650, and answer similarity 0.9756 passed predefined aggregate gates.
 
+Unchanged control rerun against an earlier control reached Recall 0.9756, nDCG@10 0.9746, Top-1 0.9650, answer similarity 0.9711, and fidelity 0.9726. Candidate was no worse on these repeat-variance indicators. This does not replace expert-labeled correctness evaluation.
+
 Application queue p95 stayed near 0.1 ms. Main remaining bottleneck was remote inference. Inference engine, model, scheduler, and decoding settings were not changed.
 
 ## Transfer to other domains
