@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cnu-rag-inference-optimization"
+version = "0.1.0"
+description = "Standalone optimization logic for reducing multi-agent RAG inference latency"
+requires-python = ">=3.11"
+authors = [{ name = "Hyunmin Choi" }]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
