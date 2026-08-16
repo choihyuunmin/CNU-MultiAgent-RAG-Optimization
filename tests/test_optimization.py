@@ -18,7 +18,7 @@ from cnu_rag_optimization import (
 
 def test_selector_preserves_rank_and_deduplicates() -> None:
     result = select_ranked_documents(
-        [{"id": "a"}, {"id": "a"}, {"law_id": "b"}, {"id": "c"}],
+        [{"id": "a"}, {"id": "a"}, {"document_id": "b"}, {"id": "c"}],
         top_k=2,
     )
     assert result.selected_ids == ("a", "b")
@@ -67,10 +67,10 @@ def test_document_compaction_caps_count_and_fields() -> None:
 
 def test_direct_lookup_uses_fast_path() -> None:
     decision = route_query(
-        QueryFeatures(prompt_chars=40, country_count=1, direct_lookup=True),
+        QueryFeatures(prompt_chars=40, source_count=1, direct_lookup=True),
         OptimizationPolicy(),
     )
-    assert decision.complexity == "L1"
+    assert decision.complexity == "simple_lookup"
     assert decision.execution_path == "single_rag"
 
 
@@ -78,19 +78,19 @@ def test_analysis_stays_on_multi_agent_path() -> None:
     decision = route_query(
         QueryFeatures(
             prompt_chars=80,
-            country_count=2,
+            source_count=2,
             direct_lookup=True,
             analysis_requested=True,
         ),
         OptimizationPolicy(),
     )
-    assert decision.complexity == "L3"
+    assert decision.complexity == "multi_source"
     assert decision.execution_path == "multi_agent"
     assert "analysis_requested" in decision.blockers
 
 
-def test_multi_country_selector_scope() -> None:
-    policy = OptimizationPolicy(selector_scope=SelectorScope.MULTI_COUNTRY)
+def test_multi_source_selector_scope() -> None:
+    policy = OptimizationPolicy(selector_scope=SelectorScope.MULTI_SOURCE)
     assert not should_use_selector(1, policy)
     assert should_use_selector(2, policy)
 
@@ -100,7 +100,7 @@ def test_parallel_enrichment() -> None:
         await asyncio.sleep(0)
         return result
 
-    assert asyncio.run(parallel_enrich(value("translation"), value("origin"))) == (
-        "translation",
-        "origin",
+    assert asyncio.run(parallel_enrich(value("primary"), value("secondary"))) == (
+        "primary",
+        "secondary",
     )

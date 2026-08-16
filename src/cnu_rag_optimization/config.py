@@ -10,7 +10,7 @@ class SelectorScope(str, Enum):
     """Queries on which deterministic retrieval selection is enabled."""
 
     ALL = "all"
-    MULTI_COUNTRY = "multi_country"
+    MULTI_SOURCE = "multi_source"
 
 
 @dataclass(frozen=True)

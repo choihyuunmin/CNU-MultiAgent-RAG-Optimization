@@ -12,12 +12,12 @@ U = TypeVar("U")
 
 
 async def parallel_enrich(
-    translation_enrichment: Awaitable[T],
-    origin_enrichment: Awaitable[U],
+    primary_enrichment: Awaitable[T],
+    secondary_enrichment: Awaitable[U],
 ) -> tuple[T, U]:
-    """Run independent translation and origin enrichments concurrently."""
-    translation, origin = await asyncio.gather(
-        translation_enrichment,
-        origin_enrichment,
+    """Run two independent enrichment operations concurrently."""
+    primary, secondary = await asyncio.gather(
+        primary_enrichment,
+        secondary_enrichment,
     )
-    return translation, origin
+    return primary, secondary

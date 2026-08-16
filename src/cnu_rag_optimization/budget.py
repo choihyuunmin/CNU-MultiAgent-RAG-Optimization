@@ -20,12 +20,12 @@ def compact_documents(
     field_max_chars: int = 800,
     keep_fields: tuple[str, ...] = (
         "id",
-        "law_id",
+        "document_id",
         "title",
-        "country",
-        "subject",
+        "source",
+        "group",
+        "section",
         "content",
-        "paragraph_content",
         "score",
     ),
 ) -> list[dict[str, object]]:
@@ -49,7 +49,7 @@ def cap_comparison_documents(
     *,
     max_items_per_group: int = 3,
     max_content_chars: int = 600,
-    content_fields: tuple[str, ...] = ("content", "paragraph_content"),
+    content_fields: tuple[str, ...] = ("content", "text"),
 ) -> dict[str, list[dict[str, object]]]:
     """Cap comparison context per group while preserving metadata."""
     if max_items_per_group < 1 or max_content_chars < 1:

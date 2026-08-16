@@ -13,18 +13,18 @@ from cnu_rag_optimization import (
 policy = OptimizationPolicy()
 features = QueryFeatures(
     prompt_chars=42,
-    country_count=2,
+    source_count=2,
     direct_lookup=False,
     analysis_requested=True,
 )
 decision = route_query(features, policy)
 
 ranked_documents = [
-    {"id": "law-1", "title": "Rank 1", "score": 0.91},
-    {"id": "law-2", "title": "Rank 2", "score": 0.87},
+    {"id": "document-1", "title": "Rank 1", "score": 0.91},
+    {"id": "document-2", "title": "Rank 2", "score": 0.87},
 ]
 
-if should_use_selector(features.country_count, policy):
+if should_use_selector(features.source_count, policy):
     selection = select_ranked_documents(
         ranked_documents,
         top_k=policy.selector_top_k,
