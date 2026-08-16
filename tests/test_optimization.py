@@ -3,14 +3,21 @@ import asyncio
 import pytest
 
 from cnu_rag_optimization import (
+    AsyncSingleFlight,
+    HTTPTransportPolicy,
     OptimizationPolicy,
     QueryFeatures,
     SelectorScope,
+    SpeculativeDraft,
+    VLLM_PROFILES,
+    build_async_client,
     cap_comparison_documents,
+    compare_regression_records,
     compact_documents,
     llm_options,
     parallel_enrich,
     route_query,
+    run_verified_speculation,
     select_ranked_documents,
     should_use_selector,
 )
@@ -104,3 +111,137 @@ def test_parallel_enrichment() -> None:
         "primary",
         "secondary",
     )
+
+
+def test_http_client_uses_bounded_pool() -> None:
+    async def check() -> None:
+        client = build_async_client(
+            HTTPTransportPolicy(
+                max_connections=8,
+                max_keepalive_connections=4,
+            )
+        )
+        try:
+            assert client.timeout.connect == 5.0
+        finally:
+            await client.aclose()
+
+    asyncio.run(check())
+
+
+def test_verified_speculation_reuses_only_matching_draft() -> None:
+    fallback_calls: list[tuple[str, ...]] = []
+
+    async def selection() -> list[str]:
+        return ["a", "b"]
+
+    async def draft(ids: tuple[str, ...], value: str) -> SpeculativeDraft[str]:
+        return SpeculativeDraft(value=value, selected_ids=ids)
+
+    async def fallback(ids: tuple[str, ...]) -> str:
+        fallback_calls.append(ids)
+        return "baseline"
+
+    hit = asyncio.run(
+        run_verified_speculation(
+            selection(),
+            draft(("a", "b"), "draft"),
+            fallback,
+        )
+    )
+    assert hit.value == "draft"
+    assert hit.reused_draft
+    assert fallback_calls == []
+
+    miss = asyncio.run(
+        run_verified_speculation(
+            selection(),
+            draft(("a", "c"), "unsafe"),
+            fallback,
+        )
+    )
+    assert miss.value == "baseline"
+    assert not miss.reused_draft
+    assert fallback_calls == [("a", "b")]
+
+
+def test_verified_speculation_can_compare_id_sets() -> None:
+    async def fallback(_: tuple[str, ...]) -> str:
+        return "baseline"
+
+    result = asyncio.run(
+        run_verified_speculation(
+            _async_value(["a", "b"]),
+            _async_value(SpeculativeDraft(value="draft", selected_ids=("b", "a"))),
+            fallback,
+            order_sensitive=False,
+        )
+    )
+    assert result.reused_draft
+
+
+async def _async_value(value):
+    await asyncio.sleep(0)
+    return value
+
+
+def test_singleflight_coalesces_only_concurrent_requests() -> None:
+    calls = 0
+
+    async def exercise() -> tuple[list[str], list[bool], int]:
+        nonlocal calls
+        gate = asyncio.Event()
+        flight: AsyncSingleFlight[str, str] = AsyncSingleFlight()
+
+        async def factory() -> str:
+            nonlocal calls
+            calls += 1
+            await gate.wait()
+            return "same-output"
+
+        first = asyncio.create_task(flight.do("same-key", factory))
+        await asyncio.sleep(0)
+        second = asyncio.create_task(flight.do("same-key", factory))
+        await asyncio.sleep(0)
+        gate.set()
+        results = await asyncio.gather(first, second)
+
+        gate.set()
+        third = await flight.do("same-key", factory)
+        return (
+            [item.value for item in (*results, third)],
+            [item.shared for item in (*results, third)],
+            calls,
+        )
+
+    values, shared, call_count = asyncio.run(exercise())
+    assert values == ["same-output"] * 3
+    assert shared == [False, True, False]
+    assert call_count == 2
+
+
+def test_regression_metrics_fail_closed_on_changed_answer() -> None:
+    control = [
+        {"status": "ok", "selected_ids": ["a", "b"], "response": {"x": 1}},
+        {"status": "ok", "selected_ids": ["c"], "response": {"x": 2}},
+    ]
+    candidate = [
+        {"status": "ok", "selected_ids": ["a", "b"], "response": {"x": 1}},
+        {"status": "ok", "selected_ids": ["c"], "response": {"x": 3}},
+    ]
+    metrics = compare_regression_records(control, candidate)
+    assert metrics.success_rate == 1.0
+    assert metrics.id_recall == 1.0
+    assert metrics.top1_agreement == 1.0
+    assert metrics.exact_response_rate == 0.5
+
+
+def test_vllm_profiles_all_require_exact_output_gate() -> None:
+    assert {profile.name for profile in VLLM_PROFILES} == {
+        "V0_CONTROL",
+        "V1_PREFIX_CACHE",
+        "V2_CHUNKED_8192",
+        "V3_NGRAM_3",
+        "V4_NGRAM_5",
+    }
+    assert all(profile.exact_output_gate for profile in VLLM_PROFILES)

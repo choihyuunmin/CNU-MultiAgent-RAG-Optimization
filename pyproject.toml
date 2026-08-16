@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Standalone optimization logic for reducing multi-agent RAG inference latency"
 requires-python = ">=3.11"
 authors = [{ name = "Hyunmin Choi" }]
-dependencies = []
+dependencies = ["httpx>=0.27"]
 
 [project.optional-dependencies]
 test = ["pytest>=8.0"]
