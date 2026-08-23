@@ -5,6 +5,7 @@ import asyncio
 from cnu_rag_optimization import (
     ConfidenceRoutingFeatures,
     OptimizationPolicy,
+    decide_evidence_route,
     decide_confident_route,
     try_typed_single_tool_dispatch,
 )
@@ -20,6 +21,20 @@ decision = decide_confident_route(
         action_term_matched=True,
     ),
     policy,
+)
+
+evidence_decision = decide_evidence_route(
+    [
+        {
+            "id": "record-1_section-1",
+            "parent_id": "record-1",
+            "scope": "source-a",
+            "score": 0.91,
+            "content": "entity retention requirements",
+        }
+    ],
+    expected_scope="source-a",
+    query_terms=["retention", "requirements"],
 )
 
 
@@ -39,6 +54,7 @@ async def main() -> None:
         policy=policy,
     )
     print(decision)
+    print(evidence_decision)
     print(result)
 
 

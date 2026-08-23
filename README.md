@@ -15,7 +15,9 @@ Repository contains only optimization primitives:
 - conservative single-RAG fast-path routing;
 - selector scope control for all or multi-source queries;
 - parallel enrichment helper;
-- prompt-free LLM timing metrics.
+- prompt-free LLM timing metrics;
+- fail-closed evidence-convergence routing;
+- bounded first-token hedging for ablation experiments.
 
 Repository intentionally excludes original service source, production prompts, API endpoints, credentials, domain data, database schemas, and evaluation question text.
 
@@ -42,14 +44,15 @@ Methods that reduced latency but failed strict fidelity are retained as rejected
 
 ## Measured outcome
 
-Validation used one large-domain retrieval system as a case study: 400 queries, concurrency 4, 3,678,686 indexed documents. Domain-specific fields and data are not required by this package.
+Latest validation used one large-domain retrieval system as a case study: 400 queries, concurrency 4, and 3,679,496 indexed records. Domain-specific fields and data are not required by this package.
 
-| Method | Mean latency | p50 | p95 | Pseudo-gold fidelity | Decision |
-|---|---:|---:|---:|---:|---|
-| Seeded control | 16.53 s | 16.15 s | 37.78 s | Reference | Control |
-| Confidence route + typed dispatch | 14.85 s | 15.45 s | 35.62 s | 0.9763 | Accepted |
+| Method | LLM calls | Mean | p50 | p95 | p99 | Pseudo-gold fidelity | Decision |
+|---|---:|---:|---:|---:|---:|---:|---|
+| Current control | 1,657 | 22.36 s | 22.85 s | 51.77 s | 107.57 s | Reference | Control |
+| Safe hybrid | 1,650 | 19.94 s | 21.20 s | 47.85 s | 59.83 s | 0.9769 | Accepted |
+| Safe hybrid + tail hedge | 1,668 | 19.76 s | 21.52 s | 47.00 s | 56.16 s | 0.9766 | Rejected as default |
 
-Remote inference engine remained unchanged. Candidate reduced LLM calls from 2,007 to 1,375 (-31.5%), mean latency 10.1%, p95 5.7%, and p99 16.2%. Document-ID Recall was 0.9804, nDCG@10 0.9778, Top-1 agreement 0.9650, and answer similarity 0.9756.
+Remote inference engine remained unchanged. Safe hybrid combined bounded connection reuse, parallel independent enrichment, and evidence-constrained critical-path routing. It reduced mean latency 10.8%, p95 7.6%, and p99 44.4%. Document-ID Recall was 0.9827, nDCG@10 0.9798, Top-1 agreement 0.9700, and answer similarity 0.9750. Tail hedging fired on 17/400 requests and produced only marginal extra latency reduction while increasing calls, so it remains an ablation rather than default behavior.
 
 ## One-line method examples
 
@@ -61,6 +64,8 @@ Remote inference engine remained unchanged. Candidate reduced LLM calls from 2,0
 | Single-flight | Two simultaneous identical questions share one in-flight request; no answer remains cached. |
 | Verified speculation | Generate early, reuse only when authoritative document IDs match; otherwise run baseline generation. |
 | Parallel enrichment | Fetch metadata while final answer generates, then merge unchanged results. |
+| Evidence convergence | Skip LLM selection only when ranked evidence has one parent, exact scope, sufficient score, and query-term coverage. |
+| Tail hedge | After delayed first token, race one duplicate under a strict concurrency budget and cancel loser. |
 
 Full aggregate methodology: [docs/EVALUATION.md](docs/EVALUATION.md).
 

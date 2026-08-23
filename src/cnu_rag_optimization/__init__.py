@@ -7,6 +7,8 @@ from .confidence import (
     decide_confident_route,
 )
 from .config import OptimizationPolicy, SelectorScope, TokenBudgets
+from .evidence import EvidenceRoutingDecision, decide_evidence_route
+from .hedged_stream import HedgeLimiter, stream_with_tail_hedge
 from .parallel import parallel_enrich
 from .regression import RegressionMetrics, compare_regression_records
 from .routing import QueryFeatures, RoutingDecision, route_query, should_use_selector
@@ -26,6 +28,8 @@ __all__ = [
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",
     "ConfidenceRoutingFeatures",
+    "EvidenceRoutingDecision",
+    "HedgeLimiter",
     "OptimizationPolicy",
     "QueryFeatures",
     "RegressionMetrics",
@@ -43,6 +47,7 @@ __all__ = [
     "compare_regression_records",
     "compact_documents",
     "decide_confident_route",
+    "decide_evidence_route",
     "llm_options",
     "measure_async_call",
     "parallel_enrich",
@@ -50,5 +55,6 @@ __all__ = [
     "run_verified_speculation",
     "select_ranked_documents",
     "should_use_selector",
+    "stream_with_tail_hedge",
     "try_typed_single_tool_dispatch",
 ]

@@ -5,6 +5,7 @@ import pytest
 from cnu_rag_optimization import (
     AsyncSingleFlight,
     ConfidenceRoutingFeatures,
+    HedgeLimiter,
     HTTPTransportPolicy,
     OptimizationPolicy,
     QueryFeatures,
@@ -15,12 +16,14 @@ from cnu_rag_optimization import (
     compare_regression_records,
     compact_documents,
     decide_confident_route,
+    decide_evidence_route,
     llm_options,
     parallel_enrich,
     route_query,
     run_verified_speculation,
     select_ranked_documents,
     should_use_selector,
+    stream_with_tail_hedge,
     try_typed_single_tool_dispatch,
 )
 
@@ -329,3 +332,72 @@ def test_typed_dispatch_falls_back_without_calling_tool() -> None:
     assert not result.dispatched
     assert result.reason == "tool_not_unique"
     assert calls == 0
+
+
+def test_evidence_route_requires_one_parent_and_matching_scope() -> None:
+    decision = decide_evidence_route(
+        [
+            {
+                "id": "doc-1_section-1",
+                "parent_id": "doc-1",
+                "scope": "source-a",
+                "score": 0.9,
+                "title": "access control policy",
+            },
+            {
+                "id": "doc-1_section-2",
+                "parent_id": "doc-1",
+                "scope": "source-a",
+                "score": 0.8,
+                "content": "access control requirements",
+            },
+        ],
+        expected_scope="source-a",
+        query_terms=["access", "control"],
+    )
+    assert decision.use_deterministic_selector
+    assert decision.reason == "evidence_converged"
+
+
+def test_evidence_route_falls_back_on_parent_divergence() -> None:
+    decision = decide_evidence_route(
+        [
+            {"id": "a", "parent_id": "p1", "score": 0.9, "text": "access"},
+            {"id": "b", "parent_id": "p2", "score": 0.8, "text": "access"},
+        ],
+        query_terms=["access"],
+    )
+    assert not decision.use_deterministic_selector
+    assert "parent_divergence" in decision.reason
+
+
+def test_tail_hedge_uses_faster_duplicate() -> None:
+    calls = 0
+
+    def factory():
+        nonlocal calls
+        calls += 1
+        number = calls
+
+        async def generate():
+            if number == 1:
+                await asyncio.sleep(0.2)
+                yield "primary"
+            else:
+                await asyncio.sleep(0.005)
+                yield "hedge"
+
+        return generate()
+
+    async def collect() -> list[str]:
+        return [
+            item
+            async for item in stream_with_tail_hedge(
+                factory,
+                delay_seconds=0.01,
+                limiter=HedgeLimiter(1),
+            )
+        ]
+
+    assert asyncio.run(collect()) == ["hedge"]
+    assert calls == 2
