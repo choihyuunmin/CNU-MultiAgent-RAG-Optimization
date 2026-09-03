@@ -80,6 +80,23 @@ Full aggregate methodology: [docs/EVALUATION.md](docs/EVALUATION.md).
 
 Application-side experiment and rejected ablations: [docs/APPLICATION_SIDE_EXPERIMENTS.md](docs/APPLICATION_SIDE_EXPERIMENTS.md).
 
+## 2025-moleg-search live experiment
+
+The 2026-09-03 live-server study used the real MOLEG hybrid search stack
+(OpenSearch translation/origin indices, BGE-M3 embeddings, and the multi-agent
+query loop).  Removing one discarded LLM tool-echo step reduced the 50-query
+search-stage mean from 4.263 s to 0.250 s with identical ranked document IDs.
+Coalescing the duplicate query embeddings and preparing the OpenSearch pipeline
+once reduced the remaining hybrid-search mean by another 15.8%, also with exact
+rank preservation.  A 10-query `/api/generate` integration check reduced mean
+latency from 11.356 s to 6.486 s; document Recall versus control was 0.975.
+That small end-to-end check is provisional because Top-1 agreement was 0.900;
+the exact-rank-preserving search-stage candidate is accepted, while full answer
+pipeline rollout remains gated on a larger repeated evaluation.
+
+Protocol, accepted/rejected ablations, reranker finding, scripts, and raw metric
+files: [docs/MOLEG_SEARCH_COT_OPTIMIZATION_20260903.md](docs/MOLEG_SEARCH_COT_OPTIMIZATION_20260903.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.
