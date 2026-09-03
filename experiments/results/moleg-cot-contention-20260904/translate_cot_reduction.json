@@ -1,0 +1,18 @@
+{
+  "target": "translate agent1 = ollama gpt-oss:20b (clause translation, reasoning discarded by app)",
+  "confirms": "certain models emit long chain-of-thought during real search; the app uses reasoning_content=disabled but the ollama gpt-oss agent still reasons",
+  "warm_sequential_12_clauses": {
+    "default_reasoning_on": {"mean_ms": 1739, "p50_ms": 1854, "p95_ms": 2253, "thinking_chars_mean": 477, "eval_tokens_mean": 185},
+    "think_low": {"mean_ms": 755, "p50_ms": 729, "p95_ms": 1222, "thinking_chars_mean": 57, "eval_tokens_mean": 47},
+    "latency_reduction_pct": 56.6, "speedup_x": 2.3,
+    "output_preservation": "semantically equivalent by manual inspection; char-bigram Jaccard 0.741 understates similarity (differs only in article-number notation '§ 1' vs '제1조' and synonyms)"
+  },
+  "cold_single_probe": {"default_ms": 13316, "think_low_ms": 696, "speedup_x": 19.1},
+  "production_context": {"model": "translate agent1 (ollama gpt-oss:20b)", "calls": 562, "mean_ms": 6912, "p95_ms": 19164, "max_ms": 56995,
+    "note": "slowest role in the whole system; high latency compounds reasoning with ollama request serialization under load; many calls returned empty content after tens of seconds"},
+  "other_models_checked": {
+    "gpt-oss-20b vLLM worker (8006)": "reasoning ~0 at default/medium; explodes only at reasoning_effort=high (>2min)",
+    "gemma-4-31B orchestrator (8000)": "no separate reasoning_content, no <think> in output; latency is real decode + load, not wasted CoT",
+    "comparison_sft gemma4-e4b (8030)": "long but legitimate output (~1730 tokens), not wasted reasoning"
+  }
+}

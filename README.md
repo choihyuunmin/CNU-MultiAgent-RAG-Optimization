@@ -119,6 +119,29 @@ differences). Full rollout stays gated on a search-stage Recall/Top-1 regression
 Protocol, role-by-role breakdown, scripts, and raw metrics:
 [docs/MOLEG_ORCHESTRATOR_LATENCY_20260904.md](docs/MOLEG_ORCHESTRATOR_LATENCY_20260904.md).
 
+## 2025-moleg-search long-CoT and fan-out contention (2026-09-04)
+
+Two follow-up experiments separated the latency causes further.
+
+**Long CoT is real but localized.** Aggregating all logged calls, the slowest
+role is the translation agent (ollama gpt-oss:20b): 562 calls, mean 6.9 s, p95
+19.2 s, max 57.0 s, often with empty output. It emits long reasoning the app
+discards. Reducing its reasoning (ollama `think=low`) cut warm per-clause
+translation 56.6% (2.3x; 19x on a cold call) over 12 clauses with semantically
+equivalent output. The vLLM gpt-oss worker showed ~0 reasoning at default; gemma
+emits no separate reasoning at all. So "long CoT" is the translation agent, not
+the orchestrator.
+
+**Fan-out contention is localized too.** A concurrency sweep on a shared server
+showed the gpt-oss worker (`--max-num-seqs 4`) inflates per-call latency 2.75x at
+K=16 with throughput plateauing ~17.5/s (admission-control queueing), while gemma
+scales cleanly (no inflation to K=16 short / K=8 generation; near-linear
+throughput). The orchestrator lever is therefore fewer sequential calls, not
+concurrency; the worker lever is its concurrency cap.
+
+Protocol, per-model reasoning check, sweeps, scripts, and raw metrics:
+[docs/MOLEG_COT_AND_CONTENTION_20260904.md](docs/MOLEG_COT_AND_CONTENTION_20260904.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.
