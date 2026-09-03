@@ -97,6 +97,28 @@ pipeline rollout remains gated on a larger repeated evaluation.
 Protocol, accepted/rejected ablations, reranker finding, scripts, and raw metric
 files: [docs/MOLEG_SEARCH_COT_OPTIMIZATION_20260903.md](docs/MOLEG_SEARCH_COT_OPTIMIZATION_20260903.md).
 
+## 2025-moleg-search orchestrator latency (2026-09-04)
+
+A follow-up study aggregated the observable agent/LLM traces of 252 live
+`/api/generate` requests. It found the latency is dominated by the orchestrator
+LLM, not search: the orchestrator (gemma-4-31B-it) was **88.2%** of non-streamed
+LLM time, while the search tool call was only 5.2%. The 2026-09-03 work had
+optimized that small search path. Each law-search request runs the orchestrator
+as several sequential calls (classify, preparation, select, generation), each
+1–4.5 s even for small JSON outputs; server prefix caching was already on (~54%
+token hit rate).
+
+Merging the two query-analysis calls (classify + preparation, which both read the
+same user query) into one orchestrator call reduced that stage from 3.691 s to
+2.645 s (**28.4%, 1.047 s/request**) over 50 fixed questions, with completion
+tokens dropping 122→87. Against the current two-call output as pseudo-gold, task,
+country, and guardrail decisions matched 100%, keyword Jaccard was 0.99/0.97, and
+the free-text `transformed_query` matched exactly on 43/50 (wording-only
+differences). Full rollout stays gated on a search-stage Recall/Top-1 regression.
+
+Protocol, role-by-role breakdown, scripts, and raw metrics:
+[docs/MOLEG_ORCHESTRATOR_LATENCY_20260904.md](docs/MOLEG_ORCHESTRATOR_LATENCY_20260904.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.

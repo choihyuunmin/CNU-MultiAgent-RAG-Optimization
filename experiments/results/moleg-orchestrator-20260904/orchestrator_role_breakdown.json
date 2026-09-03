@@ -1,0 +1,85 @@
+{
+  "sample": "252 /api/generate requests, prod logs 2026-07 to 2026-08 (non-streamed LLM calls only)",
+  "by_role_model": [
+    {
+      "role": "master",
+      "model": "orchestrator(gemma-4-31B-it)",
+      "calls": 749,
+      "mean_ms": 2336,
+      "p50_ms": 2210,
+      "p95_ms": 6164,
+      "max_ms": 10741,
+      "sum_s": 1749.6,
+      "share_pct": 88.2
+    },
+    {
+      "role": "tool",
+      "model": "retrieval tool(gpt-oss-20b)",
+      "calls": 233,
+      "mean_ms": 444,
+      "p50_ms": 353,
+      "p95_ms": 841,
+      "max_ms": 3533,
+      "sum_s": 103.4,
+      "share_pct": 5.2
+    },
+    {
+      "role": "tool_comparison_sft",
+      "model": "comparison_sft(gemma4-e4b)",
+      "calls": 9,
+      "mean_ms": 5674,
+      "p95_ms": 11248,
+      "sum_s": 51.1,
+      "share_pct": 2.6
+    },
+    {
+      "role": "tool_synthesis",
+      "model": "worker agent(gpt-oss-20b)",
+      "calls": 15,
+      "mean_ms": 2895,
+      "p95_ms": 6912,
+      "sum_s": 43.4,
+      "share_pct": 2.2
+    },
+    {
+      "role": "-",
+      "model": "translate agent2(ollama)",
+      "calls": 2,
+      "mean_ms": 17732,
+      "sum_s": 35.5,
+      "share_pct": 1.8
+    }
+  ],
+  "per_request": {
+    "total_llm_ms_mean": 8028,
+    "p50": 7536,
+    "p95": 16783,
+    "max": 47388,
+    "llm_calls_mean": 4.1,
+    "p95_calls": 8,
+    "max_calls": 17
+  },
+  "master_by_output_size": [
+    {
+      "resp_len": "<120 (classify/route/select)",
+      "calls": 369,
+      "sum_s": 398
+    },
+    {
+      "resp_len": "120-300 (preparation)",
+      "calls": 237,
+      "mean_ms": 2975,
+      "sum_s": 705
+    },
+    {
+      "resp_len": ">=300 (per-country generation)",
+      "calls": 143,
+      "mean_ms": 4521,
+      "sum_s": 647
+    }
+  ],
+  "tool_exec": {
+    "search_laws_mean_ms": 537,
+    "search_laws_p95_ms": 895
+  }
+}
