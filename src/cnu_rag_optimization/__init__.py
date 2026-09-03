@@ -6,9 +6,20 @@ from .confidence import (
     ConfidenceRoutingFeatures,
     decide_confident_route,
 )
+from .compiled_harness import (
+    CompiledProcedure,
+    CompiledProcedureHarness,
+    ProcedureResolution,
+)
 from .config import OptimizationPolicy, SelectorScope, TokenBudgets
 from .evidence import EvidenceRoutingDecision, decide_evidence_route
 from .hedged_stream import HedgeLimiter, stream_with_tail_hedge
+from .link_state import (
+    ContractLinkStateRouter,
+    LinkRouteDecision,
+    LinkRouteToken,
+    LinkSpec,
+)
 from .parallel import parallel_enrich
 from .regression import RegressionMetrics, compare_regression_records
 from .routing import QueryFeatures, RoutingDecision, route_query, should_use_selector
@@ -28,10 +39,17 @@ __all__ = [
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",
     "ConfidenceRoutingFeatures",
+    "CompiledProcedure",
+    "CompiledProcedureHarness",
+    "ContractLinkStateRouter",
     "EvidenceRoutingDecision",
     "HedgeLimiter",
+    "LinkRouteDecision",
+    "LinkRouteToken",
+    "LinkSpec",
     "OptimizationPolicy",
     "QueryFeatures",
+    "ProcedureResolution",
     "RegressionMetrics",
     "RoutingDecision",
     "SelectionResult",

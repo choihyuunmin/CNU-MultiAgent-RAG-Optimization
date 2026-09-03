@@ -5,6 +5,8 @@ Domain-independent latency optimization for multi-agent retrieval-augmented gene
 Repository contains only optimization primitives:
 
 - confidence-gated local routing with LLM fallback;
+- contract-constrained link-state routing with EWMA latency and load cost;
+- trace-compiled procedure reuse with typed fail-closed contracts;
 - typed single-tool dispatch with argument validation;
 - persistent bounded HTTP connection pools;
 - concurrent duplicate-request coalescing without completed-result caching;
@@ -42,9 +44,14 @@ Speed gain is accepted only after same-query pseudo-gold regression passes. Defa
 
 Methods that reduced latency but failed strict fidelity are retained as rejected ablations, not proposed results.
 
+A later one-pass ablation found larger raw latency reductions for compiled
+procedure reuse, but its 0.9102 pseudo-gold fidelity missed the 0.97 acceptance
+gate. It is reported as rejected evidence, not a new best result. See
+[docs/CASE_STUDY_400Q_20260903.md](docs/CASE_STUDY_400Q_20260903.md).
+
 ## Measured outcome
 
-Latest validation used one large-domain retrieval system as a case study: 400 queries, concurrency 4, and 3,679,496 indexed records. Domain-specific fields and data are not required by this package.
+Accepted validation used one large-domain retrieval system as a case study: 400 queries, concurrency 4, and 3,679,496 indexed records. Domain-specific fields and data are not required by this package.
 
 | Method | LLM calls | Mean | p50 | p95 | p99 | Pseudo-gold fidelity | Decision |
 |---|---:|---:|---:|---:|---:|---:|---|
@@ -65,6 +72,8 @@ Remote inference engine remained unchanged. Safe hybrid combined bounded connect
 | Verified speculation | Generate early, reuse only when authoritative document IDs match; otherwise run baseline generation. |
 | Parallel enrichment | Fetch metadata while final answer generates, then merge unchanged results. |
 | Evidence convergence | Skip LLM selection only when ranked evidence has one parent, exact scope, sufficient score, and query-term coverage. |
+| Contract link-state routing | Choose the lowest-delay semantically equivalent path after contract, load, and failure checks. |
+| Compiled procedure reuse | Reuse a verified stage-to-action procedure, never a prior answer; fall back on every contract miss. |
 | Tail hedge | After delayed first token, race one duplicate under a strict concurrency budget and cancel loser. |
 
 Full aggregate methodology: [docs/EVALUATION.md](docs/EVALUATION.md).
