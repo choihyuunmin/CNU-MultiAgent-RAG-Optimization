@@ -186,6 +186,30 @@ and they need a maintenance window / spare GPU to measure on gemma-31B.
 
 Details: [docs/MOLEG_ACCELERATION_ABLATION_20260904.md](docs/MOLEG_ACCELERATION_ABLATION_20260904.md).
 
+## 2025-moleg-search harness methods, described (2026-09-04)
+
+A prose write-up of each method (not code names) with an end-to-end 400-query
+comparison (concurrency 4, search included), and a newly devised harness method:
+
+| Method | Mean | Speedup | Recall | Top-1 | Verdict |
+|---|---:|---:|---:|---:|---|
+| Current production (sequential 2 calls + tool-echo search) | 4.67 s | 1.00x | 1.000 | 1.000 | reference |
+| Parallel analysis + typed dispatch | 3.75 s | 1.24x | 0.995 | 0.994 | accepted |
+| Verified fast-path cascade (new) | 1.38 s | 3.37x | 0.422 | 0.329 | rejected |
+
+The accuracy-preserving winner is running the two independent analysis calls
+concurrently and calling the search handler directly (removing the redundant
+tool-echo): 24% faster end-to-end at Recall 0.995. The newly devised speculative
+cascade (fast small model + deterministic grounding gate, deferring to the large
+model on failure) reaches 3.37x but a cheap gate cannot preserve retrieval
+fidelity (Recall 0.422) — the fast model diverges in phrasing even when grounded.
+CoT reduction preserves accuracy only where reasoning is genuinely wasted (the
+translation agent), not on the orchestrator (which emits none) or as an
+extraction substitute.
+
+Full prose method descriptions and data:
+[docs/MOLEG_HARNESS_METHODS_20260904.md](docs/MOLEG_HARNESS_METHODS_20260904.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.
