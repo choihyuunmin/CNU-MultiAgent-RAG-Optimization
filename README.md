@@ -142,6 +142,31 @@ concurrency; the worker lever is its concurrency cap.
 Protocol, per-model reasoning check, sweeps, scripts, and raw metrics:
 [docs/MOLEG_COT_AND_CONTENTION_20260904.md](docs/MOLEG_COT_AND_CONTENTION_20260904.md).
 
+## 2025-moleg-search acceleration ablation (2026-09-04)
+
+Combining paper-oriented techniques on the query-analysis stage (call fusion,
+fast-model right-sizing, compact schema, grammar-constrained decoding) and
+measuring both latency and *real retrieval fidelity* over 25 questions:
+
+| Method | Mean | Speedup | Recall | Top-1 | kw Jaccard |
+|---|---:|---:|---:|---:|---:|
+| Baseline (2 calls, gemma-31B) | 2,980 ms | 1.00x | 1.000 | 1.000 | 1.000 |
+| + call fusion | 2,294 ms | 1.30x | 0.885 | 0.857 | 0.919 |
+| + fast model | 930 ms | 3.20x | 0.624 | 0.667 | 0.815 |
+| + compact schema | 394 ms | 7.56x | 0.550 | 0.571 | 0.588 |
+| + guided decoding | 402 ms | 7.42x | 0.581 | 0.571 | 0.588 |
+
+App-level acceleration is a clear latency-accuracy Pareto: stacking techniques
+reaches 7.5x but retrieval fidelity collapses to 0.55, because search amplifies
+small extraction differences. Accuracy-preserving speedup therefore needs
+serving-level decode acceleration (fp8 / tensor-parallel / speculative decoding)
+that keeps the orchestrator's output identical; the orchestrator decodes at only
+~53 tok/s vs 239 (gpt-oss-20b) and 191 (gemma4-e4b). Accuracy is retrieval
+fidelity vs the current baseline (pseudo-gold), not expert-judged.
+
+Protocol, technique definitions, serving-level recommendation, script, and raw
+metrics: [docs/MOLEG_ACCELERATION_ABLATION_20260904.md](docs/MOLEG_ACCELERATION_ABLATION_20260904.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.
