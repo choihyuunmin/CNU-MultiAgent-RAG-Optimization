@@ -55,3 +55,23 @@ approved A/B rollout.
 
 See [the measured report](../../docs/MOLEG_SEARCH_COT_OPTIMIZATION_20260903.md)
 for protocol, results, and limitations.
+
+## Typed dispatch — measured with current models (2026-09-04)
+
+Re-verified against the current stack (orchestrator gemma-4-31B, worker
+gpt-oss-20b). Over 25 fixed questions, comparing the current tool-echo path
+against the direct-dispatch replacement with the same preparation output:
+
+| Path | mean | p50 | p95 |
+|---|---:|---:|---:|
+| Current (gpt-oss tool-echo) | 0.92 s | 0.86 s | 1.30 s |
+| Typed direct dispatch | 0.50 s | 0.47 s | 0.71 s |
+
+Latency saved 0.42 s/request (46%). Ranked document IDs identical on 24/25,
+document Recall 0.994, Top-1 agreement 24/25. The one difference is a case where
+the gpt-oss echo drifted from the intended arguments, so the direct path is the
+more faithful one. This is accuracy-preserving harness engineering: it removes a
+call without changing the search inputs. Metrics:
+`experiments/results/moleg-acceleration-20260904/typed_dispatch_verification.json`.
+
+Deployment stays with the team's k8s process; production was not modified.
