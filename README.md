@@ -146,18 +146,20 @@ Protocol, per-model reasoning check, sweeps, scripts, and raw metrics:
 
 Combining paper-oriented techniques on the query-analysis stage (call fusion,
 fast-model right-sizing, compact schema, grammar-constrained decoding) and
-measuring both latency and *real retrieval fidelity* over 25 questions:
+measuring both latency and *real retrieval fidelity*, re-run over **400 queries**
+(concurrency 4) with an added accuracy-preserving parallel arm:
 
 | Method | Mean | Speedup | Recall | Top-1 | kw Jaccard |
 |---|---:|---:|---:|---:|---:|
-| Baseline (2 calls, gemma-31B) | 2,980 ms | 1.00x | 1.000 | 1.000 | 1.000 |
-| + call fusion | 2,294 ms | 1.30x | 0.885 | 0.857 | 0.919 |
-| + fast model | 930 ms | 3.20x | 0.624 | 0.667 | 0.815 |
-| + compact schema | 394 ms | 7.56x | 0.550 | 0.571 | 0.588 |
-| + guided decoding | 402 ms | 7.42x | 0.581 | 0.571 | 0.588 |
+| Baseline (2 calls, gemma-31B) | 3.73 s | 1.00x | 1.000 | 1.000 | 1.000 |
+| Parallel classify∥prep (accuracy-preserving) | 3.43 s | 1.09x | 0.980 | 0.976 | 0.994 |
+| + call fusion (gemma) | 3.04 s | 1.23x | 0.917 | 0.878 | 0.955 |
+| + fast model (gpt-oss) | 0.48 s | 7.86x | 0.446 | 0.372 | 0.556 |
+| + compact schema | 0.54 s | 6.89x | 0.331 | 0.229 | 0.603 |
+| + guided decoding | 0.54 s | 6.94x | 0.345 | 0.223 | 0.588 |
 
 App-level acceleration is a clear latency-accuracy Pareto: stacking techniques
-reaches 7.5x but retrieval fidelity collapses to 0.55, because search amplifies
+reaches ~7x but at 400 queries retrieval Recall collapses to 0.33-0.45, because search amplifies
 small extraction differences. Accuracy-preserving speedup therefore needs
 serving-level decode acceleration (fp8 / tensor-parallel / speculative decoding)
 that keeps the orchestrator's output identical; the orchestrator decodes at only
