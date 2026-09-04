@@ -129,3 +129,35 @@ parallelism)뿐이다. 모델 치환·제약 추출·빠른-경로 캐스케이�
 무손실로 가속하는 것이다." — 이는 값싼 대체를 배제하는 비자명한 근거다.
 
 재현: `experiments/results/moleg-acceleration-20260904/constrained_extraction_400q.json`
+
+## 방향 B: speculative decoding 실측 (프록시) — 무손실 확인, 이 프록시에선 느려짐
+
+요청대로 무손실 서빙 가속(speculative decoding)을 실측했다. 다만 gemma-4-31B를 띄울
+GPU 여유(~90GB)가 확보되지 않아(GPU0 ~2GB, GPU1 ~25GB), 25GB에 들어가는 **프록시**로
+측정했다: target Qwen3-14B(fp8), draft Qwen3-0.6B(동일 vocab 151936), num_spec=5,
+같은 target에 대해 spec on/off 비교.
+
+| 설정 | 추출 tok/s | 생성 tok/s |
+|---|---:|---:|
+| spec 없음(baseline) | 155.9 | 160.1 |
+| draft-model spec | 66.4 | 71.4 |
+
+- **출력 무손실 확인**: spec on/off 출력이 10/10 완전 동일(유사도 1.000). speculative
+  decoding은 설계대로 target 분포를 보존한다 = 정확도 100% 보존.
+- **그러나 이 프록시에선 느려졌다**(156→66 tok/s). vLLM이 "draft-model spec에서 async
+  scheduling 비활성" 경고를 냈고, 이 한국어 법령 구조화 작업에서 draft 수용률이 낮아
+  draft+검증 오버헤드가 이득을 넘었다.
+
+### 해석과 한계
+
+- 이 프록시는 gemma-31B에 대한 spec 이득을 **과소평가**할 가능성이 크다. spec은 target이
+  느릴수록(디코드 병목) 유리한데, gemma-31B는 53 tok/s로 훨씬 느린 반면 프록시 target
+  (fp8 14B)은 이미 156 tok/s로 빨라 draft 오버헤드가 상대적으로 컸다.
+- 구조화 JSON 출력에 잘 맞는 **n-gram(prompt-lookup) spec**은 draft 없이 동작하고 수용률이
+  높을 수 있으나, venv의 numba가 NumPy 2.4와 비호환이라 실행하지 못했다(운영 venv 미수정).
+- **결론**: 무손실은 확인됐지만 speedup은 target·draft·작업 의존적이며 자동 보장이 아니다.
+  실제 이득은 gemma-31B(느린 target)에서 직접 재고 num_spec·draft·n-gram을 스윕해야 한다.
+  이를 위해 한 H200에 ~90GB를 비워야 한다(gemma-31B 59GB + E4B draft 15GB + KV). 준비된
+  스크립트(spec_bench.sh)는 그 환경이 생기면 즉시 실행 가능하다.
+
+재현: `experiments/results/moleg-acceleration-20260904/speculative_decoding_proxy.json`
