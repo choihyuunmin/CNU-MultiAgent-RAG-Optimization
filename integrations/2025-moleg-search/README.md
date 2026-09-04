@@ -75,3 +75,17 @@ call without changing the search inputs. Metrics:
 `experiments/results/moleg-acceleration-20260904/typed_dispatch_verification.json`.
 
 Deployment stays with the team's k8s process; production was not modified.
+
+### 400-query confirmation (2026-09-04)
+
+Re-run at 400 queries (the 50 fixed questions cycled x8, concurrency 1):
+
+| Path | mean | p50 | p95 | p99 |
+|---|---:|---:|---:|---:|
+| Current (gpt-oss tool-echo) | 0.95 s | 0.93 s | 1.17 s | 1.23 s |
+| Typed direct dispatch | 0.50 s | 0.48 s | 0.66 s | 0.85 s |
+
+Latency saved 0.45 s/request (47.3%). Ranked document IDs identical on 397/400
+(99.2%), document Recall 0.9988, Top-1 agreement 99.5%. Fidelity is higher at
+400 than at 25, confirming the change is accuracy-preserving; the ~0.8%
+non-identical are cases where the gpt-oss echo drifts from the intended args.
