@@ -125,3 +125,41 @@
 
 재현: `scripts/evaluate_moleg_harness_parallel.py`,
 `experiments/results/moleg-acceleration-20260904/harness_parallelization.json`.
+
+## 서빙 레벨 가속 실측 (2026-09-04 추가)
+
+서빙 레벨 가속을 실제 하드웨어에서 측정했다. 운영 GPU를 방해하지 않도록 벤치마크
+모델을 GPU1의 여유 메모리(~25GB, 운영 vLLM은 KV 캐시를 선점하므로 여유분은 계속
+여유)에만 띄우고 측정 후 내렸다. 운영은 재기동·방해하지 않았다.
+
+### fp8 양자화 (측정) — gemma-4-E4B(오케스트레이터 동일 계열)
+
+| 설정 | 추출 지연 | 추출 tok/s | 생성 tok/s |
+|---|---:|---:|---:|
+| bf16 | 688ms | 186.2 | 191.0 |
+| fp8 | 568ms | 225.2 | 235.8 |
+
+**디코드 처리량 +21~23%, 지연 -17%.** 그러나 **출력이 보존되지 않았다**: fp8과 bf16의
+추출 결과가 8개 중 0개 동일, 문자 유사도 0.569. 즉 fp8은 앱 레벨 트릭처럼 출력을
+바꾸며, 동일한 회귀 검증이 필요하다. (E4B는 MoE라 fp8 민감도가 높을 수 있고, 밀집
+모델인 gemma-31B에서는 더 안정적일 수 있으나 이번엔 측정하지 못했다.)
+
+### 출력 무손실 기법(측정 불가)
+
+| 기법 | 정확도 | 이번 환경에서 측정 못 한 이유 |
+|---|---|---|
+| Speculative decoding | 출력 동일(구조적으로) | venv의 n-gram proposer가 numba/NumPy 비호환(NumPy 2.4 vs ≤2.2). 공용 운영 venv는 수정하지 않음 |
+| Tensor parallelism | 출력 동일 | GPU0가 운영으로 가득 참. TP 인스턴스용 두 번째 GPU 없음 |
+
+### 정리 (측정 결과에 따른 정정)
+
+- 서빙 레벨 가속은 실재하고 측정된다: **fp8이 처리량 +22%.**
+- 그러나 서빙 레벨이라고 **자동으로 정확도 보존은 아니다.** fp8은 출력을 바꿨다.
+  앞서 "서빙 레벨 = 출력 불변"이라 한 것은 과했고, 실측으로 정정한다.
+- **진짜 무손실 기법은 speculative decoding과 tensor parallelism**이며, 이 둘은 정확도를
+  지키지만 이번 공용 운영 환경(venv/GPU 제약)에서는 측정할 수 없었다. 유지보수 창이나
+  여유 GPU가 있으면 gemma-31B에 대해 직접 측정해야 한다.
+- 참고 디코드 처리량: gemma-31B 53 tok/s(현재), gemma-4-E4B bf16 186 / fp8 225 tok/s.
+
+재현: `experiments/results/moleg-acceleration-20260904/serving_level_fp8.json`
+(운영 재기동 없이 여유 메모리에서 임시 인스턴스로 측정).

@@ -167,6 +167,23 @@ fidelity vs the current baseline (pseudo-gold), not expert-judged.
 Protocol, technique definitions, serving-level recommendation, script, and raw
 metrics: [docs/MOLEG_ACCELERATION_ABLATION_20260904.md](docs/MOLEG_ACCELERATION_ABLATION_20260904.md).
 
+## 2025-moleg-search serving-level acceleration (measured 2026-09-04)
+
+Serving-level decode acceleration was measured on real hardware by serving a
+same-family benchmark model (gemma-4-E4B) only in a spare GPU's free memory and
+tearing it down; production was not restarted. fp8 quantization vs bf16 gave
+**+21-23% decode throughput** (186->225 tok/s extract, 191->236 gen; latency
+-17%), but the outputs were **not** preserved (0/8 identical, 0.569 similarity),
+so fp8 needs the same regression validation as app-level tricks. The truly
+output-lossless techniques (speculative decoding, tensor parallelism) could not
+be measured here: the venv's n-gram proposer is broken (numba vs NumPy 2.4, and
+the shared production venv was left untouched) and GPU0 is full (no second GPU
+for tensor-parallel). Net: serving-level acceleration is real, but "serving-level
+= accuracy-preserving" is not automatic; only the lossless methods guarantee it,
+and they need a maintenance window / spare GPU to measure on gemma-31B.
+
+Details: [docs/MOLEG_ACCELERATION_ABLATION_20260904.md](docs/MOLEG_ACCELERATION_ABLATION_20260904.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.
