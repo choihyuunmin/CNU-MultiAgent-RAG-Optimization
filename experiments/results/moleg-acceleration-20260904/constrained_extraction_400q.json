@@ -1,0 +1,12 @@
+{
+  "hypothesis": "constraining the fast small model to extractive output (closed-enum country, query-substring keywords, deterministic search_terms) aligns its output space with what drives retrieval and recovers retrieval fidelity",
+  "n": 400, "concurrency": 4, "accuracy_metric": "retrieval fidelity vs gemma baseline ranked doc IDs",
+  "results": {
+    "baseline_gemma": {"mean_s":4.06,"p50_s":4.21,"p95_s":5.70,"speedup_x":1.00,"recall":1.000,"top1":1.000,"country_match":1.000},
+    "fast_free": {"mean_s":0.95,"p50_s":0.92,"p95_s":1.45,"speedup_x":4.27,"recall":0.347,"top1":0.247,"country_match":0.690},
+    "fast_country_enum": {"mean_s":0.95,"p50_s":0.91,"p95_s":1.51,"speedup_x":4.26,"recall":0.359,"top1":0.256,"country_match":0.705},
+    "fast_constrained": {"mean_s":0.99,"p50_s":0.97,"p95_s":1.45,"speedup_x":4.09,"recall":0.336,"top1":0.256,"country_match":0.703}
+  },
+  "verdict": "REJECTED",
+  "finding": "Output constraints do not recover retrieval fidelity. Enum-constraining country barely moved country agreement (0.690->0.705), so the country divergence is semantic (the two models choose differently), not a formatting/normalization artifact. With keywords and search_terms also constrained to be extractive, Recall stayed ~0.34 (unchanged from free generation). Therefore the extraction->retrieval divergence between two different models is model-intrinsic, not an output-form artifact, and cannot be cheaply aligned. Non-obvious implication: accuracy-preserving acceleration must keep the SAME model on the retrieval-driving path; the viable levers are same-model harness changes (remove/parallelize calls) and output-lossless serving-level decode acceleration (speculative decoding / tensor parallelism), not model substitution or constrained fast extraction."
+}
