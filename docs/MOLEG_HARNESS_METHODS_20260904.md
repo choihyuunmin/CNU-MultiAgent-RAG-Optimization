@@ -161,3 +161,28 @@ GPU 여유(~90GB)가 확보되지 않아(GPU0 ~2GB, GPU1 ~25GB), 25GB에 들어�
   스크립트(spec_bench.sh)는 그 환경이 생기면 즉시 실행 가능하다.
 
 재현: `experiments/results/moleg-acceleration-20260904/speculative_decoding_proxy.json`
+
+## 방향 B: gemma-31B speculative decoding 실측 시도 — 소프트웨어 제약으로 불가
+
+GPU를 확보(운영 모델 2개 일시 중단 → GPU1 ~100GB)해 gemma-4-31B를 전용 슬라이스에
+띄워 실측을 시도했다.
+
+- **baseline gemma-31B(spec 없음)**: 추출 48.2 tok/s, 생성 51.5 tok/s. 오케스트레이터가
+  전용 슬라이스에서도 ~50 tok/s로 디코드 병목임을 재확인(앞선 53 tok/s와 일치).
+- **speculative decoding은 실행 불가였다**:
+  - draft-model spec: vLLM 0.19가 `NotImplementedError: Speculative Decoding with draft
+    models ... does not support multimodal models yet`. gemma-4(31B·E4B)는 멀티모달
+    (Gemma4ForConditionalGeneration)이라 gemma-4-E4B draft가 거부된다.
+  - n-gram spec: draft 없이 되지만 numba가 필요한데 venv가 NumPy 2.4로 비호환(운영
+    venv 미수정 원칙).
+
+### 결론
+
+무손실 서빙 가속(speculative decoding)은 **이 오케스트레이터에는 현재 스택에서 사용
+불가**다. 멀티모달 gemma-4에는 draft-model spec이 미지원이고, n-gram은 venv의
+numba/NumPy 문제로 막힌다. **GPU 용량이 아니라 소프트웨어 제약**이 원인이다. 적용하려면
+(1) 텍스트 전용 오케스트레이터, (2) gemma-4용 EAGLE/MTP 헤드 학습, 또는 (3) 격리/업그레이드
+환경에서 numba를 고쳐 n-gram(구조화 JSON 단계에 적합)을 쓰는 방법이 필요하다. 운영 모델은
+실험 후 동일 명령·환경으로 재기동해 8개 엔드포인트+litellm 모두 정상 확인했다.
+
+재현: `experiments/results/moleg-acceleration-20260904/speculative_decoding_gemma31b.json`
