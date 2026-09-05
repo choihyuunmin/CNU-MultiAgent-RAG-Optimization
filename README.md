@@ -210,6 +210,29 @@ extraction substitute.
 Full prose method descriptions and data:
 [docs/MOLEG_HARNESS_METHODS_20260904.md](docs/MOLEG_HARNESS_METHODS_20260904.md).
 
+## 2025-moleg-search all-methods comparison, 400 distinct questions (2026-09-05)
+
+Built a 400 distinct-question set and compared every method against the existing
+baseline (time + retrieval accuracy).
+
+| Method | Mean | Speedup | Recall | Verdict |
+|---|---:|---:|---:|---|
+| Baseline (existing) | 3.73 s | 1.00x | 1.000 | reference |
+| typed dispatch | 3.17 s | 1.18x | 0.994 | accuracy-preserving |
+| parallel analysis | 2.92 s | 1.28x | 0.995 | accuracy-preserving |
+| merge | 2.68 s | 1.39x | 0.944 | small loss |
+| fast model | 1.02 s | 3.64x | 0.377 | rejected |
+| compact + guided | 1.00 s | 3.74x | 0.282 | rejected |
+| cascade | 1.07 s | 3.49x | 0.305 | rejected |
+
+Plus a serving-level row: n-gram speculative decoding cuts the gemma-4-31B
+analysis stage 47% (2.89->1.53 s, 1.89x) losslessly (392/400 identical) and stacks
+on any method. The accuracy-preserving path is parallel + typed dispatch + an
+n-gram-served orchestrator; aggressive model substitution is fast but collapses
+retrieval (Recall 0.28-0.38).
+
+Data: [docs/MOLEG_HARNESS_METHODS_20260904.md](docs/MOLEG_HARNESS_METHODS_20260904.md).
+
 ## Integration boundary
 
 Inputs and outputs use standard Python mappings and dataclasses. No dependency on original application modules or a particular domain. Integrators remain responsible for retrieval, reranking, document safety filtering, LLM calls, and domain-expert evaluation.
