@@ -1,0 +1,9 @@
+{
+  "technique": "harness-level: run the two independent analysis calls (classify, preparation) concurrently instead of sequentially",
+  "n_questions": 15,
+  "sequential": {"mean_s": 3.41, "p50_s": 3.70, "p95_s": 4.85},
+  "parallel":   {"mean_s": 3.15, "p50_s": 3.37, "p95_s": 4.29},
+  "reduction_pct": 7.8, "speedup_x": 1.08, "saved_s_per_req": 0.27,
+  "output_identical": "15/15 -> accuracy preserved exactly (1.000)",
+  "note": "modest because the critical path is dominated by one slow decode-bound call (preparation); parallelization only hides the smaller classify call. Under co-execution the two calls also share the gemma batch."
+}

@@ -24,7 +24,7 @@ def select_ranked_documents(
     documents: Sequence[Document],
     *,
     top_k: int = 5,
-    id_keys: tuple[str, ...] = ("id", "law_id"),
+    id_keys: tuple[str, ...] = ("id", "document_id"),
     validator: DocumentValidator | None = None,
 ) -> SelectionResult:
     """Preserve retrieval rank, remove duplicate IDs, return top-k documents.

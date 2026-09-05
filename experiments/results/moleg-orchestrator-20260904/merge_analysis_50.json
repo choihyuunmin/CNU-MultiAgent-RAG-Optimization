@@ -1,0 +1,32 @@
+{
+  "target": "orchestrator query-analysis stage: classify + preparation",
+  "backend": "gemma-4-31B-it via vLLM (OpenAI-compatible), concurrency=1, warmup excluded",
+  "n_questions": 50,
+  "baseline_2call": {
+    "mean_ms": 3691,
+    "p50_ms": 3351,
+    "p95_ms": 5317,
+    "max_ms": 6364,
+    "completion_tokens_mean": 122
+  },
+  "merged_1call": {
+    "mean_ms": 2645,
+    "p50_ms": 2269,
+    "p95_ms": 4531,
+    "max_ms": 5065,
+    "completion_tokens_mean": 87
+  },
+  "reduction": {
+    "mean_pct": 28.4,
+    "mean_ms_per_req": 1047
+  },
+  "accuracy_vs_2call": {
+    "task_match": "50/50",
+    "country_match": "50/50",
+    "guardrail_match": "50/50",
+    "transformed_query_exact": "43/50",
+    "keywords_from_original_jaccard": 0.99,
+    "keywords_from_transformed_jaccard": 0.97
+  },
+  "note": "Regression against current 2-call output as pseudo-gold; not an expert-judged absolute-accuracy claim. transformed_query is a free-text search phrase; 7/50 differ only in wording while keywords (0.99 Jaccard) and country/task are identical."
+}

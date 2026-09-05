@@ -1,0 +1,28 @@
+{
+  "method": "fire K concurrent identical requests to a single vLLM server, measure per-call latency and aggregate throughput; production GPU was under normal load (realistic condition)",
+  "gpt_oss_20b_worker_8006": {
+    "server_flag": "--max-num-seqs 4 (hard concurrent-sequence cap)",
+    "prompt": "classify, max_tokens=40",
+    "sweep": [
+      {"K": 1, "percall_mean_ms": 220, "p95_ms": 235, "throughput_s": 4.5, "inflation_x": 1.00},
+      {"K": 2, "percall_mean_ms": 231, "p95_ms": 235, "throughput_s": 8.6, "inflation_x": 1.05},
+      {"K": 4, "percall_mean_ms": 254, "p95_ms": 271, "throughput_s": 15.5, "inflation_x": 1.15},
+      {"K": 8, "percall_mean_ms": 360, "p95_ms": 472, "throughput_s": 17.4, "inflation_x": 1.63},
+      {"K": 16, "percall_mean_ms": 606, "p95_ms": 982, "throughput_s": 17.5, "inflation_x": 2.75}
+    ],
+    "finding": "latency inflates 2.75x at K=16; throughput plateaus ~17.5/s beyond K=4 (admission-control queueing at the max-num-seqs cap)"
+  },
+  "gemma_4_31B_orchestrator_8000": {
+    "short_calls_max_tokens_40": [
+      {"K": 1, "percall_mean_ms": 643, "throughput_s": 1.6, "inflation_x": 1.00},
+      {"K": 4, "percall_mean_ms": 467, "throughput_s": 8.4, "inflation_x": 0.73},
+      {"K": 16, "percall_mean_ms": 540, "throughput_s": 29.1, "inflation_x": 0.84}
+    ],
+    "generation_max_tokens_200": [
+      {"K": 1, "percall_mean_ms": 4122, "throughput_s": 0.2, "inflation_x": 1.00},
+      {"K": 4, "percall_mean_ms": 3830, "throughput_s": 1.0, "inflation_x": 0.93},
+      {"K": 8, "percall_mean_ms": 3939, "throughput_s": 2.0, "inflation_x": 0.96}
+    ],
+    "finding": "no self-contention up to K=16 (short) / K=8 (generation); vLLM continuous batching scales throughput near-linearly. The orchestrator lever is fewer sequential calls, not concurrency."
+  }
+}

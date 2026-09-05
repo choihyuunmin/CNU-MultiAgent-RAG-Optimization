@@ -1,0 +1,13 @@
+{
+  "n": 400, "construction": "50 fixed questions cycled x8", "concurrency": 4,
+  "accuracy_metric": "retrieval fidelity vs baseline ranked doc IDs (pseudo-gold); reranker HTTP 401 for all arms (matches production)",
+  "arms": {
+    "B_baseline_2call_gemma": {"mean_s":3.73,"p50_s":3.90,"p95_s":5.41,"p99_s":6.16,"speedup_x":1.00,"recall":1.000,"top1":1.000,"identical":1.000,"country_match":1.000,"kw_jaccard":1.000},
+    "P_parallel_classify_prep": {"mean_s":3.43,"p50_s":3.57,"p95_s":4.98,"p99_s":5.54,"speedup_x":1.09,"recall":0.980,"top1":0.976,"identical":0.957,"country_match":1.000,"kw_jaccard":0.994},
+    "M1_merge_gemma": {"mean_s":3.04,"p50_s":3.06,"p95_s":4.31,"p99_s":4.94,"speedup_x":1.23,"recall":0.917,"top1":0.878,"identical":0.768,"country_match":1.000,"kw_jaccard":0.955},
+    "M2_merge_fast_oss": {"mean_s":0.48,"p50_s":0.50,"p95_s":0.81,"p99_s":1.13,"speedup_x":7.86,"recall":0.446,"top1":0.372,"identical":0.082,"country_match":0.695,"kw_jaccard":0.556},
+    "M3_merge_fast_compact": {"mean_s":0.54,"p50_s":0.51,"p95_s":0.89,"p99_s":1.09,"speedup_x":6.89,"recall":0.331,"top1":0.229,"identical":0.000,"country_match":0.700,"kw_jaccard":0.603},
+    "M4_compact_guided": {"mean_s":0.54,"p50_s":0.50,"p95_s":0.87,"p99_s":1.06,"speedup_x":6.94,"recall":0.345,"top1":0.223,"identical":0.000,"country_match":0.713,"kw_jaccard":0.588}
+  },
+  "conclusion": "At 400 scale the split is sharper than at 25. Accuracy-preserving speedups are harness-level: parallel classify||prep (P) 1.09x at Recall 0.980, and typed-dispatch (separate) 47% at Recall 0.999. App-level model-swap/compact (M2-M4) reach 7-8x but retrieval Recall collapses to 0.33-0.45 and country extraction to ~0.70. Merge on the same model (M1) is a middle point (1.23x, Recall 0.917). Accuracy-preserving engineering = harness-level (remove/parallelize calls), not aggressive app-level substitution."
+}

@@ -1,0 +1,151 @@
+{
+  "protocol": {
+    "question_count": 10,
+    "action_questions": 5,
+    "named_law_questions": 5,
+    "paired_order": "alternating",
+    "excluded_warmups_per_server": 1,
+    "baseline_url": "http://127.0.0.1:28010",
+    "candidate_url": "http://127.0.0.1:28011"
+  },
+  "baseline": {
+    "mean_s": 11.355804312974215,
+    "median_s": 11.665925804525614,
+    "p95_s": 15.673039222555236
+  },
+  "candidate": {
+    "mean_s": 6.485566919110715,
+    "median_s": 5.5987635515630245,
+    "p95_s": 10.839988885587086
+  },
+  "comparison": {
+    "mean_latency_reduction_pct": 42.88764811048359,
+    "exact_ranked_id_rate": 0.8,
+    "recall_vs_baseline": 0.975,
+    "top1_agreement": 0.9,
+    "mean_comment_bigram_jaccard": 0.7180261869498552
+  },
+  "wall_s": 178.42701315134764,
+  "rows": [
+    {
+      "case_index": 0,
+      "kind": "action",
+      "baseline_s": 10.006531218998134,
+      "candidate_s": 5.276046992279589,
+      "baseline_result_count": 8,
+      "candidate_result_count": 8,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 1.0
+    },
+    {
+      "case_index": 1,
+      "kind": "action",
+      "baseline_s": 15.276640092022717,
+      "candidate_s": 5.800579313188791,
+      "baseline_result_count": 6,
+      "candidate_result_count": 4,
+      "exact_ranked_ids": false,
+      "recall_vs_baseline": 0.75,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 0.42379182156133827
+    },
+    {
+      "case_index": 2,
+      "kind": "action",
+      "baseline_s": 14.905491172336042,
+      "candidate_s": 7.477126530371606,
+      "baseline_result_count": 3,
+      "candidate_result_count": 3,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 1.0
+    },
+    {
+      "case_index": 3,
+      "kind": "action",
+      "baseline_s": 15.997365783900023,
+      "candidate_s": 7.709414696320891,
+      "baseline_result_count": 2,
+      "candidate_result_count": 2,
+      "exact_ranked_ids": false,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": false,
+      "comment_bigram_jaccard": 0.2490974729241877
+    },
+    {
+      "case_index": 4,
+      "kind": "action",
+      "baseline_s": 13.325320390053093,
+      "candidate_s": 6.829112872481346,
+      "baseline_result_count": 8,
+      "candidate_result_count": 8,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 0.9045226130653267
+    },
+    {
+      "case_index": 5,
+      "kind": "named_law",
+      "baseline_s": 8.758007594384253,
+      "candidate_s": 4.955796098336577,
+      "baseline_result_count": 1,
+      "candidate_result_count": 1,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 0.8287292817679558
+    },
+    {
+      "case_index": 6,
+      "kind": "named_law",
+      "baseline_s": 6.548856024630368,
+      "candidate_s": 3.423300896771252,
+      "baseline_result_count": 1,
+      "candidate_result_count": 1,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 0.8571428571428571
+    },
+    {
+      "case_index": 7,
+      "kind": "named_law",
+      "baseline_s": 6.05108230188489,
+      "candidate_s": 4.585976233705878,
+      "baseline_result_count": 4,
+      "candidate_result_count": 4,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 0.5972222222222222
+    },
+    {
+      "case_index": 8,
+      "kind": "named_law",
+      "baseline_s": 14.972850657999516,
+      "candidate_s": 13.401367767713964,
+      "baseline_result_count": 23,
+      "candidate_result_count": 23,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 0.319755600814664
+    },
+    {
+      "case_index": 9,
+      "kind": "named_law",
+      "baseline_s": 7.715897893533111,
+      "candidate_s": 5.396947789937258,
+      "baseline_result_count": 3,
+      "candidate_result_count": 3,
+      "exact_ranked_ids": true,
+      "recall_vs_baseline": 1.0,
+      "top1_agreement": true,
+      "comment_bigram_jaccard": 1.0
+    }
+  ]
+}

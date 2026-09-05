@@ -1,0 +1,13 @@
+{
+  "goal": "measure output-lossless serving acceleration (speculative decoding) for the decode-bound orchestrator",
+  "status": "PROXY only — the requested gemma-4-31B run could not run because no GPU was freed (GPU0 ~2GB, GPU1 ~25GB free; the 31B needs ~62GB). Ran a fitting proxy in GPU1's free memory instead.",
+  "proxy_setup": "target Qwen3-14B (fp8, to fit 25GB) + draft Qwen3-0.6B (same vocab 151936), num_speculative_tokens=5, max_num_seqs=8, GPU1, single-request; comparison is spec vs no-spec on the SAME fp8 target",
+  "results": {
+    "no_spec_baseline": {"extract_tok_s":155.9,"gen_tok_s":160.1,"extract_lat_ms":821,"gen_lat_ms":1599},
+    "draft_model_spec": {"extract_tok_s":66.4,"gen_tok_s":71.4,"extract_lat_ms":1929,"gen_lat_ms":3585}
+  },
+  "output_identity": "10/10 identical, mean char-similarity 1.000 -> speculative decoding is output-LOSSLESS as expected",
+  "throughput": "SLOWER, not faster (156->66 tok/s). vLLM warned 'Async scheduling disabled with draft_model speculative decoding'; combined with low draft acceptance on this Korean-legal structured task, the draft+verify overhead dominated.",
+  "caveats": "This proxy likely UNDERSTATES spec-decoding's benefit for gemma-4-31B: spec helps most when the target is slow/decode-bound (gemma-31B ~53 tok/s) relative to the draft, whereas the fp8 14B target here was already fast (156 tok/s). n-gram (prompt-lookup) spec, which suits structured JSON output and needs no draft, could not run (venv numba vs NumPy 2.4).",
+  "next": "faithful measurement needs ~90GB freed on one H200 to serve gemma-4-31B target + gemma-4-E4B draft; then also sweep num_speculative_tokens and try n-gram in an isolated venv. Output-lossless is confirmed; the speedup is workload/pair/target-dependent and must be measured on the real orchestrator."
+}

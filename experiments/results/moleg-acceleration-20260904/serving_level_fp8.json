@@ -1,0 +1,21 @@
+{
+  "goal": "measure serving-level (output-preserving) decode acceleration on real hardware",
+  "constraint": "production GPUs shared; a benchmark model was served only in GPU1's free headroom (~25GB; production vLLM pre-allocates KV cache so free memory stays free) and torn down; production was not restarted or disrupted",
+  "measured_technique": "fp8 weight quantization (online) vs bf16, same checkpoint",
+  "model": "google/gemma-4-E4B-it (same family as the orchestrator; small enough to fit; note: MoE)",
+  "results": {
+    "bf16": {"extract_latency_ms": 688, "extract_tok_s": 186.2, "gen_tok_s": 191.0},
+    "fp8":  {"extract_latency_ms": 568, "extract_tok_s": 225.2, "gen_tok_s": 235.8},
+    "throughput_gain": {"extract_pct": 20.9, "generation_pct": 23.5, "latency_reduction_pct": 17.4}
+  },
+  "accuracy": {
+    "fp8_vs_bf16_output": "identical 0/8, mean char-similarity 0.569",
+    "verdict": "fp8 is NOT automatically output-preserving here; it changed the extraction like the app-level tricks and needs the same regression validation. (E4B is MoE; fp8 on the dense gemma-31B may be more stable, but that was not measured.)"
+  },
+  "not_measured": {
+    "speculative_decoding": "output-IDENTICAL by construction, but the venv n-gram proposer is broken (numba needs NumPy <=2.2, venv has 2.4); the shared production venv was not modified",
+    "tensor_parallelism": "output-identical, but GPU0 is full with production; no second GPU free for a TP instance"
+  },
+  "decode_throughput_context_tok_per_s": {"gemma-4-31B orchestrator (bf16, current)": 53, "gemma-4-E4B bf16": 186, "gemma-4-E4B fp8": 225},
+  "conclusion": "serving-level acceleration is real and measurable (fp8 +21-23% throughput), but it is not automatically accuracy-free: fp8 changed outputs. The truly output-lossless serving techniques (speculative decoding, tensor parallelism) preserve accuracy but require a maintenance window / spare GPU to measure, which this shared production environment did not allow."
+}

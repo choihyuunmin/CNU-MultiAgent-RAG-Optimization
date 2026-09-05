@@ -1,0 +1,23 @@
+{
+  "question": "why are intent analysis (classify) and search-term extraction (preparation) slow? is it CoT?",
+  "answer": "no CoT in these stages; they are decode-bound on the slow 31B orchestrator model",
+  "cot_check": {
+    "classify": {"prompt_tokens": 2260, "completion_tokens": 9, "reasoning_tokens": 0, "has_think_markers": false, "prefill_ms": 68, "decode_ms": 155, "total_ms": 220},
+    "preparation": {"prompt_tokens": 3560, "completion_tokens": 108, "reasoning_tokens": 0, "has_think_markers": false, "prefill_ms": 80, "decode_ms": 2100, "total_ms": 2190},
+    "enable_thinking_effect": "None/False/True all produce identical 108-token output; gemma emits no separate reasoning"
+  },
+  "decode_throughput_idle_tok_per_s": {
+    "gemma-4-31B (orchestrator)": 53,
+    "gpt-oss-20b (worker)": 239,
+    "gemma4-e4b (comparison)": 191
+  },
+  "root_cause": "preparation decodes 108 JSON tokens at ~53 tok/s on gemma-4-31B => ~2.1s; prefill is negligible (~80ms, prefix-cached); zero reasoning tokens",
+  "measured_lever_model_swap_extraction_N20": {
+    "gemma-4-31B": {"mean_ms": 3262, "p50_ms": 3496, "p95_ms": 4581, "completion_tokens_mean": 116},
+    "gpt-oss-20b (reasoning_effort=low)": {"mean_ms": 964, "p50_ms": 935, "p95_ms": 1484, "completion_tokens_mean": 212},
+    "latency_reduction_pct": 70.5, "speedup_x": 3.4,
+    "agreement_vs_gemma": {"country": "19/20", "guardrail": "20/20", "transformed_query_exact": "1/20", "keywords_orig_jaccard": 0.908, "keywords_transformed_jaccard": 0.796},
+    "note": "3.4x faster but transformed_query wording diverges strongly; gated on a search-stage Recall/Top-1 regression before adoption"
+  },
+  "other_levers": ["trim the preparation JSON schema to fewer/shorter fields (fewer output tokens)", "merge classify+preparation (already measured, -28.4%)", "serving: fp8/tensor-parallel gemma to raise decode throughput"]
+}

@@ -1,0 +1,10 @@
+{
+  "n": 400, "construction": "50 fixed questions cycled x8", "concurrency": 4,
+  "accuracy_metric": "retrieval fidelity vs current-production ranked doc IDs (pseudo-gold); reranker HTTP 401 for all (matches prod)",
+  "methods": {
+    "current_production": {"desc":"classify (gemma) then preparation (gemma) sequentially, then a gpt-oss tool-echo call before search","mean_s":4.67,"p50_s":4.66,"p95_s":6.37,"p99_s":6.76,"speedup_x":1.00,"recall":1.000,"top1":1.000,"identical":1.000,"country_match":1.000},
+    "parallel_analysis_plus_typed_dispatch": {"desc":"run classify and preparation concurrently (independent inputs) and call the search handler directly (skip the tool-echo)","mean_s":3.75,"p50_s":3.74,"p95_s":5.27,"p99_s":5.88,"speedup_x":1.24,"recall":0.995,"top1":0.994,"identical":0.991,"country_match":1.000,"verdict":"ACCEPTED - accuracy-preserving harness stack"},
+    "verified_fastpath_cascade": {"desc":"fast small model (gpt-oss, minimal reasoning) extracts search args; a deterministic gate (country grounded in the question, keywords present, non-empty) accepts or defers to the accurate large model; then direct search","mean_s":1.38,"p50_s":1.01,"p95_s":4.66,"p99_s":5.99,"speedup_x":3.37,"recall":0.422,"top1":0.329,"identical":0.095,"country_match":0.795,"accept_rate":0.907,"verdict":"REJECTED - gate too weak; the fast model's grounded-but-differently-phrased extraction still diverges retrieval"}
+  },
+  "conclusion": "The accuracy-preserving winner is parallel analysis + typed dispatch: 24% faster (4.67->3.75s) at Recall 0.995, Top-1 0.994, country 1.000. The new speculative cascade reaches 3.37x but a cheap deterministic gate cannot preserve retrieval fidelity (Recall 0.422) because the fast model diverges in phrasing even when grounded; a stricter gate would need to run the search itself, defeating the speedup. CoT reduction preserves accuracy only where the reasoning is genuinely wasted (the translation agent: gpt-oss think=low, 2.3x, equivalent output), not on the orchestrator (which emits no reasoning) nor as a model substitute for extraction."
+}
