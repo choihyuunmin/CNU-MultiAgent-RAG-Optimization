@@ -186,3 +186,30 @@ numba/NumPy 문제로 막힌다. **GPU 용량이 아니라 소프트웨어 제�
 실험 후 동일 명령·환경으로 재기동해 8개 엔드포인트+litellm 모두 정상 확인했다.
 
 재현: `experiments/results/moleg-acceleration-20260904/speculative_decoding_gemma31b.json`
+
+## 방향 B(성공): n-gram speculative decoding으로 gemma-31B 구조화 단계 무손실 가속
+
+draft-model spec은 멀티모달 gemma-4에서 불가하지만, **n-gram(prompt-lookup) spec은
+draft 모델이 없어** 그 제약을 피한다. numba가 요구하는 numpy≤2.2 문제는 **운영 venv를
+건드리지 않고** numpy 2.2.6을 별도 디렉터리에 설치해 벤치마크 프로세스에만 PYTHONPATH로
+주입해 해결했다. GPU는 gpt-oss만 잠시 내려(~77GB) 확보했고 실험 후 재기동·검증했다.
+
+| 단계 | baseline | n-gram spec | 변화 |
+|---|---:|---:|---|
+| 구조화 추출(검색어 JSON) | 48.1 tok/s | **60.8 tok/s** | **+26%**, 지연 979→774ms (-21%) |
+| 자유 서술 생성 | 51.4 tok/s | 51.6 tok/s | ~0% |
+
+- **출력 10/10 완전 동일(무손실, sim 1.000)** — 정확도 100% 보존.
+- draft 수용률 ~27%(264/986). 구조화 추출은 출력이 질문의 토큰(국가·키워드)을 그대로
+  복사하므로 수용률이 높아 가속되고, 자유 서술은 프롬프트 중복이 적어 이득이 없다.
+- vLLM이 n-gram spec에서 async scheduling을 끄는 것이 상한 요인.
+
+### 의의 (비자명)
+
+이것이 디코드 병목 오케스트레이터에 대한 **정확도 보존형 서빙 가속**이다. 같은 모델을
+유지(검색 충실도 보존)하면서 **구조화 임계 경로 단계(분류·준비)를 무손실로 ~26% 가속**한다.
+앞선 결과(모델 치환은 검색을 붕괴시킴)와 합치면 결론은 분명하다: **오케스트레이터를
+바꾸지 말고, 그 구조화 단계를 n-gram spec으로 무손실 가속하라.** 자유 서술 생성은 n-gram
+이득이 없으므로, 이득은 검색어 추출 같은 구조화 단계에 정확히 집중된다.
+
+재현: `experiments/results/moleg-acceleration-20260904/ngram_spec_gemma31b.json`
