@@ -1,6 +1,7 @@
 """CNU multi-agent RAG inference optimization primitives."""
 
 from .budget import cap_comparison_documents, compact_documents, llm_options
+from .coflow import AdmissionTicket, CoflowAdmission, CoflowPolicy
 from .confidence import (
     ConfidenceRoutingDecision,
     ConfidenceRoutingFeatures,
@@ -35,6 +36,9 @@ from .verified import (
 )
 
 __all__ = [
+    "AdmissionTicket",
+    "CoflowAdmission",
+    "CoflowPolicy",
     "LLMCallMetrics",
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",
