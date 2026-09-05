@@ -17,7 +17,7 @@ single-flight를 결합하면 순수 hybrid 검색도 평균 15.8% 더 짧아졌
 - 검색 UI/기능: `2025-moleg-search`
 - 검색 백엔드 소스: `/data/project/vllm/fine-tune/2025-moleg-rag`
 - 후보 복사본: `/data/project/vllm/fine-tune/experiments/2025-moleg-rag-typed-dispatch`
-- GPU 서버: `192.168.100.53`, NVIDIA H200 NVL 2장
+- GPU 서버: NVIDIA H200 NVL 2장
 - 추론: vLLM 0.19.0, 검색 tool 역할은 `microsoft/phi-4`(포트 8002)
 - 임베딩: `BAAI/bge-m3`(포트 8005)
 - 리랭커: `dragonkue/bge-reranker-v2-m3-ko`(포트 8001)

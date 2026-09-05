@@ -1,4 +1,4 @@
-# CNU Multi-Agent RAG Optimization
+# Multi-Agent RAG Optimization
 
 Domain-independent latency optimization for multi-agent retrieval-augmented generation systems.
 
