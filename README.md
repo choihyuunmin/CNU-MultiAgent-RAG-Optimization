@@ -1,5 +1,38 @@
 # Multi-Agent RAG Optimization
 
+## 2026-09-06 (2차): 무손실 추측 디코딩으로 오케스트레이터 CoT 시간 2.7배 단축
+
+같은 모델·프롬프트·탐욕 디코딩을 유지하면서 오케스트레이터(gemma-4-31B-it)의 구조화
+호출을 가속했습니다. 실제 로그로 제안 정책을 오프라인에서 고르는 오라클 시뮬레이션과,
+단계별 응답 이력을 프롬프트 조회와 결합하는 vLLM 플러그인 제안기가 핵심입니다.
+400문항·동시성 4에서 분류/준비 호출이 운영 인스턴스 대비 2.68배(62.7% 단축) 빨라졌고,
+출력 변동은 같은 서버 반복 호출의 자연 변동과 같은 크기이며 출처 라벨 기준 검색 지표는
+모든 조건에서 동일했습니다. 단일 사용자 종단은 1.38배(27.5%), 동시성 4 종단은 워커 병목
+이동으로 2.9%에 그쳤습니다. KV 용량 축소로 인한 대기열 선두 차단, 복제본 부하분산과
+지연 인지 라우팅, ingress·오버레이 스트리밍 경로 계측도 포함합니다.
+[프로토콜](docs/MOLEG_SPECDEC_PROTOCOL_20260906.md) ·
+[결과 보고서](docs/MOLEG_SPECDEC_RESULTS_20260906.md) ·
+플러그인 `integrations/2025-moleg-search/vllm_plugin/` ·
+시뮬레이터 `scripts/simulate_moleg_specdec_policies.py`.
+
+## 현재 연구 범위 — 검색기는 유지하고 바깥에서 가속하기
+
+이 저장소의 목적은 운영 중인 `moleg-search`를 고치는 것이 아니라, 검색기 바깥의
+중계 서버·네트워크·GPU 처리 방식으로 지연을 줄이는 논문 주제를 실험하는 것입니다.
+운영 Kubernetes 배포와 모델 서버는 그대로 두고 별도 프로세스에서 비교합니다.
+앱 내부 호출 제거·검색어 변경 등의 과거 실험은 참고 자료이며 현재 운영 적용안이 아닙니다.
+
+2026-09-06 실험은 같은 모델 요청의 전달 경로, 동시 처리 제한, 짧은 요청 우선 처리,
+실제 요청 본문의 압축 전송을 구분합니다. 방법은
+[실험 프로토콜](docs/MOLEG_INFRA_PROTOCOL_20260906.md)에 기록합니다.
+400문항 × 4조건 × 2회(3,200개 모델 요청)를 측정한 결과, 가벼운 외부 중계는
+기존 통로보다 평균 7.34% 단축했고, 8개 동시 처리 제한은 제한 없는 중계보다
+16.42% 느렸습니다. [방법·결과·논문 기여 정리](docs/MOLEG_INFRA_RESULTS_20260906.md)를
+참고하세요. 이는 모델 요청 구간의 결과이며 최종 답변 정확도 개선을 입증하지 않습니다.
+동시 요청 4개·48문항 보조 실험에서는 단축률이 2.06%였고, 요청 본문 압축은
+59.80%의 바이트 절감에도 전송 처리 시간이 0.470밀리초 늘었습니다.
+모델 호출 구간의 단축률과 전체 검색 시간의 단축률을 혼동하지 않습니다.
+
 Domain-independent latency optimization for multi-agent retrieval-augmented generation systems.
 
 Repository contains only optimization primitives:
@@ -158,11 +191,11 @@ measuring both latency and *real retrieval fidelity*, re-run over **400 queries*
 | + compact schema | 0.54 s | 6.89x | 0.331 | 0.229 | 0.603 |
 | + guided decoding | 0.54 s | 6.94x | 0.345 | 0.223 | 0.588 |
 
-App-level acceleration is a clear latency-accuracy Pareto: stacking techniques
+The measured app-level variants show a latency-fidelity tradeoff: stacking techniques
 reaches ~7x but at 400 queries retrieval Recall collapses to 0.33-0.45, because search amplifies
-small extraction differences. Accuracy-preserving speedup therefore needs
-serving-level decode acceleration (fp8 / tensor-parallel / speculative decoding)
-that keeps the orchestrator's output identical; the orchestrator decodes at only
+small extraction differences. This motivates evaluating serving-level decode
+acceleration (quantization / tensor parallelism / speculative decoding), with
+separate output and quality checks rather than assumed identity. The orchestrator decodes at only
 ~53 tok/s vs 239 (gpt-oss-20b) and 191 (gemma4-e4b). Accuracy is retrieval
 fidelity vs the current baseline (pseudo-gold), not expert-judged.
 
@@ -176,13 +209,14 @@ same-family benchmark model (gemma-4-E4B) only in a spare GPU's free memory and
 tearing it down; production was not restarted. fp8 quantization vs bf16 gave
 **+21-23% decode throughput** (186->225 tok/s extract, 191->236 gen; latency
 -17%), but the outputs were **not** preserved (0/8 identical, 0.569 similarity),
-so fp8 needs the same regression validation as app-level tricks. The truly
-output-lossless techniques (speculative decoding, tensor parallelism) could not
-be measured here: the venv's n-gram proposer is broken (numba vs NumPy 2.4, and
+so fp8 needs the same regression validation as app-level tricks. Speculative
+decoding and tensor parallelism could not be measured in that run: the venv's
+n-gram proposer is broken (numba vs NumPy 2.4, and
 the shared production venv was left untouched) and GPU0 is full (no second GPU
-for tensor-parallel). Net: serving-level acceleration is real, but "serving-level
-= accuracy-preserving" is not automatic; only the lossless methods guarantee it,
-and they need a maintenance window / spare GPU to measure on gemma-31B.
+for tensor-parallel). Serving-level acceleration does not automatically preserve
+observed outputs. Speculative distribution guarantees have assumptions, while
+floating-point and batching changes can affect bitwise identity. These methods
+need a maintenance window / spare GPU and explicit gemma-31B validation.
 
 Details: [docs/MOLEG_ACCELERATION_ABLATION_20260904.md](docs/MOLEG_ACCELERATION_ABLATION_20260904.md).
 
@@ -226,12 +260,64 @@ baseline (time + retrieval accuracy).
 | cascade | 1.07 s | 3.49x | 0.305 | rejected |
 
 Plus a serving-level row: n-gram speculative decoding cuts the gemma-4-31B
-analysis stage 47% (2.89->1.53 s, 1.89x) losslessly (392/400 identical) and stacks
-on any method. The accuracy-preserving path is parallel + typed dispatch + an
-n-gram-served orchestrator; aggressive model substitution is fast but collapses
-retrieval (Recall 0.28-0.38).
+analysis stage 47% (2.89->1.53 s, 1.89x), with 392/400 identical observed outputs.
+This is an analysis-stage result, not proof of bitwise losslessness or measured
+end-to-end composability. A repeated same-serving control is needed to separate
+ordinary output variation from speculative-decoding differences. The table's
+Recall measures agreement with baseline documents, not expert-verified accuracy.
+Parallel + typed dispatch + an n-gram-served orchestrator remains a combination
+to validate end to end; aggressive model substitution collapses baseline
+retrieval agreement (Recall 0.28-0.38).
 
 Data: [docs/MOLEG_HARNESS_METHODS_20260904.md](docs/MOLEG_HARNESS_METHODS_20260904.md).
+
+## Paper-oriented follow-up: retrieval and full streaming API (2026-09-05)
+
+A new 400-distinct-question benchmark includes source-grounded law questions,
+scenarios, comparisons, translation, and conversation. The completed streaming
+experiment uses 400 questions × 3 conditions × 2 repetitions (2,400 requests),
+with concurrency 4 and rotated condition blocks on the existing two H200 GPUs.
+No production model restart or deployment was performed.
+
+| Condition | Mean API latency | p95 | Mean reduction, question-bootstrap 95% CI |
+|---|---:|---:|---:|
+| Frozen-source baseline | 13.772 s | 30.852 s | Reference |
+| Same-model execution/transport bundle | 12.213 s | 27.603 s | 11.32% [5.20%, 16.70%] |
+| Bundle + authenticated reranking + low-reasoning streamed answers | 10.619 s | 23.681 s | 22.89% [19.54%, 26.92%] |
+
+In the separate repeated retrieval experiment, authenticated reranking improves
+source-clause Hit@1 from 107/131 (81.68%) to 118/131 (90.08%), with Holm-adjusted
+McNemar p=0.03545. These are source-derived **silver known-item** labels, not
+expert relevance gold. The gain is primarily ordering clauses within a law;
+it does not establish improved final-answer correctness. Full-API source-clause
+inclusion is 91.60% for both baseline and the balanced bundle. Neither bundle
+has proven quality equivalence or bitwise losslessness. Two approximately
+240-second application timeouts remain included in the latency statistics.
+
+The separate JSON API experiment completes 800 requests (400 × 2 conditions):
+13.000→11.733 s, a 9.74% reduction [4.12%, 15.57%]. A fixed-input generation
+control (60 questions × 3 conditions × 2 repetitions) measures a 41.84% reduction
+[23.95%, 53.17%] from lower reasoning on the directly connected worker. This is
+upstream generation latency, not another full-API speedup. Blind phi-4 assessment
+of 131 source-grounded first-repeat answers per condition does **not** establish
+improved answer quality or equivalence (support: 1.908→1.901 on a 0–2 scale).
+Human expert labels remain unset; a 400-question blinded review packet is ready.
+
+A four-arm **search-only** experiment also finds an important counterexample to
+agreement-based evaluation: keeping the original question without generative
+extraction takes 0.426 s versus 3.425 s (8.03×), while source-clause Hit@1 is
+120/131 versus 118/131—even though document Recall against the old output is
+only 0.345 across all 400 queries (0.512 on the same 131 source-QA queries).
+On those same 131, the small extractor has higher agreement (0.693) but lower
+source Hit@1 (110/131), reversing the candidate ordering between the two metrics.
+Quality equivalence is not established, and the synthetic questions
+often name the jurisdiction explicitly. This is not an 8× full-service result.
+Combining both candidate pools covers 131/131 designated source clauses, not all
+relevant legal evidence. See the report for paired tests and limitations.
+
+Methods, limitations, additional control results, and reproducibility artifacts:
+[Korean study report](docs/MOLEG_PAPER_RESULTS_20260905.md) and
+[protocol](docs/MOLEG_PAPER_PROTOCOL_20260905.md).
 
 ## Integration boundary
 

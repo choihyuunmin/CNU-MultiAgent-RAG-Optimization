@@ -1,0 +1,200 @@
+{
+ "rows": 1600,
+ "variants": [
+  "prod",
+  "spec_tuned"
+ ],
+ "stages": [
+  "classify",
+  "prepare"
+ ],
+ "reference": "prod",
+ "http_ok": {
+  "prod": 800,
+  "spec_tuned": 800
+ },
+ "valid_json": {
+  "prod": 800,
+  "spec_tuned": 800
+ },
+ "finish_reasons": {
+  "prod": {
+   "stop": 800
+  },
+  "spec_tuned": {
+   "stop": 800
+  }
+ },
+ "latency": {
+  "prod/classify": {
+   "n": 400,
+   "mean_s": 0.6405019731703214,
+   "max_s": 1.0709922052919865,
+   "over_60_s_count": 0,
+   "over_120_s_count": 0,
+   "p50_s": 0.6162684578448534,
+   "p95_s": 0.9225521783810108,
+   "p99_s": 1.0280222287122158
+  },
+  "prod/prepare": {
+   "n": 400,
+   "mean_s": 2.9775935979373753,
+   "max_s": 5.765730590559542,
+   "over_60_s_count": 0,
+   "over_120_s_count": 0,
+   "p50_s": 2.890489888843149,
+   "p95_s": 4.152696223789826,
+   "p99_s": 4.975990026677026
+  },
+  "prod/all": {
+   "n": 800,
+   "mean_s": 1.8090477855538483,
+   "max_s": 5.765730590559542,
+   "over_60_s_count": 0,
+   "over_120_s_count": 0,
+   "p50_s": 1.4227702696807683,
+   "p95_s": 3.853779644053429,
+   "p99_s": 4.488537952974438
+  },
+  "spec_tuned/classify": {
+   "n": 400,
+   "mean_s": 0.4424266974814236,
+   "max_s": 1.0733681125566363,
+   "over_60_s_count": 0,
+   "over_120_s_count": 0,
+   "p50_s": 0.38932774867862463,
+   "p95_s": 0.9432790589053183,
+   "p99_s": 1.0576497757341712
+  },
+  "spec_tuned/prepare": {
+   "n": 400,
+   "mean_s": 1.4254943449166604,
+   "max_s": 4.2418721951544285,
+   "over_60_s_count": 0,
+   "over_120_s_count": 0,
+   "p50_s": 1.3119444330222905,
+   "p95_s": 2.318206704268231,
+   "p99_s": 2.9210867263469837
+  },
+  "spec_tuned/all": {
+   "n": 800,
+   "mean_s": 0.9339605211990419,
+   "max_s": 4.2418721951544285,
+   "over_60_s_count": 0,
+   "over_120_s_count": 0,
+   "p50_s": 0.8316841362975538,
+   "p95_s": 2.0990477098152036,
+   "p99_s": 2.6119701396673913
+  }
+ },
+ "paired": {
+  "prod->spec_tuned/classify": {
+   "n": 400,
+   "baseline_mean": 0.6405019731703214,
+   "candidate_mean": 0.4424266974814236,
+   "speedup": 1.4477019059122547,
+   "reduction_pct": 30.92500632097599,
+   "reduction_95ci_pct": [
+    29.33928107939131,
+    32.49786371310035
+   ],
+   "delta": -0.19807527568889782,
+   "delta_95ci": [
+    -0.20643744559603508,
+    -0.1894690070411889
+   ],
+   "bootstrap_resamples": 4000,
+   "unit": "question (repetitions averaged)"
+  },
+  "prod->spec_tuned/prepare": {
+   "n": 400,
+   "baseline_mean": 2.9775935979373753,
+   "candidate_mean": 1.4254943449166604,
+   "speedup": 2.088814738939884,
+   "reduction_pct": 52.12596017454759,
+   "reduction_95ci_pct": [
+    51.18155166285957,
+    53.02182113359145
+   ],
+   "delta": -1.552099253020715,
+   "delta_95ci": [
+    -1.5835787755958735,
+    -1.5217024634970004
+   ],
+   "bootstrap_resamples": 4000,
+   "unit": "question (repetitions averaged)"
+  },
+  "prod->spec_tuned/all": {
+   "n": 800,
+   "baseline_mean": 1.8090477855538483,
+   "candidate_mean": 0.9339605211990419,
+   "speedup": 1.9369638699838698,
+   "reduction_pct": 48.37281089768971,
+   "reduction_95ci_pct": [
+    47.43469554137821,
+    49.26077426623441
+   ],
+   "delta": -0.8750872643548063,
+   "delta_95ci": [
+    -0.9248405805929797,
+    -0.8258109949495119
+   ],
+   "bootstrap_resamples": 4000,
+   "unit": "question (repetitions averaged)"
+  }
+ },
+ "agreement": {
+  "prod vs spec_tuned repeat0/classify": {
+   "n": 400,
+   "identical": 400
+  },
+  "prod vs spec_tuned repeat0/prepare": {
+   "n": 400,
+   "identical": 380
+  }
+ },
+ "tokens": {
+  "prod/classify": {
+   "mean_completion_tokens": 26.0025
+  },
+  "prod/prepare": {
+   "mean_completion_tokens": 138.6975
+  },
+  "prod/all": {
+   "mean_completion_tokens": 82.35
+  },
+  "spec_tuned/classify": {
+   "mean_completion_tokens": 26.0025
+  },
+  "spec_tuned/prepare": {
+   "mean_completion_tokens": 138.665
+  },
+  "spec_tuned/all": {
+   "mean_completion_tokens": 82.33375
+  }
+ },
+ "spec": {
+  "prod": {
+   "drafts": 0,
+   "draft_tokens": 0,
+   "accepted_tokens": 0,
+   "acceptance_rate": null,
+   "mean_accepted_per_draft": null,
+   "generation_tokens": 65880.0,
+   "preemptions": 0.0,
+   "prefix_hit_rate": 0.9842386029818859,
+   "accepted_per_position": {}
+  },
+  "spec_tuned": {
+   "drafts": 11231.0,
+   "draft_tokens": 120837.0,
+   "accepted_tokens": 42524.0,
+   "acceptance_rate": 0.3519120799092993,
+   "mean_accepted_per_draft": 3.7863057608405306,
+   "generation_tokens": 65867.0,
+   "preemptions": 0.0,
+   "prefix_hit_rate": 0.9840822786871365,
+   "accepted_per_position": {}
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "frozen classify/preparation requests replayed independently; not full application",
+  "unique_questions": 400,
+  "requests_per_variant_repeat": 800,
+  "variants": {
+    "prod": "http://127.0.0.1:8000",
+    "plain": "http://127.0.0.1:8100"
+  },
+  "repeats": 2,
+  "concurrency": 4,
+  "block": 16,
+  "input_file_sha256": "73a153cfc2597092311cc831c8c40c12f87cafba18f42771c3baa515c37bf9d4",
+  "script_sha256": "851a59adbe2158460bbbd9fe6d92ad91d24ec12820fabc9daa8abb73ea7ef977",
+  "tag": "phase1_plain_vs_prod",
+  "started_utc": "2026-09-06T01:30:50.942112+00:00"
+}

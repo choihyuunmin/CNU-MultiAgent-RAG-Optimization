@@ -1,0 +1,17 @@
+{
+  "scope": "frozen classify/preparation requests replayed independently; not full application",
+  "unique_questions": 200,
+  "requests_per_variant_repeat": 400,
+  "variants": {
+    "gptoss_prod": "http://127.0.0.1:8006",
+    "gptoss_spec_ds": "http://127.0.0.1:8101"
+  },
+  "repeats": 1,
+  "concurrency": 4,
+  "block": 16,
+  "input_file_sha256": "a9327c7f187b94df7825383e80563747b475d9235facf09a924991a15cd5fbf9",
+  "fold": "odd",
+  "script_sha256": "357921b26459a7c9d43ddb9bec891f97ae68ee90401710ce576089f12657317f",
+  "tag": "transfer_t2_gptoss_ds",
+  "started_utc": "2026-09-06T05:57:55.687838+00:00"
+}

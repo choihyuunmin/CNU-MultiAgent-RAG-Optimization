@@ -1,0 +1,2 @@
+[vllm.general_plugins]
+moleg_spec = moleg_spec_plugin:register

@@ -1,0 +1,33 @@
+{
+ "argv": [
+  "/data/project/vllm/.venv/bin/python3",
+  "/data/project/vllm/.venv/bin/vllm",
+  "serve",
+  "openai/gpt-oss-20b",
+  "--port",
+  "8101",
+  "--gpu-memory-utilization",
+  "0.33",
+  "--max-model-len",
+  "65536",
+  "--max-num-seqs",
+  "4",
+  "--dtype",
+  "auto",
+  "--trust-remote-code",
+  "--enable-auto-tool-choice",
+  "--tool-call-parser",
+  "openai",
+  "--reasoning-parser",
+  "openai_gptoss",
+  "--speculative-config",
+  "{\"method\": \"ngram\", \"num_speculative_tokens\": 16, \"prompt_lookup_max\": 8, \"prompt_lookup_min\": 2}"
+ ],
+ "cuda": "1",
+ "pythonpath": "/data/project/vllm/fine-tune/experiments/specdec-20260906/vllm_plugin:/data/project/vllm/fine-tune/experiments/specdec-20260906/../paper-20260905.OemN3l/numba-compat",
+ "env": [
+  "MOLEG_SPEC_DATASTORE=/data/project/vllm/fine-tune/experiments/specdec-20260906/ds/ds_gptoss_even.json",
+  "MOLEG_SPEC_STATS=/data/project/vllm/fine-tune/experiments/specdec-20260906/results/spec_stats_gptoss_ds.json",
+  "MOLEG_SPEC_MODE=longest_any"
+ ]
+}
