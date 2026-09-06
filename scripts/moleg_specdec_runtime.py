@@ -56,8 +56,77 @@ def install():
             module.acompletion_via_proxy = chat
 
 
+def install_worker_route():
+    """Route the worker roles (streamed answer + retrieval tool call) to a
+    direct OpenAI-compatible endpoint, e.g. a replica load balancer."""
+    worker_base = os.environ.get('MOLEG_WORKER_BASE')
+    if not worker_base:
+        return
+    from dotenv import dotenv_values
+    from openai import AsyncOpenAI
+    import infra.llm.client as llm
+    serving = dotenv_values(os.environ['MOLEG_SERVING_ENV'])
+    model_name = os.environ.get('MOLEG_WORKER_MODEL', 'openai/gpt-oss-20b')
+    roles = set(os.environ.get('MOLEG_WORKER_ROLES', 'worker agent,retrieval tool').split(','))
+    client = AsyncOpenAI(base_url=worker_base, api_key=serving['VLLM_API_KEY'], timeout=300, max_retries=0)
+    installed_chat, installed_stream = llm.acompletion_via_proxy, llm.acompletion_stream_via_proxy
+
+    def payload_of(kwargs, streaming):
+        payload = {'model': model_name, 'messages': kwargs.get('messages', []), 'temperature': kwargs.get('temperature', 0)}
+        for k in ('tools', 'tool_choice', 'extra_body', 'response_format'):
+            if kwargs.get(k) is not None:
+                payload[k] = kwargs[k]
+        if kwargs.get('max_tokens') is not None:
+            payload['max_tokens'] = int(kwargs['max_tokens'])
+        if streaming:
+            payload['stream'] = True
+        return payload
+
+    async def chat(**kwargs):
+        if str(kwargs.get('model') or '') not in roles:
+            return await installed_chat(**kwargs)
+        start = time.perf_counter()
+        response = await client.chat.completions.create(**payload_of(kwargs, False))
+        base.trace_add('llm', model=kwargs.get('model'), elapsed_s=time.perf_counter() - start, stream=False,
+                       usage=response.usage.model_dump() if response.usage else {}, route='worker:' + worker_base,
+                       finish_reason=response.choices[0].finish_reason)
+        return response
+
+    async def stream(**kwargs):
+        if str(kwargs.get('model') or '') not in roles:
+            async for chunk in installed_stream(**kwargs):
+                yield chunk
+            return
+        start = time.perf_counter()
+        source = await client.chat.completions.create(**payload_of(kwargs, True))
+        chunks = chars = reasoning_chars = 0
+        try:
+            async for chunk in source:
+                chunks += 1
+                if chunk.choices:
+                    chars += len(chunk.choices[0].delta.content or '')
+                    delta = chunk.choices[0].delta.model_dump()
+                    reasoning_chars += len(delta.get('reasoning') or delta.get('reasoning_content') or '')
+                yield chunk
+        finally:
+            base.trace_add('llm', model=kwargs.get('model'), elapsed_s=time.perf_counter() - start, stream=True,
+                           chunks=chunks, characters=chars, reasoning_characters=reasoning_chars, route='worker:' + worker_base)
+            if hasattr(source, 'close'):
+                await source.close()
+
+    llm.acompletion_via_proxy, llm.acompletion_stream_via_proxy = chat, stream
+    for module in list(sys.modules.values()):
+        if module is None or not getattr(module, '__name__', '').startswith(('agent.', 'infra.', 'core.')):
+            continue
+        if getattr(module, 'acompletion_via_proxy', None) is installed_chat:
+            module.acompletion_via_proxy = chat
+        if getattr(module, 'acompletion_stream_via_proxy', None) is installed_stream:
+            module.acompletion_stream_via_proxy = stream
+
+
 if __name__ == '__main__':
     install()
+    install_worker_route()
     import uvicorn
     from main_server import app
     uvicorn.run(app, host='127.0.0.1', port=int(os.environ['MOLEG_STUDY_PORT']), log_level='error')

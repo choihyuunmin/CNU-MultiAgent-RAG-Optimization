@@ -10,6 +10,7 @@ from pathlib import Path
 def create_app(upstreams, trace_path, allowed_ips, policy='least_outstanding', alpha=0.3):
     import httpx
     from fastapi import FastAPI, Request, Response
+    from fastapi.responses import StreamingResponse
     state = {'outstanding': {u: 0 for u in upstreams}, 'served': {u: 0 for u in upstreams},
              'ewma_s': {u: 1.0 for u in upstreams}, 'policy': policy}
     clients = {}
@@ -37,6 +38,10 @@ def create_app(upstreams, trace_path, allowed_ips, policy='least_outstanding', a
             return Response(status_code=403)
         body = await request.body()
         rid = request.headers.get('x-experiment-id', '')
+        try:
+            wants_stream = bool(json.loads(body).get('stream'))
+        except ValueError:
+            wants_stream = False
         # least outstanding; ties broken by fewest served (round-robin-like)
         if policy == 'ewma_cost':
             # expected completion cost: queued work ahead times the replica's recent service time
@@ -45,6 +50,20 @@ def create_app(upstreams, trace_path, allowed_ips, policy='least_outstanding', a
             upstream = min(upstreams, key=lambda u: (state['outstanding'][u], state['served'][u]))
         state['outstanding'][upstream] += 1; state['served'][upstream] += 1
         start = time.perf_counter()
+        if wants_stream:
+            async def relay():
+                try:
+                    async with clients[upstream].stream('POST', '/v1/chat/completions', content=body,
+                            headers={'Authorization': request.headers.get('authorization', ''),
+                                     'Content-Type': 'application/json'}) as r:
+                        async for chunk in r.aiter_raw():
+                            yield chunk
+                finally:
+                    elapsed = time.perf_counter() - start
+                    state['outstanding'][upstream] -= 1
+                    state['ewma_s'][upstream] = (1 - alpha) * state['ewma_s'][upstream] + alpha * elapsed
+                    trace.write(json.dumps({'rid': rid, 'upstream': upstream, 'stream': True, 'upstream_s': elapsed}) + '\n')
+            return StreamingResponse(relay(), media_type='text/event-stream', headers={'X-Experiment-Upstream': upstream})
         try:
             r = await clients[upstream].post('/v1/chat/completions', content=body,
                                              headers={'Authorization': request.headers.get('authorization', ''),
