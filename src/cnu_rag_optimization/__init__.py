@@ -2,6 +2,7 @@
 
 from .budget import cap_comparison_documents, compact_documents, llm_options
 from .coflow import AdmissionTicket, CoflowAdmission, CoflowPolicy
+from .completion import CompletionPolicy, CompletionRouter, CompletionTicket, ReceiverSpec, ReplicaSpec
 from .confidence import (
     ConfidenceRoutingDecision,
     ConfidenceRoutingFeatures,
@@ -39,6 +40,11 @@ __all__ = [
     "AdmissionTicket",
     "CoflowAdmission",
     "CoflowPolicy",
+    "CompletionPolicy",
+    "CompletionRouter",
+    "CompletionTicket",
+    "ReceiverSpec",
+    "ReplicaSpec",
     "LLMCallMetrics",
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",
