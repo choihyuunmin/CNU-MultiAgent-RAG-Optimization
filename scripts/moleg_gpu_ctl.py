@@ -113,7 +113,10 @@ def main():
     s.add_argument('--template-pid', type=int, default=3566144)
     sub.add_parser('status')
     args = ap.parse_args()
-    key = read_environ(3566144)['VLLM_API_KEY']
+    try:
+        key = read_environ(3566144)['VLLM_API_KEY']
+    except FileNotFoundError:  # environment captures are deleted after restore; fall back to the serving env file
+        key = next(l.split('=', 1)[1] for l in Path('/data/project/vllm/.env').read_text().splitlines() if l.startswith('VLLM_API_KEY='))
     if args.cmd == 'status':
         print(gpu_mem()); print(gpu_apps())
         for port in [8000, 8001, 8002, 8005, 8006, 8010, 8020, 8030, 8100, 4000]:
