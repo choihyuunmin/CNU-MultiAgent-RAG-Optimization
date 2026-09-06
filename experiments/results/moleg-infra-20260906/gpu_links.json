@@ -1,0 +1,215 @@
+{
+  "utc": "2026-09-06T00:58:56.430532+00:00",
+  "scope": "isolated tensor copy; not LLM tensor parallelism",
+  "torch_version": "2.10.0+cu128",
+  "initial_free_bytes": {
+    "0": 1514995712,
+    "1": 22715105280
+  },
+  "tensor_bytes_per_gpu": 134217728,
+  "peer_access_0_to_1": true,
+  "peer_access_1_to_0": true,
+  "topology": "\t\u001b[4mGPU0\tGPU1\tCPU Affinity\tNUMA Affinity\tGPU NUMA ID\u001b[0m\nGPU0\t X \tSYS\t0-15\t0\t\tN/A\nGPU1\tSYS\t X \t16-31\t1\t\tN/A\n\nLegend:\n\n  X    = Self\n  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)\n  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node\n  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)\n  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)\n  PIX  = Connection traversing at most a single PCIe bridge\n  NV#  = Connection traversing a bonded set of # NVLinks\n",
+  "results": [
+    {
+      "source": 0,
+      "target": 0,
+      "bytes": 1024,
+      "n": 30,
+      "mean_s": 1.2125540524721146e-05,
+      "p95_s": 1.2872740626335144e-05,
+      "effective_GBps": 0.08444984352757744,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "bytes": 1024,
+      "n": 30,
+      "mean_s": 2.4513124177853266e-05,
+      "p95_s": 2.6417896151542664e-05,
+      "effective_GBps": 0.04177354108641719,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 0,
+      "bytes": 1024,
+      "n": 30,
+      "mean_s": 2.573365345597267e-05,
+      "p95_s": 2.7818605303764343e-05,
+      "effective_GBps": 0.03979225109842823,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 1,
+      "bytes": 1024,
+      "n": 30,
+      "mean_s": 9.824304531017939e-06,
+      "p95_s": 1.0414980351924896e-05,
+      "effective_GBps": 0.104231296654838,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 0,
+      "bytes": 65536,
+      "n": 30,
+      "mean_s": 1.2128738065560659e-05,
+      "p95_s": 1.28159299492836e-05,
+      "effective_GBps": 5.403365102432901,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "bytes": 65536,
+      "n": 30,
+      "mean_s": 2.5047330806652703e-05,
+      "p95_s": 2.62334942817688e-05,
+      "effective_GBps": 2.6164863835548213,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 0,
+      "bytes": 65536,
+      "n": 30,
+      "mean_s": 2.5667560597260792e-05,
+      "p95_s": 2.6563182473182678e-05,
+      "effective_GBps": 2.5532617231648382,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 1,
+      "bytes": 65536,
+      "n": 30,
+      "mean_s": 1.013182724515597e-05,
+      "p95_s": 1.0874122381210327e-05,
+      "effective_GBps": 6.4683297902984656,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 0,
+      "bytes": 1048576,
+      "n": 30,
+      "mean_s": 1.3237850119670232e-05,
+      "p95_s": 1.522991806268692e-05,
+      "effective_GBps": 79.21044508895838,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "bytes": 1048576,
+      "n": 30,
+      "mean_s": 5.7155049095551176e-05,
+      "p95_s": 9.129662066698074e-05,
+      "effective_GBps": 18.34616567727905,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 0,
+      "bytes": 1048576,
+      "n": 30,
+      "mean_s": 4.444966713587443e-05,
+      "p95_s": 5.092192441225052e-05,
+      "effective_GBps": 23.59018790387556,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 1,
+      "bytes": 1048576,
+      "n": 30,
+      "mean_s": 9.257191171248754e-06,
+      "p95_s": 9.853392839431763e-06,
+      "effective_GBps": 113.27150758825171,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 0,
+      "bytes": 33554432,
+      "n": 30,
+      "mean_s": 2.7786133189996085e-05,
+      "p95_s": 2.9328279197216034e-05,
+      "effective_GBps": 1207.5963132603383,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "bytes": 33554432,
+      "n": 30,
+      "mean_s": 0.0008658510322372119,
+      "p95_s": 0.00089254230260849,
+      "effective_GBps": 38.75312351744971,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 0,
+      "bytes": 33554432,
+      "n": 30,
+      "mean_s": 0.0008653995580971241,
+      "p95_s": 0.0008809231221675873,
+      "effective_GBps": 38.77334080662215,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 1,
+      "bytes": 33554432,
+      "n": 30,
+      "mean_s": 2.8688708941141764e-05,
+      "p95_s": 3.06861475110054e-05,
+      "effective_GBps": 1169.6041138986366,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 0,
+      "bytes": 67108864,
+      "n": 30,
+      "mean_s": 4.784424478809039e-05,
+      "p95_s": 4.933588206768036e-05,
+      "effective_GBps": 1402.6528017577791,
+      "exact": true
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "bytes": 67108864,
+      "n": 30,
+      "mean_s": 0.001723451695094506,
+      "p95_s": 0.0017656711861491203,
+      "effective_GBps": 38.9386393543917,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 0,
+      "bytes": 67108864,
+      "n": 30,
+      "mean_s": 0.0017331891382733982,
+      "p95_s": 0.0017692316323518753,
+      "effective_GBps": 38.71987339296034,
+      "exact": true
+    },
+    {
+      "source": 1,
+      "target": 1,
+      "bytes": 67108864,
+      "n": 30,
+      "mean_s": 4.4966302812099454e-05,
+      "p95_s": 4.6601518988609314e-05,
+      "effective_GBps": 1492.425656617303,
+      "exact": true
+    }
+  ]
+}
