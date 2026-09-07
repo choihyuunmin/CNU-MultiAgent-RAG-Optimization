@@ -10,7 +10,7 @@ from __future__ import annotations
 import asyncio
 import math
 import time
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict, defaultdict, deque
 from collections.abc import AsyncIterator, Awaitable, Callable, Iterable, Mapping
 from contextlib import AbstractAsyncContextManager, aclosing, asynccontextmanager
 from dataclasses import dataclass, field
@@ -64,7 +64,7 @@ class CompletionPolicy:
     def __post_init__(self) -> None:
         if self.routing not in {"completion", "recent", "fastest"}:
             raise ValueError("routing must be completion, recent, or fastest")
-        if self.ordering not in {"coflow", "fifo"}:
+        if self.ordering not in {"coflow", "fifo", "fair"}:
             raise ValueError("ordering must be coflow or fifo")
         if not 0 < self.ewma_alpha <= 1 or not 0 < self.residual_floor <= 1:
             raise ValueError("ewma_alpha and residual_floor must be in (0, 1]")
@@ -130,6 +130,8 @@ class CompletionRouter:
         self.policy, self.clock, self.on_event = policy, clock, on_event
         self._enabled = set(self.replicas)
         self._sequence = count()
+        self._dispatch_sequence = count()
+        self._last_dispatch: dict[str, int] = {}
         self._pending: list[CompletionTicket] = []
         self._active: dict[int, CompletionTicket] = {}
         self._history: OrderedDict[tuple[str, str, int], float] = OrderedDict()
@@ -162,6 +164,20 @@ class CompletionRouter:
                    elapsed - ticket.estimated_service_ms)
 
     def _ordered(self, now: float) -> list[CompletionTicket]:
+        if self.policy.ordering == "fair":
+            # One turn per backlogged question, FIFO within each question.
+            # Fair in admission opportunities, NOT GPU seconds or output tokens.
+            flows: dict[str, deque[CompletionTicket]] = defaultdict(deque)
+            for ticket in sorted(self._pending, key=lambda t: t.sequence):
+                flows[ticket.root_id].append(ticket)
+            roots = sorted(flows, key=lambda root: (
+                self._last_dispatch.get(root, -1), flows[root][0].sequence))
+            ordered = []
+            while roots:
+                for root in roots:
+                    ordered.append(flows[root].popleft())
+                roots = [root for root in roots if flows[root]]
+            return ordered
         costs: dict[str, float] = defaultdict(float)
         for ticket in self._active.values():
             costs[ticket.root_id] += self._remaining(ticket, now)
@@ -185,6 +201,8 @@ class CompletionRouter:
                 self._pending.remove(ticket)
                 ticket.finished_at, ticket.released = now, True
                 self._emit("cancelled", ticket, wait_ms=ticket.wait_ms)
+        live_roots = {t.root_id for t in self._pending} | {t.root_id for t in self._active.values()}
+        self._last_dispatch = {root: turn for root, turn in self._last_dispatch.items() if root in live_roots}
         lanes: dict[str, list[float]] = {}
         for resource, spec in self.receivers.items():
             active = [self._remaining(t, now) for t in self._active.values() if t.resource_id == resource]
@@ -216,6 +234,8 @@ class CompletionRouter:
             ticket.replica_id, ticket.resource_id = replica_id, resource
             ticket.started_at, ticket.estimated_service_ms = now, service
             self._active[ticket.sequence] = ticket
+            if self.policy.ordering == "fair":
+                self._last_dispatch[ticket.root_id] = next(self._dispatch_sequence)
             ticket.future.set_result(None)
             self._emit("dispatch", ticket, wait_ms=ticket.wait_ms, estimated_service_ms=service)
         if self._recheck is not None:

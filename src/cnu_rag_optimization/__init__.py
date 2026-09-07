@@ -23,6 +23,7 @@ from .link_state import (
     LinkSpec,
 )
 from .parallel import parallel_enrich
+from .network_harness import NetworkHarness
 from .regression import RegressionMetrics, compare_regression_records
 from .routing import QueryFeatures, RoutingDecision, route_query, should_use_selector
 from .selector import SelectionResult, select_ranked_documents
@@ -45,6 +46,7 @@ __all__ = [
     "CompletionTicket",
     "ReceiverSpec",
     "ReplicaSpec",
+    "NetworkHarness",
     "LLMCallMetrics",
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",
