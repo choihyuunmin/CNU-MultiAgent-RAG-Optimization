@@ -1,0 +1,28 @@
+{
+  "scope": "instrumented execute_generate traces; not SSE completion or expert answer correctness",
+  "groups": {
+    "baseline": [
+      {
+        "group_ordinal": 0,
+        "executions_traced": 34,
+        "execute_returned_count": 34,
+        "unique_indices": 34,
+        "complete_64_index_set": false,
+        "errors_recorded": 0,
+        "nonstream_finish_reasons": {
+          "stop": 112,
+          "tool_calls": 35
+        },
+        "rerank_http_status_counts": {
+          "200": 32
+        },
+        "guardrail_http_status_counts": {
+          "200": 34
+        }
+      }
+    ]
+  },
+  "private_trace_sha256": {
+    "baseline": "5294119b35f7a7fbe691d62c768d25a7e5ab66c1a59f60ae7062741b6b07fa64"
+  }
+}

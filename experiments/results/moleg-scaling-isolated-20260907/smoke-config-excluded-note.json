@@ -1,0 +1,8 @@
+{
+  "directory": "smoke-config-excluded",
+  "reason": "An obsolete host application configuration produced reranker 401 fallback despite successful SSE completion. Replaced with current pod configuration before all main comparisons.",
+  "requests": 4,
+  "included_in_performance_effect_estimates": false,
+  "replacement_smoke_directory": "smoke-live-config",
+  "credentials_in_public_artifacts": false
+}

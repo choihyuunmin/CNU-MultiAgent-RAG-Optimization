@@ -1,5 +1,20 @@
 # 2025-moleg-search integration notes
 
+## 2026-09-08 workflow adapter
+
+The isolated scaling launcher now accepts `--adapter-config` and
+`--adapter-trace` to layer observable stage timing and per-model token admission
+on the legacy application adapter. Start with [observe-only configuration](workflow-observe.json).
+See [contracts, historical evidence and combined evaluation plan](../../docs/WORKFLOW_ADAPTER_20260908.md).
+The [live comparison](../../docs/WORKFLOW_GPU_RESULTS_20260908.md) stopped after
+192 requests because the budget arm timed out once. KV pressure decreased but
+incremental acceleration/reliability was not established. No production rollout.
+With an explicit `serving_meter` configuration the MOLEG bridge now obtains
+orchestrator token counts and pressure from the current serving instance.
+Generic verified overlap is pressure-gated but is not enabled in this campaign;
+legacy ungated overlap is disabled in combined mode. The historical notes below describe earlier experiments,
+not current reranker health or proof of final-answer equivalence.
+
 The live candidate was built from the backend source at
 `/data/project/vllm/fine-tune/2025-moleg-rag` and kept in a separate server-side
 experiment directory.  Production was not edited or restarted.

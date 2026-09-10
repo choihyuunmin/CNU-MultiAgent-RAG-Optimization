@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "integrity_passed": true,
+  "campaign_complete": true,
+  "completion_issues": [],
+  "planned_trials": 8,
+  "completed_trials": 8,
+  "errors": [],
+  "rows": 512,
+  "unique_questions": 64,
+  "trials": [
+    {
+      "trial": 0,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 1,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "emit16",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 2,
+      "users": 32,
+      "arrival_rate": null,
+      "policy": "emit16",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 3,
+      "users": 32,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 4,
+      "users": 32,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 1,
+      "rows": 64
+    },
+    {
+      "trial": 5,
+      "users": 32,
+      "arrival_rate": null,
+      "policy": "emit16",
+      "repeat": 1,
+      "rows": 64
+    },
+    {
+      "trial": 6,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "emit16",
+      "repeat": 1,
+      "rows": 64
+    },
+    {
+      "trial": 7,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 1,
+      "rows": 64
+    }
+  ],
+  "sha256": {
+    "manifest.json": "1af8dbb507a0c13e58d8a14ecbaf97869a69e0df74aa7ae8891287640a4aa1b6",
+    "requests.jsonl": "17082987eb976a899ee98808f40e111c2e6a538b8afe58e16510a365bd7f18e6",
+    "telemetry.jsonl": "ff817a5f38c081c356e54b8142afffcc15677ac27a05a69649c39c46962726b1",
+    "summary.json": "8dfe231b6cefe81981081c18838566e2a8762d5f308537b5fd3b435fa872dec7"
+  },
+  "scope": "artifact coverage and timing consistency, not answer correctness or causal proof"
+}

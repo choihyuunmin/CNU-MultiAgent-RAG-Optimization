@@ -16,11 +16,26 @@ from moleg_paper_runtime import bootstrap
 from moleg_paper_metrics import paired_difference_ci
 
 
+def select_judge_records(records,cases,repeat=0):
+    selected=[r for r in records if r['repeat']==repeat]
+    if not selected:
+        raise ValueError('requested judge repeat has no response records')
+    variants={r['variant'] for r in selected}
+    eligible=[r for r in selected if cases[r['case_id']].get('reference_answer')]
+    expected={(case_id,variant) for case_id,case in cases.items()
+              if case.get('reference_answer') for variant in variants}
+    observed=[(r['case_id'],r['variant']) for r in eligible]
+    if not expected or len(observed)!=len(expected) or set(observed)!=expected:
+        raise ValueError('incomplete or duplicate reference-answer judge records')
+    return eligible
+
+
 async def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--directory',type=Path,required=True)
     ap.add_argument('--judge-url',required=True)
     ap.add_argument('--judge-model',required=True)
+    ap.add_argument('--repeat',type=int,default=0)
     args=ap.parse_args()
     _,serving,_,_=bootstrap()
     from openai import AsyncOpenAI
@@ -30,7 +45,7 @@ async def main():
         headers={'Authorization':'Bearer '+serving['VLLM_API_KEY']},timeout=30)
     cases={c['case_id']:c for c in json.loads((args.directory/'cases.json').read_text())}
     records=[json.loads(x) for x in (args.directory/'e2e_stream.jsonl').read_text().splitlines()]
-    eligible=[r for r in records if r['repeat']==0 and cases[r['case_id']].get('reference_answer')]
+    eligible=select_judge_records(records,cases,args.repeat)
     random.Random(20260905).shuffle(eligible)
     path=args.directory/'answer_judgments.jsonl';done=set();rows=[]
     if path.exists():
@@ -99,7 +114,7 @@ async def main():
     sink.close();await cli.close();await tokenizer.aclose()
     groups=defaultdict(list)
     for row in rows:groups[row['variant']].append(row)
-    summary={'expected':len(eligible),'completed':len(rows),'judge_model':args.judge_model,
+    summary={'expected':len(eligible),'completed':len(rows),'judge_model':args.judge_model,'repeat':args.repeat,
         'warning':'Automated single-model evidence support; not expert correctness. Judge has its own errors.',
         'variants':{},'comparisons':{}}
     for name,rs in groups.items():

@@ -70,7 +70,7 @@ def evidence_text(query, doc, budget=600, window=False):
     return (header + "\n" + body[start:start + remaining])[:budget]
 
 
-def install(profile="baseline"):
+def install(profile="baseline", *, allow_preparation_overlap=True):
     root, serving, config, resolve = bootstrap()
     from openai import AsyncOpenAI
     import requests
@@ -307,7 +307,7 @@ def install(profile="baseline"):
             # Only speculate on new single-turn sessions containing a legal
             # request; no session changes and no search before authoritative routing.
             q = kwargs.get("user_prompt", "")
-            allowed = len(history) == 1 and bool(re.search(r"법|조문|규정", q))
+            allowed = allow_preparation_overlap and len(history) == 1 and bool(re.search(r"법|조문|규정", q))
             spec = [signature(history), asyncio.create_task(original_prep(
                 history=copy.deepcopy(history), request_id=kwargs["request_id"])), False] if allowed else None
             token = SPEC.set(spec)
@@ -347,6 +347,13 @@ def install(profile="baseline"):
     trace_path = os.environ.get("MOLEG_TRACE_PATH")
     async def traced_execute(**kwargs):
         row = {"request_id": kwargs["request_id"], "session_id": kwargs["session_id"], "profile": profile}
+        try:
+            from cnu_rag_optimization.adaptive import current_workflow_trace_id
+            workflow_id = current_workflow_trace_id()
+            if workflow_id:
+                row['workflow_trace_id'] = workflow_id
+        except ImportError:
+            pass  # legacy isolated runs do not require the workflow package
         token = TRACE.set(row)
         start = time.perf_counter()
         try:

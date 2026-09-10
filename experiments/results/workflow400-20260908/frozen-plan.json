@@ -1,0 +1,299 @@
+{
+  "utc": "2026-09-08T13:49:23.592255+00:00",
+  "planned_requests": 21600,
+  "unique_questions": 400,
+  "source_label_questions": 240,
+  "reference_answer_questions": 131,
+  "scope": "regression dataset, not independent holdout",
+  "seed": 20260909,
+  "users": [
+    16,
+    32,
+    8,
+    4,
+    2,
+    1
+  ],
+  "repeats": 3,
+  "existing_model_processes": 8,
+  "schedule": [
+    {
+      "repeat": 0,
+      "users": 16,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 8,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 8,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 8,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 4,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 4,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 4,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 2,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 2,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 2,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 1,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 1,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 1,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 1,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 1,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 1,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 2,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 2,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 2,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 4,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 4,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 4,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 8,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 8,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 8,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 16,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 8,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 8,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 8,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 4,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 4,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 4,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 2,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 2,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 2,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 1,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 1,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 1,
+      "policy": "baseline"
+    }
+  ],
+  "sha256": {
+    "runtime.tar.gz": "c0a1128ad44fd8841619e02b48550d683fdfac72cdf99e689b609953a78409c1",
+    "source.tar.gz": "30d9cd3af7c2debc7aaf20356f5dc0fe5fe771c1de83e4939f9ec90206e428f2",
+    "cases.json": "3dc548a420aab36e082f8d727cf773fd6ec720912cd7858a966369031da8677d",
+    "observe-final.json": "89186a8af803dffc04ebfb44aedaead70fb2116f7ffbefb44f8fe1de5af026bb",
+    "budget-final.json": "634a163c5d9941a7343ccca93f59bdd1d9d5cd1e8113b4fc867f56b178145524",
+    "WORKFLOW400_PROTOCOL_20260908.md": "4ce372cc276a8f4d0cadf2db5109ad4e5dbb28a7a00a09551584bbc4ce50caae"
+  }
+}

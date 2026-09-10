@@ -1,0 +1,7 @@
+{
+  "mode": "observe",
+  "stage_hooks": [
+    {"module": "agent.validation_agent", "function": "run_preparation", "stage": "preparation"},
+    {"module": "agent.law_search_agent", "function": "run_search", "stage": "retrieval"}
+  ]
+}

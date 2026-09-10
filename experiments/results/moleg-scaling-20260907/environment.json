@@ -1,0 +1,98 @@
+{
+  "utc": "2026-09-07T08:40:43.106503+00:00",
+  "inference_host_ssh": "unavailable_with_local_deploy_key",
+  "host_gpu_and_ram_telemetry": "unavailable",
+  "scope": "HTTP-observable serving configuration; no private endpoint or credentials",
+  "servers": {
+    "orchestrator": {
+      "version": {
+        "version": "0.19.0"
+      },
+      "cache_config": [
+        {
+          "block_size": "16",
+          "num_gpu_blocks": "9924",
+          "gpu_memory_utilization": "0.63",
+          "cache_dtype": "auto",
+          "enable_prefix_caching": "True",
+          "sliding_window": "None"
+        }
+      ],
+      "metric_names": [
+        "e2e_request_latency_seconds_count",
+        "e2e_request_latency_seconds_sum",
+        "generation_tokens_total",
+        "inter_token_latency_seconds_count",
+        "inter_token_latency_seconds_sum",
+        "kv_cache_usage_perc",
+        "num_preemptions_total",
+        "num_requests_running",
+        "num_requests_waiting",
+        "prefix_cache_hits_total",
+        "prefix_cache_queries_total",
+        "prompt_tokens_total",
+        "request_decode_time_seconds_count",
+        "request_decode_time_seconds_sum",
+        "request_generation_tokens_count",
+        "request_generation_tokens_sum",
+        "request_inference_time_seconds_count",
+        "request_inference_time_seconds_sum",
+        "request_prefill_kv_computed_tokens_count",
+        "request_prefill_kv_computed_tokens_sum",
+        "request_prefill_time_seconds_count",
+        "request_prefill_time_seconds_sum",
+        "request_prompt_tokens_count",
+        "request_prompt_tokens_sum",
+        "request_queue_time_seconds_count",
+        "request_queue_time_seconds_sum",
+        "time_to_first_token_seconds_count",
+        "time_to_first_token_seconds_sum"
+      ]
+    },
+    "worker": {
+      "version": {
+        "version": "0.19.0"
+      },
+      "cache_config": [
+        {
+          "block_size": "16",
+          "num_gpu_blocks": "86393",
+          "gpu_memory_utilization": "0.33",
+          "cache_dtype": "auto",
+          "enable_prefix_caching": "True",
+          "sliding_window": "None"
+        }
+      ],
+      "metric_names": [
+        "e2e_request_latency_seconds_count",
+        "e2e_request_latency_seconds_sum",
+        "generation_tokens_total",
+        "inter_token_latency_seconds_count",
+        "inter_token_latency_seconds_sum",
+        "kv_cache_usage_perc",
+        "num_preemptions_total",
+        "num_requests_running",
+        "num_requests_waiting",
+        "prefix_cache_hits_total",
+        "prefix_cache_queries_total",
+        "prompt_tokens_total",
+        "request_decode_time_seconds_count",
+        "request_decode_time_seconds_sum",
+        "request_generation_tokens_count",
+        "request_generation_tokens_sum",
+        "request_inference_time_seconds_count",
+        "request_inference_time_seconds_sum",
+        "request_prefill_kv_computed_tokens_count",
+        "request_prefill_kv_computed_tokens_sum",
+        "request_prefill_time_seconds_count",
+        "request_prefill_time_seconds_sum",
+        "request_prompt_tokens_count",
+        "request_prompt_tokens_sum",
+        "request_queue_time_seconds_count",
+        "request_queue_time_seconds_sum",
+        "time_to_first_token_seconds_count",
+        "time_to_first_token_seconds_sum"
+      ]
+    }
+  }
+}

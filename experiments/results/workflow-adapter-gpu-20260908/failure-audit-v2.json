@@ -1,0 +1,198 @@
+{
+  "complete": false,
+  "planned_trials": 12,
+  "executed_trials": 3,
+  "planned_requests": 768,
+  "attempted_requests": 192,
+  "sse_success": 191,
+  "unique_question_count": 64,
+  "duplicate_question_condition_repeat_rows": 0,
+  "scope": "stopped experiment; no imputation of unexecuted arms/loads/repeats",
+  "failed_span_scope": "unsuccessful scope exit includes cancellation/consumer close; not always a serving error",
+  "model_failed_spans": [
+    {
+      "case_id": "q342",
+      "policy": "baseline",
+      "users": 16,
+      "repeat": 0,
+      "ok": true,
+      "calls": [
+        {
+          "stage": "unclassified",
+          "model": "comparison_sft",
+          "elapsed_s": 0.18058246467262506
+        },
+        {
+          "stage": "unclassified",
+          "model": "worker agent",
+          "elapsed_s": 120.00158059038222
+        }
+      ],
+      "legacy_error_types": {
+        "BadRequestError": 1
+      }
+    },
+    {
+      "case_id": "q337",
+      "policy": "baseline",
+      "users": 16,
+      "repeat": 0,
+      "ok": true,
+      "calls": [
+        {
+          "stage": "answer",
+          "model": "worker agent",
+          "elapsed_s": 4.6884090062230825
+        }
+      ],
+      "legacy_error_types": {}
+    },
+    {
+      "case_id": "q191",
+      "policy": "budget",
+      "users": 16,
+      "repeat": 0,
+      "ok": false,
+      "calls": [
+        {
+          "stage": "answer",
+          "model": "worker agent",
+          "elapsed_s": 196.6192989712581
+        }
+      ],
+      "legacy_error_types": {}
+    }
+  ],
+  "failed_question_comparisons": [
+    {
+      "case_id": "q191",
+      "kind": "source_paraphrase",
+      "arms": [
+        {
+          "policy": "baseline",
+          "ok": true,
+          "elapsed_s": 100.78693754877895,
+          "ttft_s": 99.22804904915392,
+          "answer_chars": 1036,
+          "adapter_wait_union_s": 9.037833660840988e-05,
+          "stream_sizes": [
+            {
+              "model": "worker agent",
+              "elapsed_s": 22.46161320991814,
+              "chunks": 4574,
+              "characters": 1036,
+              "reasoning_characters": 14463
+            }
+          ],
+          "nonstream_vs_fixed16": [
+            {
+              "model": "orchestrator",
+              "input_hash_equal": false,
+              "output_hash_equal": true
+            },
+            {
+              "model": "orchestrator",
+              "input_hash_equal": false,
+              "output_hash_equal": true
+            },
+            {
+              "model": "retrieval tool",
+              "input_hash_equal": false,
+              "output_hash_equal": false
+            },
+            {
+              "model": "orchestrator",
+              "input_hash_equal": false,
+              "output_hash_equal": true
+            }
+          ],
+          "scope": "nonstream hashes include request_id metadata, so unequal hashes do not prove semantic input differences; stream input hashes unavailable"
+        },
+        {
+          "policy": "fixed16",
+          "ok": true,
+          "elapsed_s": 54.229698590002954,
+          "ttft_s": 51.53016930632293,
+          "answer_chars": 1005,
+          "adapter_wait_union_s": 8.931010961532593e-05,
+          "stream_sizes": [
+            {
+              "model": "worker agent",
+              "elapsed_s": 7.107761254534125,
+              "chunks": 1614,
+              "characters": 1006,
+              "reasoning_characters": 2958
+            }
+          ],
+          "nonstream_vs_fixed16": [
+            {
+              "model": "orchestrator",
+              "input_hash_equal": true,
+              "output_hash_equal": true
+            },
+            {
+              "model": "orchestrator",
+              "input_hash_equal": true,
+              "output_hash_equal": true
+            },
+            {
+              "model": "retrieval tool",
+              "input_hash_equal": true,
+              "output_hash_equal": true
+            },
+            {
+              "model": "orchestrator",
+              "input_hash_equal": true,
+              "output_hash_equal": true
+            }
+          ],
+          "scope": "nonstream hashes include request_id metadata, so unequal hashes do not prove semantic input differences; stream input hashes unavailable"
+        },
+        {
+          "policy": "budget",
+          "ok": false,
+          "elapsed_s": 240.00195990037173,
+          "ttft_s": null,
+          "answer_chars": 0,
+          "adapter_wait_union_s": 14.253038310445845,
+          "stream_sizes": [
+            {
+              "model": "worker agent",
+              "elapsed_s": 196.6191501133144,
+              "chunks": 44162,
+              "characters": 0,
+              "reasoning_characters": 126142
+            }
+          ],
+          "nonstream_vs_fixed16": [
+            {
+              "model": "orchestrator",
+              "input_hash_equal": false,
+              "output_hash_equal": true
+            },
+            {
+              "model": "orchestrator",
+              "input_hash_equal": false,
+              "output_hash_equal": true
+            },
+            {
+              "model": "retrieval tool",
+              "input_hash_equal": false,
+              "output_hash_equal": false
+            },
+            {
+              "model": "orchestrator",
+              "input_hash_equal": false,
+              "output_hash_equal": true
+            }
+          ],
+          "scope": "nonstream hashes include request_id metadata, so unequal hashes do not prove semantic input differences; stream input hashes unavailable"
+        }
+      ]
+    }
+  ],
+  "raw_sha256": {
+    "validation/requests.jsonl": "1ee8e5c92602970abe34de18c9e76cf60764bac22f74a5fa4e3e5a861e7729f5",
+    "validation.responses.jsonl": "8d1f2e9bcd991f88668c7dfeca6a8642ebacd095c8bbe76962d0b47eef3016e2"
+  }
+}

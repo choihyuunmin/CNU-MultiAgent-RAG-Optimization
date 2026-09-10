@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "integrity_passed": true,
+  "campaign_complete": true,
+  "completion_issues": [],
+  "planned_trials": 3,
+  "completed_trials": 3,
+  "errors": [],
+  "rows": 192,
+  "unique_questions": 64,
+  "trials": [
+    {
+      "trial": 0,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 1,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "fixed",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 2,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "adaptive",
+      "repeat": 0,
+      "rows": 64
+    }
+  ],
+  "sha256": {
+    "manifest.json": "969c9d9ddf74756657ccb332bc4958bf48f370bfb67ed1a89e52488daaae601c",
+    "requests.jsonl": "b432dd693f199a6c7cbff6dce14f8a123ef8bc99c18a03fafa8662a488ef81f1",
+    "telemetry.jsonl": "0de837d2ca8fb96059da3b8c173ada4da5f19a5574b7d5bd1e87968ace4aa1f6",
+    "summary.json": "c7c835158b5138b8d4335e43f08d0220f517c9722886d03d129855857062bb44"
+  },
+  "scope": "artifact coverage and timing consistency, not answer correctness or causal proof"
+}

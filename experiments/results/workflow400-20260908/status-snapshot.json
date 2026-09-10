@@ -1,0 +1,22 @@
+{
+  "status": "latency_running",
+  "started_utc": "2026-09-08T13:49:49.250133+00:00",
+  "planned_requests": 21600,
+  "completed_requests": 34,
+  "scope": "400-question regression, not independent holdout",
+  "release_allowed": false,
+  "heartbeat_utc": "2026-09-08T13:52:21.910852+00:00",
+  "sse_success": 34,
+  "last_completed": {
+    "trial": 0,
+    "policy": "baseline",
+    "users": 16,
+    "repeat": 0
+  },
+  "serving_health_ok": true,
+  "data_health": {
+    "search_cluster_status": "yellow",
+    "database_select_one": true,
+    "ok": true
+  }
+}

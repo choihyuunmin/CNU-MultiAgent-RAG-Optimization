@@ -1,0 +1,13 @@
+{
+  "recorded_utc": "2026-09-07T13:36:23+00:00",
+  "directory": "validation-excluded",
+  "remote_directory_basename": "validation",
+  "reason": "Load-order reversal cancelled within-load arm-order reversal in the original runner. Stopped deliberately to implement counterbalanced arm order before a new campaign.",
+  "completed_baseline_trial_rows": 64,
+  "partial_candidate_trial_rows": 3,
+  "total_finalized_request_rows": 67,
+  "note": "Cancellation can leave launched requests without finalized rows; this is not the count of all attempted requests. Raw partial artifacts are retained but not pooled into effect estimates.",
+  "selected_variant_unchanged": "emit16",
+  "new_campaign": "validation-counterbalanced",
+  "new_planned_order": ["U16 A/E", "U32 E/A", "U32 A/E", "U16 E/A"]
+}

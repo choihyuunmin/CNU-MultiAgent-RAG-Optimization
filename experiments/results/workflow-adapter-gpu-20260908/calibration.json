@@ -1,0 +1,41 @@
+{
+  "utc": "2026-09-08T03:42:29.511298+00:00",
+  "development_traces": 64,
+  "orchestrator_calls": 194,
+  "input_tokens": {
+    "n": 194,
+    "mean": 3940.5309278350514,
+    "p50": 4085.0,
+    "p95": 5779.0,
+    "p99": 8853.669999999998,
+    "max": 9022
+  },
+  "output_tokens": {
+    "n": 194,
+    "mean": 93.8298969072165,
+    "p50": 92.0,
+    "p95": 204.84999999999994,
+    "p99": 279.07,
+    "max": 280
+  },
+  "tokenizer_verified_pairs": 193,
+  "output_reserve_tokens": 512,
+  "budget": {
+    "max_calls": 8,
+    "max_prefill_tokens": 46232,
+    "max_kv_tokens": 50328
+  },
+  "development_meter_failures_retained": 1,
+  "separate_meter_recheck": {
+    "traces": 32,
+    "tokenizations": 99,
+    "failures": 0,
+    "count_mismatches": 0,
+    "sha256": "5bf79d755fcbc74d4f5133e5757cb7302c527601c1e8456bc32c648dc033390f"
+  },
+  "source_sha256": {
+    "baseline.workflow.jsonl": "23a1c30b67002cbe1c7230e1aa389d6443a081d99a3dd2ba96c1be43880d8848",
+    "fixed16.workflow.jsonl": "2e2a52389b89cea300d163f42eeb4f149a9e4af0bfeb8e85be1fd720e1f3c387"
+  },
+  "heldout_results_accessed_for_calibration": false
+}

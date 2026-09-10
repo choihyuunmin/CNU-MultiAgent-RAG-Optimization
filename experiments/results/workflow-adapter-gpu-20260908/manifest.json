@@ -1,0 +1,499 @@
+{
+  "utc": "2026-09-08T03:42:46.488729+00:00",
+  "scope": "isolated loopback app variants; no outer admission gate",
+  "users": [
+    16,
+    32
+  ],
+  "rates": null,
+  "policies": [
+    "baseline",
+    "fixed16",
+    "budget"
+  ],
+  "repeats": 2,
+  "seed": 20260908,
+  "timeout_s": 240.0,
+  "slo_s": 30,
+  "sample_interval_s": 2,
+  "selected_cases": [
+    {
+      "case_id": "q147",
+      "kind": "named_law",
+      "question_sha256": "7f081b0487d9b206934ec622ca8e19ec6a52c87de32e43aef0e0779d779f473b"
+    },
+    {
+      "case_id": "q248",
+      "kind": "scenario",
+      "question_sha256": "3dfd96e242276a205bd8df7f85ae57821984cf7c7fa0e6f4a848b177dbdc79e3"
+    },
+    {
+      "case_id": "q066",
+      "kind": "named_law",
+      "question_sha256": "20c9699f4377f50023536196a3d6f936970039bec7b2bba13c822784719b52d0"
+    },
+    {
+      "case_id": "q243",
+      "kind": "scenario",
+      "question_sha256": "1c3871a73d79f43ed1ede6defcbc3f536e5ab5cf0be48b74384ed9d44295301d"
+    },
+    {
+      "case_id": "q284",
+      "kind": "scenario",
+      "question_sha256": "50f308221731f8a7b0a6f74772f5c60cae198d3140eb6c5135c29dcd638697ec"
+    },
+    {
+      "case_id": "q221",
+      "kind": "source_paraphrase",
+      "question_sha256": "fd07f251f3fc3da303a38aa4a5969ff36011de9f4c8faa8dffb1f79a19902586"
+    },
+    {
+      "case_id": "q157",
+      "kind": "article_subject_fallback",
+      "question_sha256": "92a2808cd5ea757479fe9736adb570afe9ad2afe3a99cc836c4991553e5ab3c4"
+    },
+    {
+      "case_id": "q331",
+      "kind": "scenario",
+      "question_sha256": "ba57c92a38a634443b91e8ae6bcf38250bb256b94b7081369ba97a38cd8d6725"
+    },
+    {
+      "case_id": "q374",
+      "kind": "assistant_translation",
+      "question_sha256": "584b4ad6a9d259d6bbf3b32e73637c1bbb97d3bff38bc2cd8d3e2dfc912abcc3"
+    },
+    {
+      "case_id": "q301",
+      "kind": "scenario",
+      "question_sha256": "fd54a7917741099e437df69cfe96b89bee0b81370431c799624bee3baaba0e09"
+    },
+    {
+      "case_id": "q191",
+      "kind": "source_paraphrase",
+      "question_sha256": "5d3a063501a088f6b3b07c3ae0157c8893bba10b41705f39ec7839cf5aa411f9"
+    },
+    {
+      "case_id": "q103",
+      "kind": "article_subject",
+      "question_sha256": "ff2b1c53376341f9e67a470bd24c8e6df83dcccdcf87f7a4a27b256b32f6e004"
+    },
+    {
+      "case_id": "q222",
+      "kind": "named_law",
+      "question_sha256": "13d6e0b12aeb41b792810d3c3b716562121cf253aa2f2b947c05243b2a1bafea"
+    },
+    {
+      "case_id": "q349",
+      "kind": "comparison",
+      "question_sha256": "88c4429fecd0a9434c74594d4f60cfae30f6a6a1b0e660414d065e82b650798f"
+    },
+    {
+      "case_id": "q304",
+      "kind": "scenario",
+      "question_sha256": "793b4f97cc563f4136b43d07a47e88d1593b1a2ee51db7f575bcd65dbf8dca89"
+    },
+    {
+      "case_id": "q383",
+      "kind": "conversation",
+      "question_sha256": "5aa762ae383fbb727af3c7a36d4940a5b8c40a989452d2304fc958ff3f354e7a"
+    },
+    {
+      "case_id": "q007",
+      "kind": "article_subject",
+      "question_sha256": "12add50f01f4916278be96dc08bd57f097f434ff5e3ceaa63543b1e2667ad94d"
+    },
+    {
+      "case_id": "q194",
+      "kind": "source_paraphrase",
+      "question_sha256": "6be9b2bfb6eddfe620a0aafa92bcf47d9be089bed00a1d6884be43dea6a65a65"
+    },
+    {
+      "case_id": "q360",
+      "kind": "assistant_translation",
+      "question_sha256": "90f7ef41087b2cbb826c39c8e0ab493fb05b3ecf4ec2124e9a3c14c3aba55d1b"
+    },
+    {
+      "case_id": "q273",
+      "kind": "scenario",
+      "question_sha256": "fb0200a84d05c9be6ecf318a9a76342f8f749a36ea0f50d93806eb3ee21991ad"
+    },
+    {
+      "case_id": "q163",
+      "kind": "article_subject",
+      "question_sha256": "cc33ca7f23a4e88d898b4f8c4ba205e8faa041befd99556883bdc8a3c398f8b4"
+    },
+    {
+      "case_id": "q121",
+      "kind": "article_subject",
+      "question_sha256": "da8c3d604d7d68039cb4e18e92127630d452fc8e7bcd3df66d76849717c22ee2"
+    },
+    {
+      "case_id": "q017",
+      "kind": "source_paraphrase",
+      "question_sha256": "3028d2764464fbb8bd31e3d851cb49fd1111f75f1ef5aedaac34abc1c44e395e"
+    },
+    {
+      "case_id": "q235",
+      "kind": "article_subject",
+      "question_sha256": "8b66085fb6c7747e2860205a6ff2c08d05fda51e4edd500e844f4f4c8a97314d"
+    },
+    {
+      "case_id": "q055",
+      "kind": "article_subject",
+      "question_sha256": "cdb30d3ea5d82f9c6bd8218517fae0b8db578f2d1e9db5120044d5c759d727be"
+    },
+    {
+      "case_id": "q148",
+      "kind": "article_subject",
+      "question_sha256": "37b6ed222165642f5a021db787e61cc14e95a2544c75f7379e91d0c5264ef84e"
+    },
+    {
+      "case_id": "q167",
+      "kind": "source_paraphrase",
+      "question_sha256": "68dd92386dae66d4106a6c9f2b06dc25811b11662631c569e76dc315e2db3d7c"
+    },
+    {
+      "case_id": "q197",
+      "kind": "article_subject_fallback",
+      "question_sha256": "dd4a93fae1d654909cace34c93a5aeae33faf3f8876d2c1c947ef381f8e0fa22"
+    },
+    {
+      "case_id": "q051",
+      "kind": "named_law",
+      "question_sha256": "c647134f8966d25220714075f8929aeae69bf4946df470b154d136a479a9a3be"
+    },
+    {
+      "case_id": "q318",
+      "kind": "scenario",
+      "question_sha256": "3bc792ca0eda2805a577c68967fe179e974cd6a6e13c6bab972bcff820bc2a4e"
+    },
+    {
+      "case_id": "q156",
+      "kind": "named_law",
+      "question_sha256": "fe098ec2cfda4f184aa55d23ec732a3982bed318d98bc4f7b5e4458c6788541c"
+    },
+    {
+      "case_id": "q268",
+      "kind": "scenario",
+      "question_sha256": "7ee43c568dc5b3a1de57dc6064f7d648b138cea9d8ac0f982a947209b60b2124"
+    },
+    {
+      "case_id": "q185",
+      "kind": "source_paraphrase",
+      "question_sha256": "c10374c2f0a12c16ca3830d96056f485bc2f230681caf50d90db91c4cd5a04f5"
+    },
+    {
+      "case_id": "q104",
+      "kind": "source_paraphrase",
+      "question_sha256": "afcaed108b282ef90413e017857616846172bf4ffbb07a9d810afe27cdb2a6a8"
+    },
+    {
+      "case_id": "q234",
+      "kind": "named_law",
+      "question_sha256": "dc20e804fc604590457160a7154c352d71de95a738d6f502242ca7508f84232c"
+    },
+    {
+      "case_id": "q370",
+      "kind": "assistant_translation",
+      "question_sha256": "1e68cbde89854387788bf0c492dd738a484d7c6c6de73788bf7d6a4c0aa93ff0"
+    },
+    {
+      "case_id": "q326",
+      "kind": "scenario",
+      "question_sha256": "5817889629310062fcf9d7d503b8a940ade9e031b4f9320fca5d4abbbb0786c6"
+    },
+    {
+      "case_id": "q391",
+      "kind": "conversation",
+      "question_sha256": "28c11ca4b4846196846bf9f2281d24090be0cda13d399edb83e6fa97dd473798"
+    },
+    {
+      "case_id": "q136",
+      "kind": "article_subject",
+      "question_sha256": "4b8ed1805af504ce0026aa901fce5f0b32a727ef33d59af21c8206a32872217f"
+    },
+    {
+      "case_id": "q116",
+      "kind": "article_subject_fallback",
+      "question_sha256": "e48b83c04a53371a9accbf22c28632628815ce3d599b4b186184d853a38a37aa"
+    },
+    {
+      "case_id": "q105",
+      "kind": "named_law",
+      "question_sha256": "2bf9b323709931f1303661d4835b20de66ed0536ed217dae094175c6478bd0eb"
+    },
+    {
+      "case_id": "q149",
+      "kind": "source_paraphrase",
+      "question_sha256": "b1d3fdfd6f84042782acb266c6e55c27c7b63274993a92f354c94b0238c5ed01"
+    },
+    {
+      "case_id": "q029",
+      "kind": "article_subject_fallback",
+      "question_sha256": "d89360bf44b0e5900dfbb3153596b17d9bba75975a290aa12d59c8e9671b9e85"
+    },
+    {
+      "case_id": "q231",
+      "kind": "named_law",
+      "question_sha256": "6666c3a9b2ffcdf2766abf2ae3217261441196e5834bbda3e70740a3e58afcaa"
+    },
+    {
+      "case_id": "q043",
+      "kind": "article_subject",
+      "question_sha256": "d039ac68415b7228d4b5a8947e011d8c9d281e175778125ab3dbff9b594f93f8"
+    },
+    {
+      "case_id": "q342",
+      "kind": "comparison",
+      "question_sha256": "6c6d993368b5c46b96198640ffe324dd1da574e5d1c9d8141f3df4d7b9418c11"
+    },
+    {
+      "case_id": "q238",
+      "kind": "article_subject",
+      "question_sha256": "6414f1f183e0866bd67ef7bef01eb99b1ff32c53ad6d027b73c8c83fd8fbcd0a"
+    },
+    {
+      "case_id": "q209",
+      "kind": "article_subject_fallback",
+      "question_sha256": "e761fae9c829f4e882ef93944cddfc3514c8671d3ef73e603156a165577749a0"
+    },
+    {
+      "case_id": "q216",
+      "kind": "named_law",
+      "question_sha256": "8ac7f5cbc1efb6464a222a578524d18886a8a83a4157d75d3794b6304c989a52"
+    },
+    {
+      "case_id": "q285",
+      "kind": "scenario",
+      "question_sha256": "8acf35b0cf4d6b9007be6544fbfc320364d1551fed42685799d100bfc4bc44a0"
+    },
+    {
+      "case_id": "q083",
+      "kind": "source_paraphrase",
+      "question_sha256": "821b5528a04a15305bbd6eba9b8d3efac54ec44b899283f0097d0b5f71a8fb19"
+    },
+    {
+      "case_id": "q078",
+      "kind": "named_law",
+      "question_sha256": "770c1186724b73e7bb1b9e84775490b7a6cec30e3ea351ba422980e3b1230f18"
+    },
+    {
+      "case_id": "q276",
+      "kind": "scenario",
+      "question_sha256": "df3da8a94fa5e050753be68bea8d839365aa5a3c06b51679b5d3abfd5b3b15e4"
+    },
+    {
+      "case_id": "q039",
+      "kind": "named_law",
+      "question_sha256": "bb9af17aa49434b27209d990efd1655ea4be3a19f3c1bfe2db92c9e36eee8040"
+    },
+    {
+      "case_id": "q264",
+      "kind": "scenario",
+      "question_sha256": "243e8270cd1c030e12fc945c82c76c89d52ec8eb6bab7b22fca3d451a78438c5"
+    },
+    {
+      "case_id": "q174",
+      "kind": "named_law",
+      "question_sha256": "5358eaf40000b1d8d8b2218bceb6d90e6cd04fe67c779ecf8b4fdcc4d7df4ac6"
+    },
+    {
+      "case_id": "q392",
+      "kind": "conversation",
+      "question_sha256": "d71ec12c3dd4569f2d6413809236e79a8810e88fb629a00ac241f5d4944bed61"
+    },
+    {
+      "case_id": "q047",
+      "kind": "source_paraphrase",
+      "question_sha256": "2180725a0d63712cab6faf0fc4868386a0a2ae4ee500df9b123cb93968509f28"
+    },
+    {
+      "case_id": "q309",
+      "kind": "scenario",
+      "question_sha256": "feb90648ad1fc2ad82a294cd2c522d345c12f51d4168c551be292c2d1e0080af"
+    },
+    {
+      "case_id": "q251",
+      "kind": "scenario",
+      "question_sha256": "dbb817c7af1020edbec2904e3a57c2799b6a9ec7fe9bc4708c499bfb60e553ed"
+    },
+    {
+      "case_id": "q096",
+      "kind": "named_law",
+      "question_sha256": "953c29a5b6013b5910e15265aada3da1202860501b0304b8bb03b646750d0d60"
+    },
+    {
+      "case_id": "q337",
+      "kind": "scenario",
+      "question_sha256": "4f03ce53c8ec119f51546aefda7c190b4f4ac234be8ae735baa0b2504898a344"
+    },
+    {
+      "case_id": "q353",
+      "kind": "comparison",
+      "question_sha256": "bfd17bdecac2f7a3a46cd590fc39ce4fa105e74346c746e40276eef1afda3321"
+    },
+    {
+      "case_id": "q119",
+      "kind": "source_paraphrase",
+      "question_sha256": "0254de5cf030c93090fadc1ab21fd165cb1ac18c51c0971becaaeadb81783193"
+    }
+  ],
+  "input_file_sha256": "e4cd9a3314c68ea109076179e8581d5c2f2089932d9eed513885c754dee16ae3",
+  "script_sha256": "68fd4cafd7c7c47693c831cd8d021e7ebc35d7f381b362de16e975b12c84b5dc",
+  "request_primitive_sha256": "5dea3ffec7af7ca891a30b8eb7e9ec897c046f7c9752a2458aa365434c059bfa",
+  "policy_column_means": "isolated application variant; no adaptive outer gate",
+  "failure_rule": "stop after a trial with any incomplete SSE response",
+  "planned_order": [
+    {
+      "repeat": 0,
+      "users": 16,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 0,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 0,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 0,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "baseline"
+    }
+  ],
+  "limitations": [
+    "finite workload including startup/drain",
+    "shared warm model caches",
+    "silver source labels, not expert answer correctness"
+  ],
+  "app_states_before": {
+    "baseline": {
+      "max_pipelines": 4,
+      "max_http": 4,
+      "active": 0,
+      "queued": 0,
+      "emission": "original",
+      "process_maxrss_kib": 147856,
+      "process_cpu_s": 1.362746,
+      "base_profile": "baseline",
+      "legacy_preparation_overlap": false,
+      "adapter": {
+        "mode": "observe",
+        "models": {},
+        "speculation_enabled": false,
+        "speculation_allowed": {},
+        "quality_equivalence_established": false
+      },
+      "serving_meter": {
+        "tokenize_ok": 0,
+        "tokenize_errors": 0,
+        "tokenize_retries": 0,
+        "metrics_ok": 0,
+        "metrics_errors": 0
+      }
+    },
+    "fixed16": {
+      "max_pipelines": 16,
+      "max_http": 16,
+      "active": 0,
+      "queued": 0,
+      "emission": "immediate",
+      "process_maxrss_kib": 147408,
+      "process_cpu_s": 1.376901,
+      "base_profile": "baseline",
+      "legacy_preparation_overlap": false,
+      "adapter": {
+        "mode": "observe",
+        "models": {},
+        "speculation_enabled": false,
+        "speculation_allowed": {},
+        "quality_equivalence_established": false
+      },
+      "serving_meter": {
+        "tokenize_ok": 0,
+        "tokenize_errors": 0,
+        "tokenize_retries": 0,
+        "metrics_ok": 0,
+        "metrics_errors": 0
+      }
+    },
+    "budget": {
+      "max_pipelines": 16,
+      "max_http": 16,
+      "active": 0,
+      "queued": 0,
+      "emission": "immediate",
+      "process_maxrss_kib": 147412,
+      "process_cpu_s": 1.453633,
+      "base_profile": "baseline",
+      "legacy_preparation_overlap": false,
+      "adapter": {
+        "mode": "budget",
+        "models": {
+          "orchestrator": {
+            "active": 0,
+            "queued": 0,
+            "reserved_kv_tokens": 0,
+            "reserved_prefill_tokens": 0
+          }
+        },
+        "speculation_enabled": false,
+        "speculation_allowed": {
+          "orchestrator": false
+        },
+        "quality_equivalence_established": false
+      },
+      "serving_meter": {
+        "tokenize_ok": 0,
+        "tokenize_errors": 0,
+        "tokenize_retries": 0,
+        "metrics_ok": 0,
+        "metrics_errors": 0
+      }
+    }
+  }
+}

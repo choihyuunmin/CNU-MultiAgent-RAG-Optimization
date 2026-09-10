@@ -1,0 +1,61 @@
+{
+  "utc": "2026-09-07T09:38:24.867278+00:00",
+  "scope": "post-experiment HTTP observable configuration and idle check; no private endpoints",
+  "servers": {
+    "orchestrator": {
+      "version": {
+        "version": "0.19.0"
+      },
+      "cache_config": [
+        {
+          "block_size": "16",
+          "num_gpu_blocks": "9924",
+          "gpu_memory_utilization": "0.63",
+          "cache_dtype": "auto",
+          "enable_prefix_caching": "True",
+          "sliding_window": "None"
+        }
+      ],
+      "running": 0.0,
+      "waiting": 0.0,
+      "version_matches_before": true,
+      "cache_config_matches_before": true
+    },
+    "worker": {
+      "version": {
+        "version": "0.19.0"
+      },
+      "cache_config": [
+        {
+          "block_size": "16",
+          "num_gpu_blocks": "86393",
+          "gpu_memory_utilization": "0.33",
+          "cache_dtype": "auto",
+          "enable_prefix_caching": "True",
+          "sliding_window": "None"
+        }
+      ],
+      "running": 0.0,
+      "waiting": 0.0,
+      "version_matches_before": true,
+      "cache_config_matches_before": true
+    },
+    "comparison": {
+      "version": {
+        "version": "0.19.0"
+      },
+      "cache_config": [
+        {
+          "block_size": "16",
+          "num_gpu_blocks": "18287",
+          "gpu_memory_utilization": "0.15",
+          "cache_dtype": "auto",
+          "enable_prefix_caching": "True",
+          "sliding_window": "None"
+        }
+      ],
+      "running": 0.0,
+      "waiting": 0.0
+    }
+  }
+}

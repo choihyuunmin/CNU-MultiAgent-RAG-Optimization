@@ -1,6 +1,11 @@
 """CNU multi-agent RAG inference optimization primitives."""
 
 from .budget import cap_comparison_documents, compact_documents, llm_options
+from .adaptive import (
+    ModelAdmission, ModelBudget, ServingPressure, TokenReservation,
+    WorkflowAdapter, WorkflowTrace, diagnose_trace,
+)
+from .quality_gate import QualityEvidence, QualityThresholds, evaluate_quality_gate
 from .confidence import (
     ConfidenceRoutingDecision,
     ConfidenceRoutingFeatures,
@@ -35,6 +40,9 @@ from .verified import (
 )
 
 __all__ = [
+    "ModelAdmission", "ModelBudget", "ServingPressure", "TokenReservation",
+    "WorkflowAdapter", "WorkflowTrace", "diagnose_trace",
+    "QualityEvidence", "QualityThresholds", "evaluate_quality_gate",
     "LLMCallMetrics",
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",
