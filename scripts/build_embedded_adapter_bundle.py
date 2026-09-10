@@ -12,7 +12,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def build(topology, *, namespace, name, node, image):
+def build(topology, *, namespace, name, node, image,
+          completion_source="_acompletion_via_proxy_unadmitted",
+          stream_source="_acompletion_stream_via_proxy_unadmitted"):
     for value in (namespace, name, node):
         if not re.fullmatch(r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?", value) or len(value) > 50:
             raise ValueError("short DNS names required")
@@ -30,7 +32,7 @@ def build(topology, *, namespace, name, node, image):
                  "metadata": {"namespace": namespace, "name": name, "labels": labels},
                  "data": files, "binaryData": {"adapter.zip": base64.b64encode(archive.getvalue()).decode()}}
     pods = []
-    for mode in ("original", "delivery", "network"):
+    for mode in ("original",):
         pods.append({"apiVersion": "v1", "kind": "Pod",
             "metadata": {"namespace": namespace, "name": name + "-" + mode,
                          "labels": {**labels, "cnu-mode": mode}},
@@ -40,6 +42,8 @@ def build(topology, *, namespace, name, node, image):
                     "command": ["/app/.venv/bin/python"],
                     "args": ["/opt/cnu/serve_embedded_adapter.py", "--application-root", "/app",
                              "--topology", "/opt/cnu/topology.json", "--mode", mode,
+                             "--completion-source", completion_source,
+                             "--stream-source", stream_source,
                              "--host", "0.0.0.0", "--port", "28000"],
                     "env": [{"name": "PYTHONPATH", "value": "/opt/cnu/adapter.zip:/app/src"},
                             {"name": "PYTHONUNBUFFERED", "value": "1"}],
@@ -64,9 +68,12 @@ def main():
     parser.add_argument("--name", required=True)
     parser.add_argument("--node", required=True)
     parser.add_argument("--image", required=True)
+    parser.add_argument("--completion-source", required=True)
+    parser.add_argument("--stream-source", required=True)
     args = parser.parse_args()
     payload = build(json.loads(args.topology.read_text()), namespace=args.namespace, name=args.name,
-                    node=args.node, image=args.image)
+                    node=args.node, image=args.image,
+                    completion_source=args.completion_source, stream_source=args.stream_source)
     with args.output.open("x") as target:
         json.dump(payload, target, indent=2)
         target.write("\n")

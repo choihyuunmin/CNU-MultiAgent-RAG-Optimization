@@ -11,7 +11,7 @@ spec.loader.exec_module(builder)
 def test_bundle_is_pinned_isolated_and_contains_no_original_application_or_credentials():
     result = builder.build({"aliases": {}, "receivers": {}, "application_source_sha256": {}},
         namespace="trial", name="cnu-example", node="node1", image="example/app@sha256:" + "a" * 64)
-    assert [x["kind"] for x in result["items"]] == ["ConfigMap", "Pod", "Pod", "Pod"]
+    assert [x["kind"] for x in result["items"]] == ["ConfigMap", "Pod"]
     config, *pods = result["items"]
     assert set(config["data"]) == {"serve_embedded_adapter.py", "serve_scaling_adapter.py", "topology.json"}
     for pod in pods:
@@ -20,6 +20,9 @@ def test_bundle_is_pinned_isolated_and_contains_no_original_application_or_crede
         assert spec["automountServiceAccountToken"] is False
         assert not spec.get("hostNetwork")
         container = spec["containers"][0]
+        assert container["args"][container["args"].index("--mode") + 1] == "original"
+        assert container["args"][container["args"].index("--completion-source") + 1] == "_acompletion_via_proxy_unadmitted"
+        assert "--stream-source" in container["args"]
         assert container["imagePullPolicy"] == "Never"
         assert all("hostPort" not in p for p in container["ports"])
         assert container["resources"]["limits"] == {"cpu": "2", "memory": "8Gi"}
