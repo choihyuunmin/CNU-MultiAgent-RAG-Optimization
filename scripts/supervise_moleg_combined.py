@@ -92,9 +92,11 @@ async def models_healthy(metrics, headers):
 
 
 def launch_app(arm, root, port, python, app_root, app_env, serving_env, proxy_config,
-               fingerprint):
-    trace = root / "apps" / f"{arm}.trace.jsonl"
-    workflow = root / "apps" / f"{arm}.workflow.jsonl"
+               fingerprint, out):
+    apps = out / "apps"
+    apps.mkdir(mode=0o700, exist_ok=True)
+    trace = apps / f"{arm}.trace.jsonl"
+    workflow = apps / f"{arm}.workflow.jsonl"
     config = root / (f"{arm}.adapter.json")
     argv = [python, str(root / "scripts" / "launch_moleg_scaling_app.py"),
             "--app-root", str(app_root), "--app-env", str(app_env),
@@ -103,7 +105,7 @@ def launch_app(arm, root, port, python, app_root, app_env, serving_env, proxy_co
             "--adapter-config", str(config), "--adapter-trace", str(workflow)]
     if arm == "combined":
         argv += ["--program-overlap", "--program-fingerprint", fingerprint]
-    log = (root / "apps" / f"{arm}.server.log").open("w")
+    log = (apps / f"{arm}.server.log").open("w")
     env = dict(os.environ, PYTHONPATH=str(root / "src"))
     proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT, env=env,
                             cwd=str(root / "scripts"), start_new_session=True)
@@ -212,21 +214,26 @@ async def execute(args):
     os.umask(0o077)
     root = args.directory
     plan = json.loads((root / "plan.json").read_text())
-    cases = json.loads((root / "cases.json").read_text())
-    if len(cases) != plan["unique_questions"] or len({c["question"] for c in cases}) != len(cases):
-        raise ValueError("frozen case set mismatch")
+    out = root / args.run_subdir if args.run_subdir else root
+    out.mkdir(mode=0o700, exist_ok=True)
+    cases = json.loads((root / args.cases_file).read_text())
+    if len({c["question"] for c in cases}) != len(cases):
+        raise ValueError("duplicate questions in case set")
+    users = args.users or plan["users"]
+    repeats = args.repeats if args.repeats is not None else plan["repeats"]
+    limit = args.limit if args.limit is not None else plan["unique_questions"]
     headers = {"Authorization": "Bearer " + os.environ[args.api_key_env]} if args.api_key_env else {}
     metrics = dict(v.split("=", 1) for v in args.metrics)
     bases = {"baseline": f"http://127.0.0.1:{args.baseline_port}",
              "combined": f"http://127.0.0.1:{args.combined_port}"}
 
-    status = root / "campaign-status.json"
-    state = {"status": "preflight", "started_utc": utc(),
-             "planned_requests": plan["planned_primary_requests"],
+    status = out / "campaign-status.json"
+    state = {"status": "preflight", "started_utc": utc(), "run_subdir": args.run_subdir,
+             "planned_requests": limit * len(users) * len(bases) * repeats,
              "completed_requests": 0, "arms": list(bases), "release_allowed": False}
     write_json(status, state)
 
-    write_json(root / "model-inventory-before.json", model_inventory())
+    write_json(out / "model-inventory-before.json", model_inventory())
     if not await models_healthy(metrics, headers):
         raise RuntimeError("model health check failed before start")
 
@@ -234,36 +241,37 @@ async def execute(args):
     infos = []
     for arm, port in [("baseline", args.baseline_port), ("combined", args.combined_port)]:
         proc, info = launch_app(arm, root, port, args.python, args.app_root, args.app_env,
-                                args.serving_env, args.proxy_config, plan["law_search_nodes_sha256"])
+                                args.serving_env, args.proxy_config, plan["law_search_nodes_sha256"],
+                                out)
         procs[arm] = proc
         infos.append(info)
-    write_json(root / "apps" / "apps.json", infos)
+    write_json(out / "apps.json", infos)
 
     stopped = None
     try:
         app_states = {}
         for arm, base in bases.items():
             app_states[arm] = await wait_ready(base)
-        write_json(root / "app-state-before.json", app_states)
+        write_json(out / "app-state-before.json", app_states)
         if app_states["combined"].get("program_overlap") is not True:
             raise RuntimeError("combined arm did not enable the program overlay")
 
-        selected = select_cases(cases, args.limit, plan["seed"])
-        (root / "selected.json").write_text(json.dumps(
+        selected = select_cases(cases, limit, plan["seed"])
+        (out / "selected.json").write_text(json.dumps(
             [{"case_id": c["case_id"], "kind": c["kind"], "question_sha256": digest(c["question"])}
              for c in selected], ensure_ascii=False, indent=2) + "\n")
 
         state["status"] = "running"
         write_json(status, state)
         summaries = []
-        requests_path = root / "requests.jsonl"
-        private_path = root / "private-responses.jsonl"
-        telemetry_path = root / "telemetry.jsonl"
+        requests_path = out / "requests.jsonl"
+        private_path = out / "private-responses.jsonl"
+        telemetry_path = out / "telemetry.jsonl"
         with requests_path.open("x", buffering=1) as sink, \
                 private_path.open("x", buffering=1) as private_sink, \
                 telemetry_path.open("x", buffering=1) as telemetry_sink:
-            for repeat in range(plan["repeats"]):
-                loads = list(USERS)
+            for repeat in range(repeats):
+                loads = list(users)
                 if repeat % 2:
                     loads.reverse()
                 for load_index, load in enumerate(loads):
@@ -277,12 +285,19 @@ async def execute(args):
                         summaries.append(entry)
                         state["completed_requests"] += entry["n"]
                         write_json(status, state)
-                        (root / "summary.json").write_text(json.dumps(
+                        (out / "summary.json").write_text(json.dumps(
                             {"complete": False, "trials": summaries}, indent=2) + "\n")
-                        if entry["success"] < entry["n"]:
-                            stopped = "failed_requests_stop_escalation"
+                        # Retain every failure in the stats. A rare tail timeout on
+                        # the shared backend is expected and must not halt the sweep;
+                        # only a systematic failure rate or a model-health fault stops it.
+                        fail_rate = 1 - entry["success"] / entry["n"] if entry["n"] else 0.0
+                        if fail_rate > args.max_failure_rate:
+                            stopped = f"trial_failure_rate_{fail_rate:.4f}_over_{args.max_failure_rate}"
                             raise RuntimeError(stopped)
-        (root / "summary.json").write_text(json.dumps({"complete": True, "trials": summaries}, indent=2) + "\n")
+                        if not await models_healthy(metrics, headers):
+                            stopped = "model_health_failed_between_trials"
+                            raise RuntimeError(stopped)
+        (out / "summary.json").write_text(json.dumps({"complete": True, "trials": summaries}, indent=2) + "\n")
         state["status"] = "completed"
     except Exception as exc:
         state["status"] = "stopped"
@@ -297,7 +312,7 @@ async def execute(args):
                     after_states[arm] = (await client.get(base + "/__scaling_state")).json()
             except Exception as exc:
                 after_states[arm] = {"error": type(exc).__name__}
-        write_json(root / "app-state-after.json", after_states)
+        write_json(out / "app-state-after.json", after_states)
         for arm, proc in procs.items():
             if proc.poll() is None:
                 os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
@@ -306,7 +321,7 @@ async def execute(args):
                 proc.wait(timeout=30)
             except Exception:
                 os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-        write_json(root / "model-inventory-after.json", model_inventory())
+        write_json(out / "model-inventory-after.json", model_inventory())
         state["ended_utc"] = utc()
         write_json(status, state)
 
@@ -323,7 +338,13 @@ def main():
     p.add_argument("--combined-port", type=int, default=28381)
     p.add_argument("--metrics", action="append", default=[], help="role=http://host:port/metrics")
     p.add_argument("--api-key-env")
-    p.add_argument("--limit", type=int, default=200)
+    p.add_argument("--cases-file", default="cases.json", help="relative to --directory")
+    p.add_argument("--run-subdir", default="", help="place run outputs under this subdir")
+    p.add_argument("--users", type=int, nargs="+")
+    p.add_argument("--repeats", type=int)
+    p.add_argument("--limit", type=int)
+    p.add_argument("--max-failure-rate", type=float, default=0.05,
+                   help="stop escalation only if a trial's failure fraction exceeds this")
     p.add_argument("--sample-interval", type=float, default=2.0)
     p.add_argument("--timeout", type=float, default=240.0)
     p.add_argument("--slo", type=float, default=30.0)

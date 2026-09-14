@@ -1,5 +1,24 @@
 # Multi-Agent RAG Optimization
 
+## 2026-09-14: 결합 하네스 어댑터 — 200문항 실측(시간↓·정확도 유지)
+
+원격 `agent/generalize-multi-agent-rag`의 최신 하네스(ProgramHarness, CompletionRouter,
+CoflowAdmission, NetworkHarness, InferenceOverlapAdapter, ApplicationAdapter)를 실험
+브랜치로 통합하고, worker `reasoning_effort=low` 제어와 결합한 개선 어댑터를 만들었다.
+200문항 × baseline/combined × 사용자 {1,4,16} × 2반복 = **2,400요청**을 실제 서빙으로
+실행했다(SSE 정상 2,398, combined 실패 0). 질문 단위 paired bootstrap 단축률은
+**U1 19.3%(12.5~29.0), U4 11.5%(8.3~14.8), U16 5.4%(1.5~9.9)** 로 세 부하 모두 유의하며,
+검색 소스 재현율(Δ≈0)·근거 ID 일치(0.94~0.97)·blinded 판정(relevance 1.815→1.831,
+support 1.80→1.831, 구간이 0 포함)은 저하 없이 유지됐다. 이득의 원천은 worker 답변 전
+reasoning 제거(문자수 1,939→164, 첫 출력 2.39→0.35초)이며, 부하가 커질수록 오케스트
+레이터 selection(7.25초)·preparation(6.62초) prefill이 종단을 지배해 이득이 5%로
+압축된다. **정량화된 경계**: 앱 계층의 worker·검색 가속은 오케스트레이터 prepare+select
+천장에 상한되며, 다음 레버는 오케스트레이터 prefill의 무손실 가속이다. 운영 배포·모델
+변경 없음(모델 argv·포트 실험 전후 동일).
+[결과](docs/COMBINED_HARNESS_RESULTS_20260914.md) ·
+[프로토콜](docs/COMBINED_HARNESS_PROTOCOL_20260914.md) ·
+[공개 자료](experiments/results/combined-20260914/README.md).
+
 ## 2026-09-11: 호출 상한 제거와 reasoning 병목 수정
 
 현재 기본 실행에서 HTTP·생성·모델 예산 대기열을 제거했습니다. 일반 async 호출과
