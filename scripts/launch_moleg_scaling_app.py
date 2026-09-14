@@ -44,6 +44,12 @@ def main():
     parser.add_argument("--adapter-trace", type=Path, help="new prompt-free workflow trace file")
     parser.add_argument("--base-profile", choices=["baseline", "speed"], default="baseline",
                         help="speed combines earlier application methods; requires separate quality evaluation")
+    parser.add_argument("--program-overlap", action="store_true",
+                        help="attach the ProgramHarness ready-successor overlay to execute_search; "
+                             "moves start time of dependency-ready search work earlier without "
+                             "changing models, prompts, retrieval arguments, or the return shape")
+    parser.add_argument("--program-fingerprint",
+                        help="expected SHA-256 of law_search/nodes.py; overlay fails closed on mismatch")
     args = parser.parse_args()
     if args.adapter_trace is None:
         args.adapter_trace = args.trace.with_suffix(".workflow.jsonl")
@@ -83,6 +89,14 @@ def main():
     from api.concurrency import generate_queue
     from moleg_unrestricted import remove_admission_limits
     remove_admission_limits(app, generate_queue)
+    program_harness = None
+    program_harness_sink = None
+    if args.program_overlap:
+        from moleg_program_overlay import apply_program_overlay
+        program_harness_sink = open(args.adapter_trace.with_suffix(".harness.jsonl"), "w", buffering=1)
+        program_harness, _overlay = apply_program_overlay(
+            fingerprint=args.program_fingerprint, event_sink=program_harness_sink,
+            harness_sink=program_harness_sink)
     @app.get("/__scaling_state", include_in_schema=False)
     async def scaling_state():
         # This process is loopback-only. No request IDs or application data.
@@ -95,6 +109,7 @@ def main():
                 "process_cpu_s": usage.ru_utime + usage.ru_stime,
                 "base_profile": args.base_profile,
                 "legacy_preparation_overlap": False,
+                "program_overlap": args.program_overlap,
                 "adapter": adapter.snapshot(),
                 "serving_meter": adapter.serving_meter.snapshot()
                     if hasattr(adapter, "serving_meter") else None}
@@ -106,6 +121,8 @@ def main():
                     host="127.0.0.1", port=args.port, log_level="error")
     finally:
         adapter_sink.close()
+        if program_harness_sink is not None:
+            program_harness_sink.close()
 
 
 if __name__ == "__main__":

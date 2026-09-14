@@ -5,6 +5,18 @@ from .adaptive import (
     ServingPressure, TokenReservation,
     WorkflowAdapter, WorkflowTrace, diagnose_trace,
 )
+from .application_adapter import ApplicationAdapter
+from .coflow import AdmissionTicket, CoflowAdmission, CoflowPolicy
+from .completion import (
+    CompletionPolicy,
+    CompletionRouter,
+    CompletionTicket,
+    ReceiverSpec,
+    ReplicaSpec,
+)
+from .inference_overlap import InferenceOverlapAdapter, ReadContract
+from .network_harness import NetworkHarness
+from .program_harness import ProgramHarness
 from .quality_gate import QualityEvidence, QualityThresholds, evaluate_quality_gate
 from .confidence import (
     ConfidenceRoutingDecision,
@@ -42,6 +54,13 @@ from .verified import (
 __all__ = [
     "ServingPressure", "TokenReservation",
     "WorkflowAdapter", "WorkflowTrace", "diagnose_trace",
+    "ApplicationAdapter",
+    "AdmissionTicket", "CoflowAdmission", "CoflowPolicy",
+    "CompletionPolicy", "CompletionRouter", "CompletionTicket",
+    "ReceiverSpec", "ReplicaSpec",
+    "InferenceOverlapAdapter", "ReadContract",
+    "NetworkHarness",
+    "ProgramHarness",
     "QualityEvidence", "QualityThresholds", "evaluate_quality_gate",
     "LLMCallMetrics",
     "HTTPTransportPolicy",

@@ -1,0 +1,18 @@
+{
+  "mode": "observe",
+  "reasoning_policies": {
+    "worker agent": {
+      "effort": "low",
+      "first_output_timeout_s": 60,
+      "max_reasoning_characters": 32768
+    }
+  },
+  "stage_hooks": [
+    {"module": "core.agent_orchestrator.orchestrator", "function": "classify_and_decompose", "stage": "classification"},
+    {"module": "core.agent_orchestrator.orchestrator", "function": "classify_intent_with_confidence", "stage": "classification"},
+    {"module": "agent.validation_agent", "function": "run_preparation", "stage": "preparation"},
+    {"module": "agent.law_search_agent", "function": "run_search", "stage": "retrieval"},
+    {"module": "agent.law_analysis_agent", "function": "run_select_laws", "stage": "selection"},
+    {"module": "agent.law_analysis_agent", "function": "run_generate_comment", "stage": "answer"}
+  ]
+}
