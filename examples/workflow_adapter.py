@@ -4,14 +4,12 @@ import json
 import time
 
 from cnu_rag_optimization import (
-    ModelBudget, ServingPressure, TokenReservation, WorkflowAdapter, diagnose_trace,
+    ServingPressure, TokenReservation, WorkflowAdapter, diagnose_trace,
 )
 
 
 async def main():
-    adapter = WorkflowAdapter(mode="budget", budgets={
-        "orchestrator": ModelBudget(max_calls=4, max_kv_tokens=16000, max_prefill_tokens=12000),
-    }, speculation=True)
+    adapter = WorkflowAdapter(speculation=True)
     # Synthetic fresh telemetry for this example ONLY. Production integrations
     # must supply real samples and preemption counter deltas, not these values.
     adapter.pressure["orchestrator"] = ServingPressure(time.monotonic(), .20, 0, 0)

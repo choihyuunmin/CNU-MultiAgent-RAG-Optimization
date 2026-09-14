@@ -1,14 +1,10 @@
-"""Observable workflow adapter; never reads, shortens, or rewrites reasoning text.
+"""Observable workflow execution using ordinary async calls, without admission queues.
 
-Budgets are per-model scheduling estimates, NOT model output limits or GPU bytes.
-All authoritative work is retained. Missing estimates run exclusively, and work
-larger than a configured budget runs alone rather than being silently truncated.
-Instances belong to one asyncio event loop / application process.
+Token estimates and serving pressure are telemetry, not execution limits.
 """
 from __future__ import annotations
 
 import asyncio
-from collections import deque
 from collections.abc import AsyncIterator, Awaitable, Callable, Mapping
 from contextlib import asynccontextmanager, contextmanager
 from contextvars import ContextVar
@@ -45,17 +41,6 @@ class TokenReservation:
 
 
 @dataclass(frozen=True)
-class ModelBudget:
-    max_calls: int
-    max_kv_tokens: int
-    max_prefill_tokens: int
-
-    def __post_init__(self):
-        if any(type(x) is not int or x < 1 for x in asdict(self).values()):
-            raise ValueError("model budgets must be positive integers")
-
-
-@dataclass(frozen=True)
 class ServingPressure:
     observed_at: float  # time.monotonic(), not wall clock
     kv_usage: float
@@ -70,78 +55,6 @@ class ServingPressure:
             and 0 <= self.kv_usage < kv_ceiling
             and self.waiting == 0 and self.preemptions_delta == 0
         )
-
-
-class ModelAdmission:
-    """FIFO token budget with cancellation-safe accounting and no short-job bypass.
-
-    Oversized/unknown reservations consume the entire budget exclusively. This
-    guarantees eventual admission, not that such a request fits physical VRAM.
-    """
-    def __init__(self, budget: ModelBudget):
-        self.budget = budget
-        self.active = self.kv_tokens = self.prefill_tokens = 0
-        self.pending = deque()
-        self.condition = asyncio.Condition()
-        self.exclusive = False
-
-    def _cost(self, reservation):
-        exclusive = reservation is None or (
-            reservation.kv_tokens > self.budget.max_kv_tokens
-            or reservation.prefill_tokens > self.budget.max_prefill_tokens)
-        if exclusive:
-            return self.budget.max_kv_tokens, self.budget.max_prefill_tokens, True
-        return reservation.kv_tokens, reservation.prefill_tokens, False
-
-    def _fits(self, cost):
-        kv, prefill, exclusive = cost
-        return (not self.exclusive and self.active < self.budget.max_calls
-                and (not exclusive or self.active == 0)
-                and self.kv_tokens + kv <= self.budget.max_kv_tokens
-                and self.prefill_tokens + prefill <= self.budget.max_prefill_tokens)
-
-    @asynccontextmanager
-    async def slot(self, reservation: TokenReservation | None, *, optional=False):
-        cost = self._cost(reservation)
-        ticket = object()
-        acquired = False
-        try:
-            async with self.condition:
-                if optional:
-                    # Never queue speculative work ahead of authoritative work.
-                    if not self.pending and reservation is not None and not cost[2] and self._fits(cost):
-                        acquired = True
-                else:
-                    self.pending.append(ticket)
-                    try:
-                        await self.condition.wait_for(
-                            lambda: self.pending[0] is ticket and self._fits(cost))
-                        self.pending.popleft()
-                        acquired = True
-                    except BaseException:
-                        self.pending.remove(ticket)
-                        self.condition.notify_all()
-                        raise
-                if acquired:
-                    self.active += 1
-                    self.kv_tokens += cost[0]
-                    self.prefill_tokens += cost[1]
-                    self.exclusive = cost[2]
-                    self.condition.notify_all()
-            yield acquired
-        finally:
-            if acquired:
-                async with self.condition:
-                    self.active -= 1
-                    self.kv_tokens -= cost[0]
-                    self.prefill_tokens -= cost[1]
-                    self.exclusive = False
-                    self.condition.notify_all()
-
-    def snapshot(self):
-        return {"active": self.active, "queued": len(self.pending),
-                "reserved_kv_tokens": self.kv_tokens,
-                "reserved_prefill_tokens": self.prefill_tokens}
 
 
 @dataclass
@@ -166,16 +79,14 @@ def current_workflow_trace_id() -> str | None:
 class WorkflowAdapter:
     """Coordinate measured stages without altering model/tool request payloads.
 
-    `observe` only records. `budget` applies configured model gates. No policy
-    automatically raises HTTP/pipeline capacity or authorizes a quality change.
+    Requests run immediately. Pressure may suppress optional speculative work,
+    but never queues authoritative calls.
     """
-    def __init__(self, *, mode="observe", budgets: Mapping[str, ModelBudget] | None = None,
+    def __init__(self, *, mode="observe",
                  speculation=False, pressure_max_age_s=5.0, speculation_kv_ceiling=0.80,
                  max_spans=2048):
-        if mode not in {"observe", "budget"}:
-            raise ValueError("mode must be observe or budget")
-        if mode == "budget" and not budgets:
-            raise ValueError("budget mode requires explicit per-model budgets")
+        if mode != "observe":
+            raise ValueError("only observe mode is supported; model admission budgets were removed")
         if (not math.isfinite(pressure_max_age_s) or pressure_max_age_s <= 0
                 or not math.isfinite(speculation_kv_ceiling)
                 or not 0 < speculation_kv_ceiling < 1
@@ -184,7 +95,6 @@ class WorkflowAdapter:
         self.mode, self.speculation = mode, speculation
         self.pressure_max_age_s, self.speculation_kv_ceiling = pressure_max_age_s, speculation_kv_ceiling
         self.max_spans = max_spans
-        self.gates = {name: ModelAdmission(b) for name, b in (budgets or {}).items()}
         self.pressure: dict[str, ServingPressure] = {}
 
     @contextmanager
@@ -223,32 +133,16 @@ class WorkflowAdapter:
 
     @asynccontextmanager
     async def execution(self, model: str, reservation: TokenReservation | None = None):
-        """Hold only a model call, not its enclosing agent/HTTP lifetime.
-
-        Streaming holds credit until source exhaustion/close; downstream
-        backpressure is included. There is no unbounded prefetch buffer.
-        """
-        queued = time.monotonic()
-        gate = self.gates.get(model) if self.mode == "budget" else None
-        async with self._slot(gate, reservation):
-            started = time.monotonic()
-            self.record("adapter_wait", queued, model=model, gated=gate is not None)
-            success = False
-            try:
-                yield
-                success = True
-            finally:
-                self.record("model_rpc_lifetime", started, model=model, success=success,
-                            estimated_input_tokens=reservation.input_tokens if reservation else None,
-                            estimated_output_tokens=reservation.output_tokens if reservation else None)
-
-    @asynccontextmanager
-    async def _slot(self, gate, reservation):
-        if gate is None:
+        """Measure a direct call, including stream consumption and backpressure."""
+        started = time.monotonic()
+        success = False
+        try:
             yield
-        else:
-            async with gate.slot(reservation):
-                yield
+            success = True
+        finally:
+            self.record("model_rpc_lifetime", started, model=model, success=success,
+                        estimated_input_tokens=reservation.input_tokens if reservation else None,
+                        estimated_output_tokens=reservation.output_tokens if reservation else None)
 
     async def call(self, model: str, call: Callable[[], Awaitable[T]], *, reservation=None) -> T:
         async with self.execution(model, reservation):
@@ -266,7 +160,7 @@ class WorkflowAdapter:
 
     def speculation_allowed(self, model: str) -> bool:
         pressure = self.pressure.get(model)
-        return bool(self.mode == "budget" and self.speculation and model in self.gates
+        return bool(self.speculation
                     and pressure and pressure.healthy(time.monotonic(), self.pressure_max_age_s,
                                                      self.speculation_kv_ceiling))
 
@@ -280,7 +174,7 @@ class WorkflowAdapter:
         Inputs must include model/revision, prompt/messages/history, generation
         options, tools, evidence/context and tenant/security scope where relevant.
         No document-ID-only reuse. Read-only/pure calls only, explicit opt-in.
-        The speculative callback is a raw invocation: do not nest the same gate.
+        The speculative callback is the original model invocation.
         """
         predicted = json.dumps(predicted_input, sort_keys=True, ensure_ascii=False, allow_nan=False)
         sentinel = object()
@@ -291,14 +185,11 @@ class WorkflowAdapter:
         async def draft():
             if not self.speculation_allowed(model):
                 return sentinel
-            async with self.gates[model].slot(reservation, optional=True) as admitted:
-                if not admitted:
-                    return sentinel
-                started = time.monotonic()
-                try:
-                    return await invoke(json.loads(predicted))
-                finally:
-                    self.record("speculative_rpc_lifetime", started, model=model)
+            started = time.monotonic()
+            try:
+                return await invoke(json.loads(predicted))
+            finally:
+                self.record("speculative_rpc_lifetime", started, model=model)
 
         if read_only and self.speculation_allowed(model):
             task = asyncio.create_task(draft())
@@ -329,9 +220,9 @@ class WorkflowAdapter:
                         launched=task is not None, reused=reused)
 
     def snapshot(self):
-        return {"mode": self.mode, "models": {name: gate.snapshot() for name, gate in self.gates.items()},
+        return {"mode": self.mode, "models": {}, "admission_control": False,
                 "speculation_enabled": self.speculation,
-                "speculation_allowed": {name: self.speculation_allowed(name) for name in self.gates},
+                "speculation_allowed": {name: self.speculation_allowed(name) for name in self.pressure},
                 "quality_equivalence_established": False}
 
 
@@ -366,5 +257,11 @@ def diagnose_trace(trace: WorkflowTrace) -> dict:
                                     for (stage, model), work in sorted(stage_work.items())],
             "observed_reasoning_tokens": sum(s.get("reasoning_tokens") or 0 for s in trace.spans),
             "reasoning_tokens_observed": any(s.get("reasoning_tokens") is not None for s in trace.spans),
+            "stream_progress": [{"stage": s["stage"], "model": s["model"],
+                **{key: s.get(key) for key in (
+                    "first_chunk_s", "first_reasoning_s", "first_visible_s", "first_tool_s",
+                    "reasoning_characters", "visible_characters", "stream_finished",
+                    "stream_truncated", "reasoning_stalled")}}
+                for s in trace.spans if s["kind"] == "reasoning_size"],
             "dropped_spans": trace.dropped_spans,
             "scope": "observable workflow intervals; categories overlap; not a causal critical path"}

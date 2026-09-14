@@ -8,6 +8,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--directory', type=Path, required=True)
     p.add_argument('--cases', type=Path, help='explicit regression dataset; defaults to the original holdout file')
+    p.add_argument('--variants', nargs='+', default=['baseline','fixed16','budget'])
     p.add_argument('--repeat', type=int, default=0, help='first repeat index of this separately reported segment')
     args = p.parse_args()
     root = args.directory
@@ -19,7 +20,7 @@ def main():
         with (dest / 'cases.json').open('x') as sink:
             json.dump(cases, sink, ensure_ascii=False)
         selected = [r for r in rows if r['users']==users and r['repeat']==args.repeat]
-        expected = {(c['case_id'], arm) for c in cases for arm in ['baseline','fixed16','budget']}
+        expected = {(c['case_id'], arm) for c in cases for arm in args.variants}
         observed = [(r['case_id'],r['policy']) for r in selected]
         if len(observed)!=len(expected) or set(observed)!=expected:
             raise ValueError('quality comparison requires all attempted first-repeat questions, including failures')

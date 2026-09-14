@@ -1,5 +1,14 @@
 # 2025-moleg-search integration notes
 
+## Current execution (2026-09-11)
+
+The app launcher now removes global HTTP/pipeline admission limits and uses an
+observe-only workflow adapter. Its default `workflow-reasoning.json` applies low
+effort and an answer-free deadline to the configured gpt-oss worker. Legacy
+capacity flags and budget configurations are rejected. See the
+[current implementation and validation scope](../../docs/UNRESTRICTED_REASONING_20260911.md).
+The dated experiments below describe their archived code, not this revision.
+
 ## 2026-09-08 workflow adapter
 
 The isolated scaling launcher now accepts `--adapter-config` and

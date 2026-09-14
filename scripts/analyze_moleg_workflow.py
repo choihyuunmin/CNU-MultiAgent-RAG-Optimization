@@ -14,7 +14,8 @@ from moleg_scaling_metrics import describe
 from summarize_moleg_scaling import aggregate
 
 
-def paired_comparisons(rows):
+def paired_comparisons(rows, pairs=None):
+    pairs = pairs or [('baseline','fixed16'), ('baseline','budget'), ('fixed16','budget')]
     grouped = defaultdict(dict)
     for row in rows:
         key = (row['case_id'], row['repeat'])
@@ -24,7 +25,7 @@ def paired_comparisons(rows):
         group[key] = row
     comparisons = []
     for users in sorted({r['users'] for r in rows}):
-        for control, candidate in [('baseline','fixed16'), ('baseline','budget'), ('fixed16','budget')]:
+        for control, candidate in pairs:
             before, after = grouped[(users, control)], grouped[(users, candidate)]
             if not before or set(before) != set(after):
                 raise ValueError('incomplete paired comparison')
@@ -42,14 +43,14 @@ def paired_comparisons(rows):
                      'latency':paired_cluster_ci(latency),
                      'evidence_list_exact_fraction':statistics.fmean(exact),
                      'paired_requests':len(before)}
-            for field in ['source_law_hit','source_chunk_hit']:
-                pairs = []
+            for field in ['source_law_hit','source_chunk_hit', 'ok']:
+                field_pairs = []
                 for observations in by_question.values():
                     bs = [float(b[field]) for b,a in observations if b[field] is not None]
                     cs = [float(a[field]) for b,a in observations if a[field] is not None]
                     if bs and cs:
-                        pairs.append((statistics.fmean(bs), statistics.fmean(cs)))
-                entry[field + '_change'] = paired_difference_ci(pairs)
+                        field_pairs.append((statistics.fmean(bs), statistics.fmean(cs)))
+                entry[field + '_change'] = paired_difference_ci(field_pairs)
             comparisons.append(entry)
     return comparisons
 
@@ -58,7 +59,7 @@ def workflow_summary(directory, workflow_directory):
     state = json.loads((directory/'summary.json').read_text())
     app_states = [json.loads(line) for line in (directory/'app-state.jsonl').open()]
     output = []
-    for policy in ['baseline','fixed16','budget']:
+    for policy in dict.fromkeys(t['policy'] for t in state['trials']):
         trials = [t for t in state['trials'] if t['policy']==policy]
         groups = {}
         for line in (workflow_directory/(policy+'.trace.jsonl')).open():
@@ -105,7 +106,16 @@ def workflow_summary(directory, workflow_directory):
                     'input_tokens':describe([s.get('input_tokens') for s in tokens]),
                     'output_tokens':describe([s.get('output_tokens') for s in tokens]),
                     'reasoning_tokens':describe([s.get('reasoning_tokens') for s in tokens]),
-                    'reasoning_characters':describe([s.get('reasoning_characters') for s in reasoning])})
+                    'reasoning_characters':describe([s.get('reasoning_characters') for s in reasoning]),
+                    'visible_characters':describe([s.get('visible_characters') for s in reasoning]),
+                    'first_visible_s':describe([s.get('first_visible_s') for s in reasoning]),
+                    'reasoning_before_answer_s':describe([
+                        s['first_visible_s']-s['first_reasoning_s'] for s in reasoning
+                        if s.get('first_visible_s') is not None and s.get('first_reasoning_s') is not None]),
+                    'reasoning_stalled':sum(s.get('reasoning_stalled') is True for s in reasoning),
+                    'stream_truncated':sum(s.get('stream_truncated') is True for s in reasoning),
+                    'unfinished_streams':sum(s.get('stream_finished') is False for s in reasoning),
+                    'unsuccessful_rpc_scopes':sum(s.get('success') is False for s in calls)})
             entry = {k:trial[k] for k in ['trial','policy','users','repeat']}
             samples = [r['state'] for r in app_states if r['trial']==trial['trial'] and 'state' in r]
             gates = [s.get('adapter',{}).get('models',{}).get('orchestrator') for s in samples]
@@ -132,6 +142,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--directory', type=Path, required=True)
     p.add_argument('--workflow-directory', type=Path)
+    p.add_argument('--comparison', action='append', help='explicit control=candidate pair')
     p.add_argument('--allow-stopped', action='store_true',
                    help='explicit descriptive failure audit, not a completed primary analysis')
     args = p.parse_args()
@@ -139,13 +150,21 @@ def main():
     if not result['complete'] and not args.allow_stopped:
         raise ValueError('main analysis requires a complete campaign')
     rows = [json.loads(line) for line in (args.directory/'requests.jsonl').open()]
-    result['adapter_comparisons'] = paired_comparisons(rows)
+    pairs = [tuple(value.split('=', 1)) for value in args.comparison] if args.comparison else None
+    if pairs and any(len(pair) != 2 or not all(pair) for pair in pairs):
+        p.error('comparison must be control=candidate')
+    result['adapter_comparisons'] = paired_comparisons(rows, pairs)
+    result['completion_conditioned_latency'] = [dict(users=users, policy=policy,
+        successful_s=describe([r['elapsed_s'] for r in rows if r['users']==users and r['policy']==policy and r['ok']]),
+        failed_s=describe([r['elapsed_s'] for r in rows if r['users']==users and r['policy']==policy and not r['ok']]))
+        for users,policy in sorted({(r['users'],r['policy']) for r in rows})]
     result['pipeline_success'] = sum(r.get('pipeline_ok',False) for r in rows)
     result['analysis_status'] = 'completed_primary' if result['complete'] else 'stopped_descriptive_only'
     result['latency_endpoint'] = 'observed time to completion or failure/deadline; failures retained, not completed-response mean'
     result['failure_rows'] = [{k:r.get(k) for k in ['trial','policy','users','repeat','case_id','kind',
                               'elapsed_s','ttft_s','error_type','status','pipeline_ok']} for r in rows if not r['ok']]
-    result['method_scope'] = 'combined model call cap=8 and token estimates; not their separate causal effects'
+    result['method_scope'] = ('explicit arm comparison; interpret interventions from the frozen run plan'
+                              if pairs else 'combined model call cap=8 and token estimates; not their separate causal effects')
     if args.workflow_directory:
         result['workflow'] = workflow_summary(args.directory, args.workflow_directory)
     with (args.directory/'workflow-analysis.json').open('x') as sink:

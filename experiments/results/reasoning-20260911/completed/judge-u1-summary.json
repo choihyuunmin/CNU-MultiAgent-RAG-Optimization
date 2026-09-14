@@ -1,0 +1,53 @@
+{
+  "expected": 196,
+  "completed": 196,
+  "judge_model": "microsoft/phi-4",
+  "repeat": 0,
+  "warning": "Automated single-model evidence support; not expert correctness. Judge has its own errors.",
+  "variants": {
+    "reasoning": {
+      "n": 98,
+      "valid": 98,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.8673469387755102,
+      "mean_support_0_to_2": 1.8673469387755102,
+      "insufficient_evidence_rate": 0.07142857142857142
+    },
+    "baseline": {
+      "n": 98,
+      "valid": 98,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.8265306122448979,
+      "mean_support_0_to_2": 1.836734693877551,
+      "insufficient_evidence_rate": 0.10204081632653061
+    }
+  },
+  "comparisons": {
+    "reasoning": {
+      "relevance": {
+        "n": 98,
+        "baseline_mean": 1.8265306122448979,
+        "candidate_mean": 1.8673469387755102,
+        "delta": 0.04081632653061229,
+        "delta_95ci": [
+          0.01020408163265306,
+          0.08163265306122448
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      },
+      "support": {
+        "n": 98,
+        "baseline_mean": 1.836734693877551,
+        "candidate_mean": 1.8673469387755102,
+        "delta": 0.030612244897959107,
+        "delta_95ci": [
+          -0.01020408163265306,
+          0.08163265306122448
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      }
+    }
+  }
+}

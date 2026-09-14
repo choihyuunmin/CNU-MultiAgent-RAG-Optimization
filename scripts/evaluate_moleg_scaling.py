@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 from collections import Counter, defaultdict
+from contextlib import nullcontext
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -62,10 +63,10 @@ async def request(client, base, case, gate, due, timeout, run_id, index, capture
     terminal_error = False
     async def execute():
         nonlocal wire_start, first_token, first_event, result, terminal_error
-        async with gate.slot():
+        async with gate.slot() if gate is not None else nullcontext():
             wire_start = time.perf_counter()
-            row["admission_wait_s"] = wire_start - entered
-            row["gate_limit_at_start"] = gate.limit
+            row["admission_wait_s"] = wire_start - entered if gate is not None else 0.0
+            row["gate_limit_at_start"] = gate.limit if gate is not None else None
             async with client.stream("POST", base.rstrip("/") + "/api/generate/stream",
                     json={"prompt": case["question"], "session_id": f"scale-{run_id}-{index}"}) as response:
                 row["status"] = response.status_code
@@ -125,12 +126,13 @@ async def trial(args, cases, concurrency, rate, policy, repeat, run_index, sink,
     import httpx
     maximum = concurrency if rate is None else args.open_max_active
     limit = maximum if policy == "baseline" else min(args.initial_limit, maximum)
-    gate = PressureGate(limit=limit, maximum=maximum, adaptive=policy == "adaptive")
+    gate = None if policy == "baseline" else PressureGate(limit=limit, maximum=maximum, adaptive=policy == "adaptive")
     servers = dict(v.split("=", 1) for v in args.metrics)
     headers = {"Authorization": "Bearer " + os.environ[args.api_key_env]} if args.api_key_env else {}
     metadata = {"trial": run_index, "policy": policy, "repeat": repeat,
                 "users": concurrency if rate is None else None, "arrival_rate": rate}
     samples, rows = [], []
+    in_flight = 0
     stop = asyncio.Event()
     previous_preempt = {}
     run_id = uuid.uuid4().hex[:12]
@@ -148,7 +150,8 @@ async def trial(args, cases, concurrency, rate, policy, repeat, run_index, sink,
                 except Exception as exc:
                     return name, {"error_type": type(exc).__name__}
             sample = {**metadata, "utc": datetime.now(timezone.utc).isoformat(),
-                      "gate_limit": gate.limit, "active": gate.active, "pending": len(gate.pending),
+                      "gate_limit": gate.limit if gate else None,
+                      "active": gate.active if gate else in_flight, "pending": len(gate.pending) if gate else 0,
                       "servers": dict(await asyncio.gather(*(one(k, v) for k, v in servers.items())))}
             samples.append(sample)
             telemetry_sink.write(json.dumps(sample) + "\n")
@@ -161,9 +164,10 @@ async def trial(args, cases, concurrency, rate, policy, repeat, run_index, sink,
                 change = delta(previous_preempt.get(k, {}), current, "num_preemptions_total")
                 preempt += change or 0
                 previous_preempt[k] = current
-            await gate.observe(waiting=max(v["num_requests_waiting"] for v in values) if complete else None,
-                kv_usage=max(v.get("kv_cache_usage_perc", v.get("gpu_cache_usage_perc", 0))
-                             for v in values) if complete else None, preemptions=preempt)
+            if gate is not None:
+                await gate.observe(waiting=max(v["num_requests_waiting"] for v in values) if complete else None,
+                    kv_usage=max(v.get("kv_cache_usage_perc", v.get("gpu_cache_usage_perc", 0))
+                                 for v in values) if complete else None, preemptions=preempt)
         async def monitor():
             while not stop.is_set():
                 try:
@@ -233,7 +237,8 @@ async def trial(args, cases, concurrency, rate, policy, repeat, run_index, sink,
                "slo_goodput_rps": sum(r["ok"] and r["elapsed_s"] <= args.slo for r in rows) / wall,
                "slo_s": args.slo, "slo_attainment": sum(r["ok"] and r["elapsed_s"] <= args.slo for r in rows) / len(rows),
                "max_outstanding": max_in_flight, "mean_outstanding": active_area / wall,
-               "gate_changes": gate.changes, "final_gate_limit": gate.limit, "metrics": metrics,
+               "gate_changes": gate.changes if gate else 0,
+               "final_gate_limit": gate.limit if gate else None, "metrics": metrics,
                "errors": dict(Counter(r.get("error_type", "pipeline") for r in rows if not r["ok"])),
                "source_law_hit": describe([float(r["source_law_hit"]) if r["source_law_hit"] is not None else None for r in rows]),
                "source_chunk_hit": describe([float(r["source_chunk_hit"]) if r["source_chunk_hit"] is not None else None for r in rows]),

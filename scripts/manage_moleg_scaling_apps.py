@@ -10,9 +10,7 @@ import sys
 import time
 from urllib.request import urlopen
 
-ARMS = [('baseline', 4, 'original', 28220), ('emit', 4, 'immediate', 28221),
-        ('slots8', 8, 'original', 28222), ('emit8', 8, 'immediate', 28223),
-        ('emit16', 16, 'immediate', 28224)]
+ARMS = [('unrestricted', None, 'immediate', 28220)]
 
 
 def main():
@@ -35,7 +33,7 @@ def main():
         for row in variants:
             if (not re.fullmatch(r'[a-z0-9_]+', row['name']) or row['name'] in names
                     or row['port'] in ports or not 28200 <= row['port'] <= 29000
-                    or row['slots'] not in [1,2,4,8,16,32]
+                    or row['slots'] is not None
                     or row['emission'] not in ['original','immediate']):
                 parser.error('invalid or duplicate isolated variant')
             names.add(row['name']); ports.add(row['port'])
@@ -57,7 +55,7 @@ def main():
             argv = [sys.executable, str(launcher), '--app-root', str(args.app_root),
                     '--app-env', str(args.app_env), '--serving-env', str(args.serving_env),
                     '--proxy-config', str(args.proxy_config), '--trace', str(root / (name + '.trace.jsonl')),
-                    '--port', str(port), '--max-pipelines', str(slots), '--emission', emission]
+                    '--port', str(port), '--emission', emission]
             if variant.get('adapter_config'):
                 argv += ['--adapter-config', variant['adapter_config'],
                          '--adapter-trace', str(root / (name + '.workflow.jsonl'))]

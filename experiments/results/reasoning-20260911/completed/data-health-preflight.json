@@ -1,0 +1,10 @@
+{
+  "search_cluster_status": "yellow",
+  "required_index_document_counts": [
+    454351,
+    3194294,
+    19583
+  ],
+  "database_select_one": true,
+  "ok": true
+}

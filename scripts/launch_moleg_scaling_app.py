@@ -1,4 +1,4 @@
-"""Launch an isolated app with independently controlled capacity and emission.
+"""Launch an isolated app without HTTP, pipeline, or model admission limits.
 
 Run in the application's existing Python environment. All credentials come
 from operator files. Loopback binding is mandatory. Never edits deployed code,
@@ -10,14 +10,6 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-
-def configure_http_limit(app, maximum):
-    """Configure the second, ASGI-lifetime limit before the stack is built."""
-    matches = [m for m in app.user_middleware if m.cls.__name__ == 'GlobalWaitQueueMiddleware']
-    if len(matches) != 1 or app.middleware_stack is not None:
-        raise RuntimeError('expected one unbuilt global HTTP limiter')
-    matches[0].kwargs['max_concurrency'] = maximum
 
 
 def install_immediate_emission():
@@ -45,27 +37,22 @@ def main():
     parser.add_argument("--proxy-config", type=Path, required=True)
     parser.add_argument("--trace", type=Path, required=True, help="private output: may contain visible text")
     parser.add_argument("--port", type=int, default=28220)
-    parser.add_argument("--max-pipelines", type=int, choices=[1, 2, 4, 8, 16, 32], default=4)
-    parser.add_argument("--max-http", type=int, choices=[4, 8, 16, 32, 64],
-                        help="defaults to pipeline count; separate only for a predeclared ablation")
-    parser.add_argument("--emission", choices=["original", "immediate"], default="original")
+    parser.add_argument("--emission", choices=["original", "immediate"], default="immediate")
     parser.add_argument("--adapter-config", type=Path,
-                        help="opt-in observable workflow/token-budget adapter configuration")
+                        default=Path(__file__).resolve().parents[1] / "integrations/2025-moleg-search/workflow-reasoning.json",
+                        help="observable workflow and reasoning policy configuration")
     parser.add_argument("--adapter-trace", type=Path, help="new prompt-free workflow trace file")
     parser.add_argument("--base-profile", choices=["baseline", "speed"], default="baseline",
                         help="speed combines earlier application methods; requires separate quality evaluation")
     args = parser.parse_args()
-    if bool(args.adapter_config) != bool(args.adapter_trace):
-        parser.error("adapter configuration and trace must be supplied together")
-    if args.base_profile != "baseline" and not args.adapter_config:
-        parser.error("base-profile is an opt-in combined-adapter experiment")
-    adapter = None
-    adapter_sink = None
-    if args.adapter_config:
-        from moleg_workflow_adapter import load_adapter
-        adapter, estimates, hooks = load_adapter(args.adapter_config)
-        if args.adapter_trace.exists():
-            parser.error("use a new adapter trace path")
+    if args.adapter_trace is None:
+        args.adapter_trace = args.trace.with_suffix(".workflow.jsonl")
+    if args.adapter_trace.resolve() == args.trace.resolve():
+        parser.error("model and workflow traces must use different paths")
+    from moleg_workflow_adapter import load_adapter
+    adapter, estimates, hooks = load_adapter(args.adapter_config)
+    if args.adapter_trace.exists():
+        parser.error("use a new adapter trace path")
     for path in (args.app_env, args.serving_env, args.proxy_config):
         if not path.is_file():
             parser.error("operator configuration file missing")
@@ -81,51 +68,44 @@ def main():
         "MOLEG_SERVING_ENV": str(args.serving_env.resolve()),
         "MOLEG_PROXY_CONFIG": str(args.proxy_config.resolve()),
         "MOLEG_TRACE_PATH": str(args.trace.resolve()),
-        "MOLEG_STUDY_PROFILE": args.base_profile,
-        "MAX_CONCURRENT_GENERATE_REQUESTS": str(args.max_pipelines)})
+        "MOLEG_STUDY_PROFILE": args.base_profile})
     import moleg_paper_runtime
-    # Legacy overlap has no fresh-pressure / optional-budget contract. Keep it
-    # off in combined mode; the new verified_overlap API is separately gated.
-    moleg_paper_runtime.install(args.base_profile, allow_preparation_overlap=adapter is None)
-    if adapter:
-        from moleg_workflow_adapter import install, TraceASGI
-        install(adapter, estimates, hooks)
-        args.adapter_trace.parent.mkdir(parents=True, exist_ok=True)
-        fd = os.open(args.adapter_trace, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        adapter_sink = os.fdopen(fd, "w", buffering=1)
+    # Optional speculative calls remain off in the normal execution path.
+    moleg_paper_runtime.install(args.base_profile, allow_preparation_overlap=False)
+    from moleg_workflow_adapter import install, TraceASGI
+    install(adapter, estimates, hooks)
+    args.adapter_trace.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(args.adapter_trace, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    adapter_sink = os.fdopen(fd, "w", buffering=1)
     if args.emission == "immediate":
         install_immediate_emission()
     from main_server import app
     from api.concurrency import generate_queue
-    http_limit = args.max_http or args.max_pipelines
-    configure_http_limit(app, http_limit)
-    effective = generate_queue._global.max_concurrency
-    if effective != args.max_pipelines:
-        raise RuntimeError("effective app limit differs from requested experiment limit")
+    from moleg_unrestricted import remove_admission_limits
+    remove_admission_limits(app, generate_queue)
     @app.get("/__scaling_state", include_in_schema=False)
     async def scaling_state():
         # This process is loopback-only. No request IDs or application data.
         import resource
         usage = resource.getrusage(resource.RUSAGE_SELF)
-        return {"max_pipelines": effective, "max_http": http_limit,
+        return {"max_pipelines": None, "max_http": None,
                 "active": generate_queue._global.active,
                 "queued": generate_queue._global.queued, "emission": args.emission,
                 "process_maxrss_kib": usage.ru_maxrss,
                 "process_cpu_s": usage.ru_utime + usage.ru_stime,
                 "base_profile": args.base_profile,
-                "legacy_preparation_overlap": adapter is None and args.base_profile == "speed",
-                "adapter": adapter.snapshot() if adapter else None,
+                "legacy_preparation_overlap": False,
+                "adapter": adapter.snapshot(),
                 "serving_meter": adapter.serving_meter.snapshot()
-                    if adapter and hasattr(adapter, "serving_meter") else None}
-    print({"scope": "isolated loopback application", "max_pipelines": effective,
-           "max_http": http_limit, "emission": args.emission, "port": args.port}, flush=True)
+                    if hasattr(adapter, "serving_meter") else None}
+    print({"scope": "isolated loopback application", "max_pipelines": None,
+           "max_http": None, "emission": args.emission, "port": args.port}, flush=True)
     import uvicorn
     try:
-        uvicorn.run(TraceASGI(app, adapter, adapter_sink) if adapter else app,
+        uvicorn.run(TraceASGI(app, adapter, adapter_sink),
                     host="127.0.0.1", port=args.port, log_level="error")
     finally:
-        if adapter_sink:
-            adapter_sink.close()
+        adapter_sink.close()
 
 
 if __name__ == "__main__":

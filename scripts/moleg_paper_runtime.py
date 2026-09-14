@@ -122,6 +122,8 @@ def install(profile="baseline", *, allow_preparation_overlap=True):
                 clients[base] = AsyncOpenAI(base_url=base, api_key=key, timeout=120, max_retries=0)
             routes[item["model_name"]] = (clients[base], model[len("openai/"):])
 
+    from moleg_model_transport import install_standard_transport, chat_payload
+    install_standard_transport()
     original_chat = llm.acompletion_via_proxy
     original_stream = llm.acompletion_stream_via_proxy
 
@@ -130,17 +132,10 @@ def install(profile="baseline", *, allow_preparation_overlap=True):
         route = routes.get(model)
         if route is None:
             return None, None
-        payload = {"model": route[1], "messages": kwargs.get("messages", []),
-                   "temperature": kwargs.get("temperature", 0)}
-        for k in ("tools", "tool_choice", "extra_body"):
-            if kwargs.get(k) is not None:
-                payload[k] = kwargs[k]
-        if streaming:
-            payload["stream"] = True
-            if profile == 'balanced' and route[1] == 'openai/gpt-oss-20b':
-                payload['reasoning_effort'] = 'low'
-        elif kwargs.get("response_format"):
-            payload["response_format"] = kwargs["response_format"]
+        payload = chat_payload(kwargs, model=route[1], streaming=streaming,
+                               create=route[0].chat.completions.create)
+        if streaming and profile == 'balanced' and route[1] == 'openai/gpt-oss-20b':
+            payload.setdefault('reasoning_effort', 'low')
         return route[0], payload
 
     async def chat(**kwargs):
@@ -180,8 +175,10 @@ def install(profile="baseline", *, allow_preparation_overlap=True):
         finally:
             trace_add("llm", model=kwargs.get("model"), elapsed_s=time.perf_counter()-start,
                       stream=True, chunks=chunks, characters=chars, reasoning_characters=reasoning_chars)
-            if cli and hasattr(source, "close"):
+            if cli:
                 await source.close()
+            else:
+                await source.aclose()
 
     llm.acompletion_via_proxy = chat
     llm.acompletion_stream_via_proxy = stream

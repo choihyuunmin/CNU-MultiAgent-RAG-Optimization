@@ -10,7 +10,7 @@ from types import ModuleType, SimpleNamespace
 import pytest
 
 from cnu_rag_optimization import (
-    ModelAdmission, ModelBudget, TokenReservation, ServingPressure,
+    TokenReservation, ServingPressure,
     WorkflowAdapter, WorkflowTrace, diagnose_trace,
     QualityEvidence, QualityThresholds, evaluate_quality_gate,
 )
@@ -30,64 +30,15 @@ def test_invalid_token_estimates(args):
         TokenReservation(*args)
 
 
-def test_budget_fifo_cancellation_and_oversized_exclusive():
+def test_direct_calls_preserve_exceptions_without_private_details():
     async def run():
-        gate = ModelAdmission(ModelBudget(3, 10, 10))
-        entered, release = asyncio.Event(), asyncio.Event()
-        order = []
-        async def request(name, reservation):
-            async with gate.slot(reservation):
-                order.append(name)
-                if name == "large":
-                    assert gate.active == 1
-                    entered.set()
-                    await release.wait()
-        async with gate.slot(TokenReservation(4, 2)):
-            cancelled = asyncio.create_task(request("cancelled", None))
-            large = asyncio.create_task(request("large", TokenReservation(100, 100)))
-            small = asyncio.create_task(request("small", TokenReservation(1, 1)))
-            await asyncio.sleep(0)
-            assert order == []
-            cancelled.cancel()
-            with pytest.raises(asyncio.CancelledError):
-                await cancelled
-        await asyncio.wait_for(entered.wait(), 1)
-        assert order == ["large"]
-        release.set()
-        await asyncio.gather(large, small)
-        assert order == ["large", "small"]
-        assert gate.snapshot() == {"active": 0, "queued": 0, "reserved_kv_tokens": 0, "reserved_prefill_tokens": 0}
-    asyncio.run(run())
-
-
-def test_optional_work_never_queues_or_bypasses_waiter():
-    async def run():
-        gate = ModelAdmission(ModelBudget(2, 10, 10))
-        async with gate.slot(None):
-            async with gate.slot(TokenReservation(1, 1), optional=True) as admitted:
-                assert not admitted
-        async with gate.slot(TokenReservation(2, 2)):
-            async def wait():
-                async with gate.slot(None):
-                    return True
-            task = asyncio.create_task(wait())
-            await asyncio.sleep(0)
-            async with gate.slot(TokenReservation(1, 1), optional=True) as admitted:
-                assert not admitted
-        assert await task
-    asyncio.run(run())
-
-
-def test_model_gates_are_independent_and_exception_releases():
-    async def run():
-        adapter = WorkflowAdapter(mode="budget", budgets={name: ModelBudget(1, 10, 10) for name in ["a", "b"]})
+        adapter = WorkflowAdapter()
         async def fail():
             raise RuntimeError("private failure detail")
         with adapter.request() as trace:
             async with adapter.execution("a"):
                 with pytest.raises(RuntimeError):
                     await adapter.call("b", fail)
-        assert all(g.active == 0 for g in adapter.gates.values())
         assert "private failure" not in json.dumps(trace.spans)
         assert any(s.get("success") is False for s in trace.spans)
     asyncio.run(run())
@@ -95,7 +46,7 @@ def test_model_gates_are_independent_and_exception_releases():
 
 def test_stream_chunks_and_backpressure_preserved_on_close():
     async def run():
-        adapter = WorkflowAdapter(mode="budget", budgets={"a": ModelBudget(1, 10, 10)})
+        adapter = WorkflowAdapter()
         chunk = object()
         closed = []
         async def source():
@@ -107,15 +58,14 @@ def test_stream_chunks_and_backpressure_preserved_on_close():
         with adapter.request():
             stream = adapter.stream("a", source)
             assert await anext(stream) is chunk
-            assert adapter.gates["a"].active == 1
             await stream.aclose()
-        assert closed == [True] and adapter.gates["a"].active == 0
+        assert closed == [True]
     asyncio.run(run())
 
 
 @pytest.mark.parametrize("kind", ["missing", "stale", "future", "kv", "waiting", "preempted", "nan"])
 def test_missing_or_unhealthy_pressure_suppresses_speculation(kind):
-    a = WorkflowAdapter(mode="budget", budgets={"a": ModelBudget(2, 20, 20)}, speculation=True)
+    a = WorkflowAdapter(speculation=True)
     now = time.monotonic()
     p = ServingPressure(now, .2, 0, 0)
     p = {"stale": replace(p, observed_at=now-100), "future": replace(p, observed_at=now+100),
@@ -129,7 +79,7 @@ def test_missing_or_unhealthy_pressure_suppresses_speculation(kind):
 @pytest.mark.parametrize("change", [None, "messages", "evidence", "options", "tenant"])
 def test_verified_overlap_requires_full_input_match(change):
     async def run():
-        a = WorkflowAdapter(mode="budget", budgets={"a": ModelBudget(2, 100, 100)}, speculation=True)
+        a = WorkflowAdapter(speculation=True)
         a.pressure["a"] = ServingPressure(time.monotonic(), .1, 0, 0)
         payload = {"messages": ["query"], "evidence": ["same-id", "full content"],
                    "options": {"max_tokens": 80}, "tenant": "scope", "model": "a@rev"}
@@ -148,14 +98,13 @@ def test_verified_overlap_requires_full_input_match(change):
         assert out == actual and reused == (change is None)
         assert calls[-1] == actual
         assert len(calls) == (1 if change is None else 2)
-        assert a.gates["a"].active == 0
         assert payload["evidence"] == ["same-id", "full content"]
     asyncio.run(run())
 
 
 def test_speculation_error_fallback_and_authoritative_failure_cleanup():
     async def run():
-        a = WorkflowAdapter(mode="budget", budgets={"a": ModelBudget(2, 10, 10)}, speculation=True)
+        a = WorkflowAdapter(speculation=True)
         a.pressure["a"] = ServingPressure(time.monotonic(), .1, 0, 0)
         calls = []
         async def invoke(p):
@@ -183,7 +132,7 @@ def test_speculation_error_fallback_and_authoritative_failure_cleanup():
         with pytest.raises(RuntimeError):
             await a.verified_overlap(model="a", predicted_input={}, authoritative_input=fail,
                 invoke=blocking, reservation=TokenReservation(1, 1), read_only=True)
-        assert stopped.is_set() and a.gates["a"].active == 0
+        assert stopped.is_set()
     asyncio.run(run())
 
 
@@ -269,9 +218,9 @@ def test_adapter_config_is_explicit_and_unknown_fields_rejected(tmp_path):
         load_adapter(p)
 
 
-def test_cancelled_active_request_returns_budget():
+def test_cancelled_active_request_propagates_cancellation():
     async def run():
-        a = WorkflowAdapter(mode="budget", budgets={"a": ModelBudget(1, 10, 10)})
+        a = WorkflowAdapter()
         started = asyncio.Event()
         async def call():
             started.set()
@@ -281,24 +230,6 @@ def test_cancelled_active_request_returns_budget():
         task.cancel()
         with pytest.raises(asyncio.CancelledError):
             await task
-        assert a.gates["a"].snapshot()["reserved_kv_tokens"] == 0
-        assert a.gates["a"].active == 0
-    asyncio.run(run())
-
-
-def test_prefill_budget_is_independent_of_kv_budget():
-    async def run():
-        gate = ModelAdmission(ModelBudget(8, 1000, 10))
-        entered = []
-        async def wait():
-            async with gate.slot(TokenReservation(8, 1)):
-                entered.append(True)
-        async with gate.slot(TokenReservation(8, 1)):
-            task = asyncio.create_task(wait())
-            await asyncio.sleep(0)
-            assert not entered
-        await task
-        assert entered == [True]
     asyncio.run(run())
 
 

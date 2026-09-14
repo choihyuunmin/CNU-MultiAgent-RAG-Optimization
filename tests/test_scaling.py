@@ -213,19 +213,6 @@ def test_isolated_variant_label_does_not_change_request_measurements():
     assert json.loads(output.getvalue()) == row | {'policy': 'emit16'}
 
 
-def test_both_app_limits_must_be_configured_before_serving():
-    from types import SimpleNamespace
-    from launch_moleg_scaling_app import configure_http_limit
-    limiter_class = type('GlobalWaitQueueMiddleware', (), {})
-    middleware = SimpleNamespace(cls=limiter_class, kwargs={'max_concurrency': 4})
-    app = SimpleNamespace(user_middleware=[middleware], middleware_stack=None)
-    configure_http_limit(app, 16)
-    assert middleware.kwargs['max_concurrency'] == 16
-    app.middleware_stack = object()
-    with pytest.raises(RuntimeError):
-        configure_http_limit(app, 8)
-
-
 def test_resource_histogram_matches_expanded_quantile_and_missing_is_not_zero():
     from summarize_moleg_resources import histogram_stats, host_summary
     from moleg_scaling_metrics import describe

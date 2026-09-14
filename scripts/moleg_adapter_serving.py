@@ -125,7 +125,7 @@ class ServingMeter:
             self.counts[kind] = self.counts.get(kind, 0) + 1
             self.adapter.record("tokenization", started, model=role, success=False,
                                 http_status=response.status_code if response is not None else None)
-            reservation = None  # budget mode executes unknown costs exclusively
+            reservation = None  # telemetry failure does not delay or serialize execution
         await self.refresh_pressure(role)
         return reservation
 

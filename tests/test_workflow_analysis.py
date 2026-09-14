@@ -35,6 +35,18 @@ def test_missing_pairs_and_duplicate_rows_are_rejected():
         paired_comparisons(rows+[rows[0]])
 
 
+def test_explicit_two_arm_comparison_keeps_fast_failures_in_success_rate():
+    rows = [dict(row, policy='reasoning' if row['policy']=='fixed16' else row['policy'])
+            for row in fixtures() if row['policy']!='budget']
+    for row in rows:
+        if row['policy']=='reasoning' and row['case_id']=='q0':
+            row.update(ok=False, elapsed_s=1)
+    comparison = paired_comparisons(rows, [('baseline','reasoning')])[0]
+    assert comparison['latency']['reduction_pct'] > 0
+    assert comparison['ok_change']['delta'] < 0
+    assert comparison['paired_requests'] == 8
+
+
 def test_private_join_exports_only_numeric_aggregates(tmp_path):
     data = tmp_path/'validation'
     private = tmp_path/'main-apps'

@@ -2,7 +2,7 @@
 
 Synthetic complete payloads exercise sustained users 1/2/4/8/16/32. Stored live
 results are referenced separately; their improvements are never pooled with
-this test or attributed to the new budget scheduler.
+this test or attributed to the removal of admission queues.
 """
 import argparse
 import asyncio
@@ -12,13 +12,13 @@ import json
 from pathlib import Path
 
 from cnu_rag_optimization import (
-    ModelBudget, TokenReservation, WorkflowAdapter, diagnose_trace,
+    TokenReservation, WorkflowAdapter, diagnose_trace,
     QualityEvidence, evaluate_quality_gate,
 )
 
 
 async def exercise(users, mode):
-    adapter = WorkflowAdapter(mode=mode, budgets={"orchestrator": ModelBudget(8, 640, 512)})
+    adapter = WorkflowAdapter(mode=mode)
     pending = iter(range(64))
     completed = []
 
@@ -48,16 +48,16 @@ async def exercise(users, mode):
             completed.append({"fixture": index, "exact": unchanged,
                               "trace_complete": diagnose_trace(trace)["dropped_spans"] == 0})
     await asyncio.gather(*(worker() for _ in range(users)))
-    idle = all(g.active == 0 and not g.pending for g in adapter.gates.values())
+    idle = adapter.snapshot()["admission_control"] is False
     assert len(completed) == 64 and all(r["exact"] and r["trace_complete"] for r in completed) and idle
     return {"users": users, "mode": mode, "requests": 64,
-            "exact_fixture_outputs": sum(r["exact"] for r in completed), "credits_released": idle}
+            "exact_fixture_outputs": sum(r["exact"] for r in completed), "admission_control_removed": idle}
 
 
 async def run():
     rows = []
     for users in [1, 2, 4, 8, 16, 32]:
-        for mode in ["observe", "budget"]:
+        for mode in ["observe"]:
             rows.append(await exercise(users, mode))
     return rows
 
