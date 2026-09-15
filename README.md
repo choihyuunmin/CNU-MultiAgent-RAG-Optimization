@@ -1,5 +1,8 @@
 # Multi-Agent RAG Optimization
 
+> **종합 정리**: 결합 어댑터 개선·실측·하드웨어 한계 요약은
+> [docs/SUMMARY_MOLEG_ADAPTER_20260915.md](docs/SUMMARY_MOLEG_ADAPTER_20260915.md).
+
 ## 2026-09-15: 방법 탐색 + 동시성 용량 램프(하드웨어 한계)
 
 지연 개선 방법을 먼저 비교한 뒤 최적안으로 동시성을 1→500 올려 하드웨어 한계를 판정했다
