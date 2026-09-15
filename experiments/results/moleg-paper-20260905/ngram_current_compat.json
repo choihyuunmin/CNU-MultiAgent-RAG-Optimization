@@ -1,0 +1,12 @@
+{
+  "scope": "CPU proposer import/JIT/algorithm only; no LLM weights, no GPU speed or output-fidelity claim",
+  "versions": {
+    "vllm": "0.19.0",
+    "numpy": "2.4.4",
+    "numba": "0.61.2",
+    "llvmlite": "0.44.0"
+  },
+  "import_ok": false,
+  "error_type": "ImportError",
+  "error": "Numba needs NumPy 2.2 or less. Got NumPy 2.4."
+}

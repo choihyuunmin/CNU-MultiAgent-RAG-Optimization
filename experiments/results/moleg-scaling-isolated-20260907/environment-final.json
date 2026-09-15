@@ -1,0 +1,149 @@
+{
+  "recorded_utc": "2026-09-07T14:06:06.271787+00:00",
+  "model_processes": {
+    "orchestrator": {
+      "expected_pid": 1806308,
+      "alive": true,
+      "started_utc": "2026-09-06T14:58:44.270000+00:00",
+      "health_http": 200
+    },
+    "worker": {
+      "expected_pid": 1738275,
+      "alive": true,
+      "started_utc": "2026-09-06T06:03:27.990000+00:00",
+      "health_http": 200
+    },
+    "comparison": {
+      "expected_pid": 3567988,
+      "alive": true,
+      "started_utc": "2026-07-29T02:11:14.910000+00:00",
+      "health_http": 200
+    },
+    "embedding": {
+      "expected_pid": 1727468,
+      "alive": true,
+      "started_utc": "2026-07-20T02:11:02.970000+00:00",
+      "health_http": 200
+    },
+    "reranker": {
+      "expected_pid": 3566657,
+      "alive": true,
+      "started_utc": "2026-07-29T02:09:37.620000+00:00",
+      "health_http": 200
+    },
+    "guardrail": {
+      "expected_pid": 1739299,
+      "alive": true,
+      "started_utc": "2026-09-06T06:04:58.660000+00:00",
+      "health_http": 200
+    },
+    "judge": {
+      "expected_pid": 1806831,
+      "alive": true,
+      "started_utc": "2026-09-06T14:59:56.520000+00:00",
+      "health_http": 200
+    },
+    "ocr": {
+      "expected_pid": 1738626,
+      "alive": true,
+      "started_utc": "2026-09-06T06:04:01.200000+00:00",
+      "health_http": 200
+    }
+  },
+  "gpus": [
+    {
+      "index": 0,
+      "temperature": "60 C",
+      "clock_event_reasons": {
+        "clocks_event_reason_gpu_idle": "Not Active",
+        "clocks_event_reason_applications_clocks_setting": "Not Active",
+        "clocks_event_reason_sw_power_cap": "Not Active",
+        "clocks_event_reason_hw_slowdown": "Not Active",
+        "clocks_event_reason_hw_thermal_slowdown": "Not Active",
+        "clocks_event_reason_hw_power_brake_slowdown": "Not Active",
+        "clocks_event_reason_sync_boost": "Not Active",
+        "clocks_event_reason_sw_thermal_slowdown": "Not Active",
+        "clocks_event_reason_display_clocks_setting": "Not Active"
+      },
+      "clock_event_counters": {
+        "clocks_event_reasons_counters_sw_power_cap": "142736921910 us",
+        "clocks_event_reasons_counters_sync_boost": "0 us",
+        "clocks_event_reasons_counters_sw_therm_slowdown": "0 us",
+        "clocks_event_reasons_counters_hw_therm_slowdown": "0 us",
+        "clocks_event_reasons_counters_hw_power_brake": "0 us"
+      }
+    },
+    {
+      "index": 1,
+      "temperature": "45 C",
+      "clock_event_reasons": {
+        "clocks_event_reason_gpu_idle": "Not Active",
+        "clocks_event_reason_applications_clocks_setting": "Not Active",
+        "clocks_event_reason_sw_power_cap": "Not Active",
+        "clocks_event_reason_hw_slowdown": "Not Active",
+        "clocks_event_reason_hw_thermal_slowdown": "Not Active",
+        "clocks_event_reason_hw_power_brake_slowdown": "Not Active",
+        "clocks_event_reason_sync_boost": "Not Active",
+        "clocks_event_reason_sw_thermal_slowdown": "Not Active",
+        "clocks_event_reason_display_clocks_setting": "Not Active"
+      },
+      "clock_event_counters": {
+        "clocks_event_reasons_counters_sw_power_cap": "7259395290 us",
+        "clocks_event_reasons_counters_sync_boost": "0 us",
+        "clocks_event_reasons_counters_sw_therm_slowdown": "2171300 us",
+        "clocks_event_reasons_counters_hw_therm_slowdown": "0 us",
+        "clocks_event_reasons_counters_hw_power_brake": "0 us"
+      }
+    }
+  ],
+  "remaining_owned_apps": [],
+  "bound_experiment_ports": [],
+  "temporary_gpu_operator_config_removed": true,
+  "private_profiles": {
+    "nsys_factorial.sqlite": {
+      "bytes": 168763392,
+      "sha256": "9b16d4898b36782c636fe7e9e54174469e5a9698f7aa1ebb1267bd9767c685cf",
+      "raw_retained_privately": true
+    },
+    "nsys_validation.sqlite": {
+      "bytes": 313647104,
+      "sha256": "032693484c61fe5d088e71f7954985f7bb567d1062be5afa8724247ce4d91b05",
+      "raw_retained_privately": true
+    }
+  },
+  "script_sha256": {
+    "audit_moleg_scaling.py": "91f3551060c53158485f2a4e6765accb408335f26d0a2ea8d760ff5e99600a21",
+    "evaluate_moleg_isolated.py": "13b1db9dbebbc0162513fb7bcb4e3c7aa003390741087bd8ef448080fa2fcf14",
+    "evaluate_moleg_scaling.py": "aa2d95954ac86aae8558e4dc0321a43df8ab146fb833b7ad2685eb685452afa5",
+    "launch_moleg_scaling_app.py": "bbaa9f4fad5d8754ba481c65535e8913760151d0f5f51f3fecea35cc0ac021a8",
+    "manage_moleg_scaling_apps.py": "e0e9c3cd46378ecd70fef58a7418a0217ef2bc84d8b2e6838c33b9161e7b6fc4",
+    "moleg_paper_metrics.py": "d0d53462f2f26cb9986737d50b3d5c1da0b25608230a9a057542a66551a7ad61",
+    "moleg_paper_runtime.py": "ee59275a355688986bd85323777e73524cf98ef088df0b5de7a98f4fedbb3e05",
+    "moleg_scaling_metrics.py": "5fcab93e2155352d6b54a8ae1c376493035b1056e1e9277d2843a8f52f16bb0f",
+    "monitor_moleg_resources.py": "58e022c475061af5091ad22a8daba9510067850753df6b8a5bb20622fbbfefae",
+    "select_moleg_scaling_variant.py": "42f65b06a48752ab0951b24b6f36519dff9fbfb4b1dd37493554f6f3f7b6a272",
+    "summarize_moleg_app_health.py": "1f803ef9752d19980670f758034a2add64da090eba18cc71c268dd5e48b19f7d",
+    "summarize_moleg_resources.py": "d00365f71c399dab2e61912b8ceeae180d4870a9b2f455647aa8542475de47c8",
+    "summarize_moleg_scaling.py": "b5132d38ffdf4e5d5690a385a4703399c81ebe355cc4a9f0923033a427913737"
+  },
+  "k8s_end_check": {
+    "deployment_generation": 36,
+    "ready_replicas": 1,
+    "available_replicas": 1,
+    "pod_phase": "Running",
+    "pod_restart_count": 0
+  },
+  "cleanup": {
+    "temporary_auth_config_copies_removed": 3,
+    "original_configuration_files_preserved": true,
+    "production_model_or_k8s_changes_by_experiment": false,
+    "owned_host_monitor_stopped": true
+  },
+  "mid_run_gpu0_sw_power_cap_counter": {
+    "observed_utc_lower_bound": "2026-09-07T13:50:34+00:00",
+    "observed_utc_upper_bound": "2026-09-07T13:51:23+00:00",
+    "counter_us": 142476625108,
+    "increment_to_end_s": 260.296802,
+    "scope": "two device-lifetime counter observations; not a complete per-trial power-cap trace"
+  }
+}

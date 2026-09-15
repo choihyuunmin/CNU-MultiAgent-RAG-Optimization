@@ -1,0 +1,55 @@
+{
+  "exported_utc": "2026-09-10T00:41:40.399043+00:00",
+  "scope": "numeric/hash-only export; original private evidence unchanged",
+  "completed_requests": 10800,
+  "sse_success": 10786,
+  "pipeline_ok": 10786,
+  "traced_internal_error_requests": 11,
+  "judge_records": 1764,
+  "judge_valid": 1762,
+  "judge_error_types": {
+    "ReadError": 2
+  },
+  "frozen_inputs_verified": true,
+  "temporary_environment_removed": true,
+  "release_allowed": false,
+  "omitted": [
+    "raw questions",
+    "raw answers",
+    "private traces",
+    "judge reasons",
+    "credentials",
+    "runtime/source archives"
+  ],
+  "source_sha256": {
+    "validation/requests.jsonl": "284336f91ca5f59a50b4da89659b35a89c05cb12d8a70a161d7c454cdaa899c9",
+    "validation/pipeline-audit.jsonl": "e2bdd823ecedd8a74e7c6766b216d211057783f4b2bf1d2b72431a23c3d83fc3",
+    "validation/workflow-analysis.json": "a20e984a119a407c5baf65f8a03737eb8c375d84949472bdd2235cde166a40f8",
+    "validation/resources.json": "87fca641b5e84763ce65f5981652a21602df049c92bb260388dcc4cf2a01e71b",
+    "campaign-status.json": "4ff9e0bb30426819258e9950880e57064a26cc942f7e1b9d2f03b40899bd7937"
+  },
+  "exported_sha256": {
+    "budget-final.json": "634a163c5d9941a7343ccca93f59bdd1d9d5cd1e8113b4fc867f56b178145524",
+    "campaign-status.json": "4ff9e0bb30426819258e9950880e57064a26cc942f7e1b9d2f03b40899bd7937",
+    "data-health-preflight.json": "9140698bbfe0ab4365ac2a88dc3f5ead0a41034690e37f34c4aecd338aa56279",
+    "frozen-plan.json": "bd7455ed9600339d90dde9da7b2af138db9e8d5ff4f48a220b7f15b5c0aa9138",
+    "judge-scores.jsonl": "68fef2e0f3d9ce5cb2f908a74f1696f8002af3f0cbc93760cef2fe2281e11166",
+    "judge-u1-summary.json": "62af1e7ff468e15a806438d784a60b79d2985132923fe2b0b193a1d6a7f89b39",
+    "judge-u16-summary.json": "f0d8d64c3f2c2f28d857771693a0a8311ce060478536969652737f455ef91e84",
+    "judge-u2-summary.json": "bfe544d6e2f6b47b71ddc50638994b7d3332339e42661fe8c078dfca5e769f3c",
+    "judge-u32-summary.json": "bfc061f505499df960b9411185f465bc562d5f27ec5bf8982241ea5f92c56c4e",
+    "judge-u4-summary.json": "c1bb85178581cef47a59c6309d87dd7fda176bc39c21e38938dd9c5879419b13",
+    "judge-u8-summary.json": "dacf8714c4f108ce9b6e456d0487cfa0fe0772ab03fa34ebd11909de57da7578",
+    "manifest.json": "3d874813e2f0c9f93f6577c0c57a41b694844f5a1677bf41a498ea379b1d9f41",
+    "observe-final.json": "89186a8af803dffc04ebfb44aedaead70fb2116f7ffbefb44f8fe1de5af026bb",
+    "pipeline-audit.jsonl": "e2bdd823ecedd8a74e7c6766b216d211057783f4b2bf1d2b72431a23c3d83fc3",
+    "preflight.json": "b78c54e51aa95ead508fc702ace41eef8a64cc10c771c63c58815633dfd389a9",
+    "recovery-lineage.json": "98dc9001bc04749377cfdc61d44394f6f148cd3c25e13bee5a280db4eab99932",
+    "requests.jsonl": "6cd33d807d68968ac36ae859aca489cce54913352a9b70b6179d620415162586",
+    "resources.json": "87fca641b5e84763ce65f5981652a21602df049c92bb260388dcc4cf2a01e71b",
+    "run-spec.json": "3c0a6d739113bd1d721b36004775e1b44c7cd67ae98625baf5b78c429ea4fd8a",
+    "summary.json": "1112f11aa26dd2b00aae8a5da279ceccda1cce29cc5a71dbeba7be3ad1573b43",
+    "supervised-data-preflight.json": "9140698bbfe0ab4365ac2a88dc3f5ead0a41034690e37f34c4aecd338aa56279",
+    "workflow-analysis.json": "a20e984a119a407c5baf65f8a03737eb8c375d84949472bdd2235cde166a40f8"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "utc": "2026-09-09T08:04:00.755791+00:00",
+  "scope": "partial startup pipeline health, not accuracy or completed trial",
+  "planned_questions_per_trial": 300,
+  "groups": {
+    "baseline": [
+      {
+        "group_ordinal": 0,
+        "executions_traced": 2,
+        "execute_returned_count": 2,
+        "unique_indices": 2,
+        "errors_recorded": 0,
+        "nonstream_finish_reasons": {
+          "stop": 4,
+          "tool_calls": 2
+        },
+        "rerank_http_status_counts": {
+          "200": 2
+        },
+        "guardrail_http_status_counts": {
+          "200": 2
+        }
+      }
+    ]
+  }
+}

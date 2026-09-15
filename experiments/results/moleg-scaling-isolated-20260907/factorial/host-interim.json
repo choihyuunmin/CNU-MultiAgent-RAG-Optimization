@@ -1,0 +1,142 @@
+{
+  "scope": "time-aligned whole-device and inference-host observations, not causal per-model attribution",
+  "units": "NVML memory utilization is activity time; Nsight DRAM fields are reported percentages, not GB/s",
+  "nsys_available": false,
+  "trials": [
+    {
+      "trial": 0,
+      "policy": "baseline",
+      "users": 16,
+      "repeat": 0,
+      "started_utc": "2026-09-07T13:11:40.333195+00:00",
+      "ended_utc": "2026-09-07T13:16:07.378179+00:00",
+      "host": {
+        "n": 267,
+        "first_utc": "2026-09-07T13:11:41.026775+00:00",
+        "last_utc": "2026-09-07T13:16:07.067797+00:00",
+        "minimum_mem_available_gib": 460.19512939453125,
+        "swap_total_kib": 0,
+        "vm_counter_deltas": {
+          "pswpin": 0,
+          "pswpout": 0,
+          "pgmajfault": 0,
+          "oom_kill": 0
+        },
+        "memory_psi": {
+          "some_stall_s": 0.003691,
+          "full_stall_s": 0.003691
+        },
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "n": 267,
+              "mean": 139044.47940074906,
+              "p50": 138838.0,
+              "p95": 139362.0,
+              "p99": 139362.0,
+              "max": 139362.0
+            },
+            "utilization.gpu": {
+              "n": 267,
+              "mean": 98.23595505617978,
+              "p50": 100.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 267,
+              "mean": 51.45692883895131,
+              "p50": 52.0,
+              "p95": 84.0,
+              "p99": 85.0,
+              "max": 86.0
+            },
+            "power.draw": {
+              "n": 267,
+              "mean": 467.1879775280899,
+              "p50": 475.69,
+              "p95": 531.974,
+              "p99": 545.2447999999999,
+              "max": 560.35
+            },
+            "temperature.gpu": {
+              "n": 267,
+              "mean": 77.38202247191012,
+              "p50": 78.0,
+              "p95": 82.0,
+              "p99": 83.0,
+              "max": 85.0
+            }
+          },
+          "1": {
+            "memory.used": {
+              "n": 267,
+              "mean": 122516.08988764045,
+              "p50": 119682.0,
+              "p95": 126840.0,
+              "p99": 126840.0,
+              "max": 126840.0
+            },
+            "utilization.gpu": {
+              "n": 267,
+              "mean": 44.243445692883896,
+              "p50": 6.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 267,
+              "mean": 12.887640449438202,
+              "p50": 1.0,
+              "p95": 32.0,
+              "p99": 36.0,
+              "max": 37.0
+            },
+            "power.draw": {
+              "n": 267,
+              "mean": 196.10378277153558,
+              "p50": 176.92,
+              "p95": 306.78099999999995,
+              "p99": 336.9856,
+              "max": 341.15
+            },
+            "temperature.gpu": {
+              "n": 267,
+              "mean": 48.68539325842696,
+              "p50": 48.0,
+              "p95": 52.0,
+              "p99": 53.0,
+              "max": 54.0
+            }
+          }
+        }
+      },
+      "app": {
+        "n": 266,
+        "active": {
+          "n": 266,
+          "mean": 3.4661654135338344,
+          "p50": 4.0,
+          "p95": 4.0,
+          "p99": 4.0,
+          "max": 4
+        },
+        "inner_queued": {
+          "n": 266,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0
+        },
+        "maxrss_kib": 186548,
+        "pipeline_limits_observed": [
+          4
+        ],
+        "http_limits_observed": []
+      }
+    }
+  ]
+}

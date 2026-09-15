@@ -1,0 +1,28 @@
+{
+  "spec": {
+    "limit": 300,
+    "start_repeat": 0,
+    "repeats": 2,
+    "seed": 20260911
+  },
+  "sha256": {
+    "runtime-initial.tar.gz": "c72f3106affd9d52fab6383990379ab332ed02a2e77f7fe7c1fa152b5ff95c76",
+    "runtime-final.tar.gz": "8ce3e8927c2267351ccf27c0bbb003aa6797001fda2fd5ae73e29c7dcf178f8e",
+    "runtime-primary.tar.gz": "831c88382ac7cbc8650bef5336e063cb73a24fd46c8e4c19bc814f4e0c8e9dfa",
+    "plan.json": "cd61697578936fd7b08431231d6db7317402d5464f6f398999ccb2bdb3711e7a",
+    "cases.json": "acdb84a352f116856ab48db0637265f99105e316c4b8ca0e59a25dda82ccca61",
+    "smoke.cases.json": "42e66a65186ba345cd341b4f11b7c3def05216917e1fcee3f792036fa93ecb33",
+    "baseline.json": "48e8966a3dd8c6f86633a3b3dd3cdbc3092c99370f7b290ebe4facf62ccb9d0e",
+    "reasoning.json": "ff672e9400a69a09f7ece841716e6d7d038c43b479dc227309d0beec10f9003c",
+    "environment-lineage.json": "adfa6e437444da616ce049ce4bcc6edd6a7449ca7979aeaceedaf1f97381b56b"
+  },
+  "smoke": {
+    "initial_sse_success": 16,
+    "initial_candidate_internal_error_requests": 8,
+    "verified_requests": 16,
+    "verified_success": 16,
+    "verified_internal_error_requests": 0
+  },
+  "runtime_changes": "LiteLLM request-local reasoning_effort allowlist; added analysis, audit and supervisor; policy thresholds and questions unchanged",
+  "unit_tests_passed": 155
+}

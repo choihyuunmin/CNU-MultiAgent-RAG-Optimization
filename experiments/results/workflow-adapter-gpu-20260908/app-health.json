@@ -1,0 +1,70 @@
+{
+  "scope": "instrumented execute_generate traces; not SSE completion or expert answer correctness",
+  "groups": {
+    "baseline": [
+      {
+        "group_ordinal": 0,
+        "executions_traced": 64,
+        "execute_returned_count": 64,
+        "unique_indices": 64,
+        "complete_64_index_set": true,
+        "errors_recorded": 1,
+        "nonstream_finish_reasons": {
+          "stop": 201,
+          "tool_calls": 64
+        },
+        "rerank_http_status_counts": {
+          "200": 62
+        },
+        "guardrail_http_status_counts": {
+          "200": 64
+        }
+      }
+    ],
+    "fixed16": [
+      {
+        "group_ordinal": 0,
+        "executions_traced": 64,
+        "execute_returned_count": 64,
+        "unique_indices": 64,
+        "complete_64_index_set": true,
+        "errors_recorded": 0,
+        "nonstream_finish_reasons": {
+          "stop": 201,
+          "tool_calls": 64
+        },
+        "rerank_http_status_counts": {
+          "200": 62
+        },
+        "guardrail_http_status_counts": {
+          "200": 64
+        }
+      }
+    ],
+    "budget": [
+      {
+        "group_ordinal": 0,
+        "executions_traced": 64,
+        "execute_returned_count": 63,
+        "unique_indices": 64,
+        "complete_64_index_set": true,
+        "errors_recorded": 0,
+        "nonstream_finish_reasons": {
+          "stop": 201,
+          "tool_calls": 64
+        },
+        "rerank_http_status_counts": {
+          "200": 62
+        },
+        "guardrail_http_status_counts": {
+          "200": 64
+        }
+      }
+    ]
+  },
+  "private_trace_sha256": {
+    "baseline": "b6f19b844fc3ffc27d4ea5ba309a4fde08c7c8eb71275908cfe59b194ba39059",
+    "fixed16": "0089d6f629c3ff519953ff6fa91c802e5b9af979f0c09fd9afda53e62f10dabd",
+    "budget": "64292d1527b444f66b30d6e2897411945ffe342bedac423d73d2427c916f20c0"
+  }
+}

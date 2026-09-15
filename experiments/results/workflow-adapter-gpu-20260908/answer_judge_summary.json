@@ -1,0 +1,86 @@
+{
+  "expected": 63,
+  "completed": 63,
+  "judge_model": "microsoft/phi-4",
+  "warning": "Automated single-model evidence support; not expert correctness. Judge has its own errors.",
+  "variants": {
+    "baseline": {
+      "n": 21,
+      "valid": 21,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.9047619047619047,
+      "mean_support_0_to_2": 1.9523809523809523,
+      "insufficient_evidence_rate": 0.047619047619047616
+    },
+    "fixed16": {
+      "n": 21,
+      "valid": 21,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.9047619047619047,
+      "mean_support_0_to_2": 1.9523809523809523,
+      "insufficient_evidence_rate": 0.047619047619047616
+    },
+    "budget": {
+      "n": 21,
+      "valid": 21,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.8095238095238095,
+      "mean_support_0_to_2": 1.8571428571428572,
+      "insufficient_evidence_rate": 0.09523809523809523
+    }
+  },
+  "comparisons": {
+    "fixed16": {
+      "relevance": {
+        "n": 21,
+        "baseline_mean": 1.9047619047619047,
+        "candidate_mean": 1.9047619047619047,
+        "delta": 0.0,
+        "delta_95ci": [
+          0.0,
+          0.0
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      },
+      "support": {
+        "n": 21,
+        "baseline_mean": 1.9523809523809523,
+        "candidate_mean": 1.9523809523809523,
+        "delta": 0.0,
+        "delta_95ci": [
+          0.0,
+          0.0
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      }
+    },
+    "budget": {
+      "relevance": {
+        "n": 21,
+        "baseline_mean": 1.9047619047619047,
+        "candidate_mean": 1.8095238095238095,
+        "delta": -0.09523809523809512,
+        "delta_95ci": [
+          -0.2857142857142857,
+          0.0
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      },
+      "support": {
+        "n": 21,
+        "baseline_mean": 1.9523809523809523,
+        "candidate_mean": 1.8571428571428572,
+        "delta": -0.09523809523809512,
+        "delta_95ci": [
+          -0.2857142857142857,
+          0.0
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      }
+    }
+  }
+}

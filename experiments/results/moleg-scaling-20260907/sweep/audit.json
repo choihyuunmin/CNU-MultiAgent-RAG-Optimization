@@ -1,0 +1,71 @@
+{
+  "passed": false,
+  "integrity_passed": true,
+  "campaign_complete": false,
+  "completion_issues": [
+    "campaign is incomplete",
+    "trial count does not match manifest"
+  ],
+  "planned_trials": 12,
+  "completed_trials": 6,
+  "errors": [],
+  "rows": 384,
+  "unique_questions": 64,
+  "trials": [
+    {
+      "trial": 0,
+      "users": 1,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 1,
+      "users": 2,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 2,
+      "users": 4,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 3,
+      "users": 8,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 4,
+      "users": 16,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    },
+    {
+      "trial": 5,
+      "users": 32,
+      "arrival_rate": null,
+      "policy": "baseline",
+      "repeat": 0,
+      "rows": 64
+    }
+  ],
+  "sha256": {
+    "manifest.json": "d6814869e9d2f0ac97b8ede392dc965485dbe66d6d47eec30b2f090221f3229a",
+    "requests.jsonl": "471f321ada85a521f46265efd0f15899b39b2858d35ee28f524af74879d0db5d",
+    "telemetry.jsonl": "97e59c80621bc7f8be181a3b824fe5bafd0e98f63bec437a5f12dce4afc69f05",
+    "summary.json": "d9bf3d97795b583813681477b8aa4e9bd179731b2a1aea2e82c36685a7432611"
+  },
+  "scope": "artifact coverage and timing consistency, not answer correctness or causal proof"
+}

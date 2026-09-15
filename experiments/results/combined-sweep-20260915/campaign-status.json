@@ -1,0 +1,32 @@
+{
+  "status": "completed",
+  "started_utc": "2026-09-14T23:45:43.725329+00:00",
+  "levels": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    50,
+    100,
+    300,
+    500
+  ],
+  "arms": [
+    "baseline",
+    "reasoning"
+  ],
+  "reference_arm": "reasoning",
+  "completed_levels": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    50,
+    100,
+    300
+  ],
+  "hardware_limit_level": 300,
+  "ended_utc": "2026-09-15T01:20:10.210224+00:00"
+}

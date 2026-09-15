@@ -1,0 +1,26 @@
+{
+  "utc": "2026-09-07T13:30:04.116614+00:00",
+  "selected": "emit16",
+  "rule": "minimum mean latency among non-baseline 64/64 candidates with both source inclusion rates at least baseline",
+  "source_aggregate_sha256": "e3698cd6cc138af3c1aac50f8a4943d971c7350ccb580bc82d8f1326f6b82d79",
+  "validation": {
+    "users": [
+      16,
+      32
+    ],
+    "repeats": 2,
+    "cases_per_trial": 64,
+    "timeout_s": 240,
+    "slo_s": 30,
+    "planned_requests": 512,
+    "variants": [
+      "baseline",
+      "emit16"
+    ]
+  },
+  "limitations": [
+    "selection and validation use the same question set but new executions",
+    "source labels do not establish expert answer quality",
+    "selection trials are excluded from validation estimates"
+  ]
+}

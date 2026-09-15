@@ -1,0 +1,1144 @@
+{
+  "scope": "time-aligned whole-device and inference-host observations, not causal per-model attribution",
+  "units": "NVML memory utilization is activity time; Nsight DRAM fields are reported percentages, not GB/s",
+  "nsys_available": true,
+  "trials": [
+    {
+      "trial": 0,
+      "policy": "baseline",
+      "users": 16,
+      "repeat": 0,
+      "started_utc": "2026-09-07T13:11:40.333195+00:00",
+      "ended_utc": "2026-09-07T13:16:07.378179+00:00",
+      "host": {
+        "n": 267,
+        "first_utc": "2026-09-07T13:11:41.026775+00:00",
+        "last_utc": "2026-09-07T13:16:07.067797+00:00",
+        "minimum_mem_available_gib": 460.19512939453125,
+        "swap_total_kib": 0,
+        "vm_counter_deltas": {
+          "pswpin": 0,
+          "pswpout": 0,
+          "pgmajfault": 0,
+          "oom_kill": 0
+        },
+        "memory_psi": {
+          "some_stall_s": 0.003691,
+          "full_stall_s": 0.003691
+        },
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "n": 267,
+              "mean": 139044.47940074906,
+              "p50": 138838.0,
+              "p95": 139362.0,
+              "p99": 139362.0,
+              "max": 139362.0
+            },
+            "utilization.gpu": {
+              "n": 267,
+              "mean": 98.23595505617978,
+              "p50": 100.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 267,
+              "mean": 51.45692883895131,
+              "p50": 52.0,
+              "p95": 84.0,
+              "p99": 85.0,
+              "max": 86.0
+            },
+            "power.draw": {
+              "n": 267,
+              "mean": 467.1879775280899,
+              "p50": 475.69,
+              "p95": 531.974,
+              "p99": 545.2447999999999,
+              "max": 560.35
+            },
+            "temperature.gpu": {
+              "n": 267,
+              "mean": 77.38202247191012,
+              "p50": 78.0,
+              "p95": 82.0,
+              "p99": 83.0,
+              "max": 85.0
+            }
+          },
+          "1": {
+            "memory.used": {
+              "n": 267,
+              "mean": 122516.08988764045,
+              "p50": 119682.0,
+              "p95": 126840.0,
+              "p99": 126840.0,
+              "max": 126840.0
+            },
+            "utilization.gpu": {
+              "n": 267,
+              "mean": 44.243445692883896,
+              "p50": 6.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 267,
+              "mean": 12.887640449438202,
+              "p50": 1.0,
+              "p95": 32.0,
+              "p99": 36.0,
+              "max": 37.0
+            },
+            "power.draw": {
+              "n": 267,
+              "mean": 196.10378277153558,
+              "p50": 176.92,
+              "p95": 306.78099999999995,
+              "p99": 336.9856,
+              "max": 341.15
+            },
+            "temperature.gpu": {
+              "n": 267,
+              "mean": 48.68539325842696,
+              "p50": 48.0,
+              "p95": 52.0,
+              "p99": 53.0,
+              "max": 54.0
+            }
+          }
+        }
+      },
+      "app": {
+        "n": 266,
+        "active": {
+          "n": 266,
+          "mean": 3.4661654135338344,
+          "p50": 4.0,
+          "p95": 4.0,
+          "p99": 4.0,
+          "max": 4
+        },
+        "inner_queued": {
+          "n": 266,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0
+        },
+        "maxrss_kib": 186548,
+        "pipeline_limits_observed": [
+          4
+        ],
+        "http_limits_observed": []
+      },
+      "nsys_gpus": {
+        "0": {
+          "GR Active [Throughput %]": {
+            "n": 26553,
+            "mean": 98.25375663766806,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.9779685911196475
+          },
+          "SMs Active [Throughput %]": {
+            "n": 26553,
+            "mean": 68.51598689413626,
+            "p95": 98.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.1568937596505103
+          },
+          "SM Issue [Throughput %]": {
+            "n": 26553,
+            "mean": 11.26132640379618,
+            "p95": 25.0,
+            "max": 34.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 26553,
+            "mean": 13.96742364327948,
+            "p95": 56.0,
+            "max": 93.0,
+            "fraction_ge_80": 0.009791737280156667
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 26553,
+            "mean": 39.445712348887135,
+            "p95": 66.0,
+            "max": 69.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 26553,
+            "mean": 1.7221782849395548,
+            "p95": 5.0,
+            "max": 11.0,
+            "fraction_ge_80": 0.0
+          }
+        },
+        "1": {
+          "GR Active [Throughput %]": {
+            "n": 26543,
+            "mean": 44.518215725426664,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.41623026786723427
+          },
+          "SMs Active [Throughput %]": {
+            "n": 26543,
+            "mean": 18.128470783257356,
+            "p95": 47.0,
+            "max": 95.0,
+            "fraction_ge_80": 0.00037674716497758355
+          },
+          "SM Issue [Throughput %]": {
+            "n": 26543,
+            "mean": 6.229325999321855,
+            "p95": 18.0,
+            "max": 35.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 26543,
+            "mean": 1.7341295256753193,
+            "p95": 5.0,
+            "max": 54.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 26543,
+            "mean": 10.411973024902988,
+            "p95": 26.0,
+            "max": 60.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 26543,
+            "mean": 0.900538748445918,
+            "p95": 1.0,
+            "max": 4.0,
+            "fraction_ge_80": 0.0
+          }
+        }
+      },
+      "nsys_window_covered": false
+    },
+    {
+      "trial": 1,
+      "policy": "emit",
+      "users": 16,
+      "repeat": 0,
+      "started_utc": "2026-09-07T13:16:07.381024+00:00",
+      "ended_utc": "2026-09-07T13:20:33.803356+00:00",
+      "host": {
+        "n": 266,
+        "first_utc": "2026-09-07T13:16:08.067945+00:00",
+        "last_utc": "2026-09-07T13:20:33.114664+00:00",
+        "minimum_mem_available_gib": 460.7594413757324,
+        "swap_total_kib": 0,
+        "vm_counter_deltas": {
+          "pswpin": 0,
+          "pswpout": 0,
+          "pgmajfault": 1,
+          "oom_kill": 0
+        },
+        "memory_psi": {
+          "some_stall_s": 0.004326,
+          "full_stall_s": 0.004327
+        },
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "n": 266,
+              "mean": 139362.0,
+              "p50": 139362.0,
+              "p95": 139362.0,
+              "p99": 139362.0,
+              "max": 139362.0
+            },
+            "utilization.gpu": {
+              "n": 266,
+              "mean": 98.15789473684211,
+              "p50": 100.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 266,
+              "mean": 47.962406015037594,
+              "p50": 50.0,
+              "p95": 83.75,
+              "p99": 84.35000000000002,
+              "max": 85.0
+            },
+            "power.draw": {
+              "n": 266,
+              "mean": 446.8960902255639,
+              "p50": 440.36,
+              "p95": 524.6225,
+              "p99": 534.175,
+              "max": 547.66
+            },
+            "temperature.gpu": {
+              "n": 266,
+              "mean": 77.34586466165413,
+              "p50": 77.0,
+              "p95": 82.0,
+              "p99": 83.0,
+              "max": 85.0
+            }
+          },
+          "1": {
+            "memory.used": {
+              "n": 266,
+              "mean": 126840.0,
+              "p50": 126840.0,
+              "p95": 126840.0,
+              "p99": 126840.0,
+              "max": 126840.0
+            },
+            "utilization.gpu": {
+              "n": 266,
+              "mean": 41.8421052631579,
+              "p50": 0.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 266,
+              "mean": 12.406015037593985,
+              "p50": 0.0,
+              "p95": 33.75,
+              "p99": 36.0,
+              "max": 38.0
+            },
+            "power.draw": {
+              "n": 266,
+              "mean": 193.7695864661654,
+              "p50": 169.935,
+              "p95": 305.96500000000003,
+              "p99": 333.22650000000004,
+              "max": 338.48
+            },
+            "temperature.gpu": {
+              "n": 266,
+              "mean": 48.94736842105263,
+              "p50": 49.0,
+              "p95": 53.0,
+              "p99": 54.0,
+              "max": 54.0
+            }
+          }
+        }
+      },
+      "app": {
+        "n": 265,
+        "active": {
+          "n": 265,
+          "mean": 3.8,
+          "p50": 4.0,
+          "p95": 4.0,
+          "p99": 4.0,
+          "max": 4
+        },
+        "inner_queued": {
+          "n": 265,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0
+        },
+        "maxrss_kib": 186700,
+        "pipeline_limits_observed": [
+          4
+        ],
+        "http_limits_observed": []
+      },
+      "nsys_gpus": {
+        "0": {
+          "GR Active [Throughput %]": {
+            "n": 26642,
+            "mean": 97.65250356579837,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.9721867727648075
+          },
+          "SMs Active [Throughput %]": {
+            "n": 26642,
+            "mean": 64.83169431724345,
+            "p95": 95.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.11204113805269875
+          },
+          "SM Issue [Throughput %]": {
+            "n": 26642,
+            "mean": 10.612566624127318,
+            "p95": 23.0,
+            "max": 34.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 26642,
+            "mean": 12.825989039861872,
+            "p95": 52.0,
+            "max": 93.0,
+            "fraction_ge_80": 0.006455971773890849
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 26642,
+            "mean": 36.066624127317766,
+            "p95": 66.0,
+            "max": 68.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 26642,
+            "mean": 1.60367089557841,
+            "p95": 4.0,
+            "max": 10.0,
+            "fraction_ge_80": 0.0
+          }
+        },
+        "1": {
+          "GR Active [Throughput %]": {
+            "n": 26642,
+            "mean": 42.8102244576233,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.39685459049620897
+          },
+          "SMs Active [Throughput %]": {
+            "n": 26642,
+            "mean": 17.372006606110652,
+            "p95": 47.0,
+            "max": 84.0,
+            "fraction_ge_80": 3.753471961564447e-05
+          },
+          "SM Issue [Throughput %]": {
+            "n": 26642,
+            "mean": 5.966181217626304,
+            "p95": 18.0,
+            "max": 32.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 26642,
+            "mean": 1.6343367615043916,
+            "p95": 5.0,
+            "max": 48.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 26642,
+            "mean": 10.07514450867052,
+            "p95": 26.0,
+            "max": 60.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 26642,
+            "mean": 0.8887470910592298,
+            "p95": 1.0,
+            "max": 3.0,
+            "fraction_ge_80": 0.0
+          }
+        }
+      },
+      "nsys_window_covered": true
+    },
+    {
+      "trial": 2,
+      "policy": "slots8",
+      "users": 16,
+      "repeat": 0,
+      "started_utc": "2026-09-07T13:20:33.807272+00:00",
+      "ended_utc": "2026-09-07T13:23:55.924715+00:00",
+      "host": {
+        "n": 202,
+        "first_utc": "2026-09-07T13:20:34.114776+00:00",
+        "last_utc": "2026-09-07T13:23:55.154059+00:00",
+        "minimum_mem_available_gib": 460.7805595397949,
+        "swap_total_kib": 0,
+        "vm_counter_deltas": {
+          "pswpin": 0,
+          "pswpout": 0,
+          "pgmajfault": 0,
+          "oom_kill": 0
+        },
+        "memory_psi": {
+          "some_stall_s": 0.004245,
+          "full_stall_s": 0.004245
+        },
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "n": 202,
+              "mean": 139362.0,
+              "p50": 139362.0,
+              "p95": 139362.0,
+              "p99": 139362.0,
+              "max": 139362.0
+            },
+            "utilization.gpu": {
+              "n": 202,
+              "mean": 96.70792079207921,
+              "p50": 100.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 202,
+              "mean": 38.45544554455446,
+              "p50": 44.0,
+              "p95": 77.69999999999993,
+              "p99": 82.99000000000001,
+              "max": 84.0
+            },
+            "power.draw": {
+              "n": 202,
+              "mean": 434.46415841584155,
+              "p50": 444.31,
+              "p95": 530.2175,
+              "p99": 540.6587999999999,
+              "max": 555.35
+            },
+            "temperature.gpu": {
+              "n": 202,
+              "mean": 76.36138613861387,
+              "p50": 77.0,
+              "p95": 80.0,
+              "p99": 82.0,
+              "max": 83.0
+            }
+          },
+          "1": {
+            "memory.used": {
+              "n": 202,
+              "mean": 126840.0,
+              "p50": 126840.0,
+              "p95": 126840.0,
+              "p99": 126840.0,
+              "max": 126840.0
+            },
+            "utilization.gpu": {
+              "n": 202,
+              "mean": 52.55940594059406,
+              "p50": 80.5,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 202,
+              "mean": 15.970297029702971,
+              "p50": 22.0,
+              "p95": 36.0,
+              "p99": 38.0,
+              "max": 40.0
+            },
+            "power.draw": {
+              "n": 202,
+              "mean": 217.07158415841585,
+              "p50": 216.225,
+              "p95": 337.0969999999999,
+              "p99": 342.54650000000004,
+              "max": 344.55
+            },
+            "temperature.gpu": {
+              "n": 202,
+              "mean": 51.004950495049506,
+              "p50": 51.0,
+              "p95": 56.0,
+              "p99": 57.0,
+              "max": 57.0
+            }
+          }
+        }
+      },
+      "app": {
+        "n": 201,
+        "active": {
+          "n": 201,
+          "mean": 6.7711442786069655,
+          "p50": 7.0,
+          "p95": 8.0,
+          "p99": 8.0,
+          "max": 8
+        },
+        "inner_queued": {
+          "n": 201,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0
+        },
+        "maxrss_kib": 196836,
+        "pipeline_limits_observed": [
+          8
+        ],
+        "http_limits_observed": [
+          8
+        ]
+      },
+      "nsys_gpus": {
+        "0": {
+          "GR Active [Throughput %]": {
+            "n": 20212,
+            "mean": 96.25732238274293,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.9527013655254304
+          },
+          "SMs Active [Throughput %]": {
+            "n": 20212,
+            "mean": 63.802988323768055,
+            "p95": 97.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.15441321986938453
+          },
+          "SM Issue [Throughput %]": {
+            "n": 20212,
+            "mean": 11.942262022560856,
+            "p95": 24.0,
+            "max": 33.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 20212,
+            "mean": 16.295566989906987,
+            "p95": 56.0,
+            "max": 93.0,
+            "fraction_ge_80": 0.008311893924401346
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 20212,
+            "mean": 28.51672273896695,
+            "p95": 62.0,
+            "max": 67.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 20212,
+            "mean": 1.7005739164852562,
+            "p95": 4.0,
+            "max": 8.0,
+            "fraction_ge_80": 0.0
+          }
+        },
+        "1": {
+          "GR Active [Throughput %]": {
+            "n": 20212,
+            "mean": 54.03052641994854,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.5009895111814764
+          },
+          "SMs Active [Throughput %]": {
+            "n": 20212,
+            "mean": 22.808628537502475,
+            "p95": 52.0,
+            "max": 71.0,
+            "fraction_ge_80": 0.0
+          },
+          "SM Issue [Throughput %]": {
+            "n": 20212,
+            "mean": 8.208984761527805,
+            "p95": 23.0,
+            "max": 32.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 20212,
+            "mean": 2.2417375816346725,
+            "p95": 6.0,
+            "max": 27.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 20212,
+            "mean": 12.840936077577677,
+            "p95": 28.0,
+            "max": 56.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 20212,
+            "mean": 0.9080249356817732,
+            "p95": 1.0,
+            "max": 4.0,
+            "fraction_ge_80": 0.0
+          }
+        }
+      },
+      "nsys_window_covered": true
+    },
+    {
+      "trial": 3,
+      "policy": "emit8",
+      "users": 16,
+      "repeat": 0,
+      "started_utc": "2026-09-07T13:23:55.930392+00:00",
+      "ended_utc": "2026-09-07T13:27:12.343222+00:00",
+      "host": {
+        "n": 197,
+        "first_utc": "2026-09-07T13:23:56.154241+00:00",
+        "last_utc": "2026-09-07T13:27:12.190776+00:00",
+        "minimum_mem_available_gib": 460.6198539733887,
+        "swap_total_kib": 0,
+        "vm_counter_deltas": {
+          "pswpin": 0,
+          "pswpout": 0,
+          "pgmajfault": 0,
+          "oom_kill": 0
+        },
+        "memory_psi": {
+          "some_stall_s": 0.000298,
+          "full_stall_s": 0.000297
+        },
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "n": 197,
+              "mean": 139362.0,
+              "p50": 139362.0,
+              "p95": 139362.0,
+              "p99": 139362.0,
+              "max": 139362.0
+            },
+            "utilization.gpu": {
+              "n": 197,
+              "mean": 95.58375634517766,
+              "p50": 100.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 197,
+              "mean": 37.71573604060914,
+              "p50": 44.0,
+              "p95": 74.19999999999999,
+              "p99": 81.0,
+              "max": 83.0
+            },
+            "power.draw": {
+              "n": 197,
+              "mean": 432.8728426395939,
+              "p50": 439.59,
+              "p95": 527.742,
+              "p99": 539.2172,
+              "max": 548.53
+            },
+            "temperature.gpu": {
+              "n": 197,
+              "mean": 77.11167512690355,
+              "p50": 77.0,
+              "p95": 82.0,
+              "p99": 83.0,
+              "max": 84.0
+            }
+          },
+          "1": {
+            "memory.used": {
+              "n": 197,
+              "mean": 126840.0,
+              "p50": 126840.0,
+              "p95": 126840.0,
+              "p99": 126840.0,
+              "max": 126840.0
+            },
+            "utilization.gpu": {
+              "n": 197,
+              "mean": 54.67005076142132,
+              "p50": 89.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 197,
+              "mean": 16.365482233502537,
+              "p50": 24.0,
+              "p95": 36.0,
+              "p99": 37.119999999999976,
+              "max": 41.0
+            },
+            "power.draw": {
+              "n": 197,
+              "mean": 212.91928934010153,
+              "p50": 206.72,
+              "p95": 330.844,
+              "p99": 342.1196,
+              "max": 344.69
+            },
+            "temperature.gpu": {
+              "n": 197,
+              "mean": 51.23857868020305,
+              "p50": 51.0,
+              "p95": 54.0,
+              "p99": 55.0,
+              "max": 55.0
+            }
+          }
+        }
+      },
+      "app": {
+        "n": 196,
+        "active": {
+          "n": 196,
+          "mean": 7.255102040816326,
+          "p50": 8.0,
+          "p95": 8.0,
+          "p99": 8.0,
+          "max": 8
+        },
+        "inner_queued": {
+          "n": 196,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0
+        },
+        "maxrss_kib": 195272,
+        "pipeline_limits_observed": [
+          8
+        ],
+        "http_limits_observed": [
+          8
+        ]
+      },
+      "nsys_gpus": {
+        "0": {
+          "GR Active [Throughput %]": {
+            "n": 19641,
+            "mean": 95.51489231709179,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.9449620691410824
+          },
+          "SMs Active [Throughput %]": {
+            "n": 19641,
+            "mean": 63.7445649406853,
+            "p95": 98.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.18191538109057584
+          },
+          "SM Issue [Throughput %]": {
+            "n": 19641,
+            "mean": 12.147599409398707,
+            "p95": 25.0,
+            "max": 34.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 19641,
+            "mean": 16.97113181609898,
+            "p95": 56.0,
+            "max": 92.0,
+            "fraction_ge_80": 0.012117509291787587
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 19641,
+            "mean": 27.42350185835752,
+            "p95": 59.0,
+            "max": 69.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 19641,
+            "mean": 1.6993533934117409,
+            "p95": 4.0,
+            "max": 8.0,
+            "fraction_ge_80": 0.0
+          }
+        },
+        "1": {
+          "GR Active [Throughput %]": {
+            "n": 19641,
+            "mean": 52.13548190010692,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.4847512855760908
+          },
+          "SMs Active [Throughput %]": {
+            "n": 19641,
+            "mean": 21.835089863041595,
+            "p95": 52.0,
+            "max": 86.0,
+            "fraction_ge_80": 0.0001018278091746856
+          },
+          "SM Issue [Throughput %]": {
+            "n": 19641,
+            "mean": 7.784175958454254,
+            "p95": 23.0,
+            "max": 33.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 19641,
+            "mean": 2.127742986609643,
+            "p95": 6.0,
+            "max": 48.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 19641,
+            "mean": 12.380683264599561,
+            "p95": 27.0,
+            "max": 60.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 19641,
+            "mean": 0.9071839519372741,
+            "p95": 1.0,
+            "max": 4.0,
+            "fraction_ge_80": 0.0
+          }
+        }
+      },
+      "nsys_window_covered": true
+    },
+    {
+      "trial": 4,
+      "policy": "emit16",
+      "users": 16,
+      "repeat": 0,
+      "started_utc": "2026-09-07T13:27:12.350691+00:00",
+      "ended_utc": "2026-09-07T13:29:51.602823+00:00",
+      "host": {
+        "n": 159,
+        "first_utc": "2026-09-07T13:27:13.190936+00:00",
+        "last_utc": "2026-09-07T13:29:51.227925+00:00",
+        "minimum_mem_available_gib": 460.6402893066406,
+        "swap_total_kib": 0,
+        "vm_counter_deltas": {
+          "pswpin": 0,
+          "pswpout": 0,
+          "pgmajfault": 0,
+          "oom_kill": 0
+        },
+        "memory_psi": {
+          "some_stall_s": 0.002753,
+          "full_stall_s": 0.002753
+        },
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "n": 159,
+              "mean": 139362.0,
+              "p50": 139362.0,
+              "p95": 139362.0,
+              "p99": 139362.0,
+              "max": 139362.0
+            },
+            "utilization.gpu": {
+              "n": 159,
+              "mean": 98.26415094339623,
+              "p50": 100.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 159,
+              "mean": 31.660377358490567,
+              "p50": 30.0,
+              "p95": 57.0,
+              "p99": 61.0,
+              "max": 62.0
+            },
+            "power.draw": {
+              "n": 159,
+              "mean": 433.1525786163522,
+              "p50": 433.49,
+              "p95": 513.583,
+              "p99": 535.0812,
+              "max": 551.61
+            },
+            "temperature.gpu": {
+              "n": 159,
+              "mean": 76.59748427672956,
+              "p50": 76.0,
+              "p95": 80.1,
+              "p99": 81.41999999999999,
+              "max": 82.0
+            }
+          },
+          "1": {
+            "memory.used": {
+              "n": 159,
+              "mean": 126840.0,
+              "p50": 126840.0,
+              "p95": 126840.0,
+              "p99": 126840.0,
+              "max": 126840.0
+            },
+            "utilization.gpu": {
+              "n": 159,
+              "mean": 52.9748427672956,
+              "p50": 81.0,
+              "p95": 100.0,
+              "p99": 100.0,
+              "max": 100.0
+            },
+            "utilization.memory": {
+              "n": 159,
+              "mean": 16.628930817610062,
+              "p50": 24.0,
+              "p95": 36.0,
+              "p99": 38.41999999999999,
+              "max": 39.0
+            },
+            "power.draw": {
+              "n": 159,
+              "mean": 224.75484276729557,
+              "p50": 237.23,
+              "p95": 340.514,
+              "p99": 347.68819999999994,
+              "max": 351.11
+            },
+            "temperature.gpu": {
+              "n": 159,
+              "mean": 52.77987421383648,
+              "p50": 53.0,
+              "p95": 57.0,
+              "p99": 57.0,
+              "max": 58.0
+            }
+          }
+        }
+      },
+      "app": {
+        "n": 159,
+        "active": {
+          "n": 159,
+          "mean": 14.264150943396226,
+          "p50": 16.0,
+          "p95": 16.0,
+          "p99": 16.0,
+          "max": 16
+        },
+        "inner_queued": {
+          "n": 159,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0
+        },
+        "maxrss_kib": 192976,
+        "pipeline_limits_observed": [
+          16
+        ],
+        "http_limits_observed": [
+          16
+        ]
+      },
+      "nsys_gpus": {
+        "0": {
+          "GR Active [Throughput %]": {
+            "n": 15925,
+            "mean": 98.1797174254317,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.9802825745682888
+          },
+          "SMs Active [Throughput %]": {
+            "n": 15925,
+            "mean": 64.90285714285714,
+            "p95": 98.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.21569858712715856
+          },
+          "SM Issue [Throughput %]": {
+            "n": 15925,
+            "mean": 13.176640502354788,
+            "p95": 26.0,
+            "max": 34.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 15925,
+            "mean": 21.004897959183673,
+            "p95": 58.0,
+            "max": 93.0,
+            "fraction_ge_80": 0.01576138147566719
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 15925,
+            "mean": 21.981287284144425,
+            "p95": 44.0,
+            "max": 64.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 15925,
+            "mean": 1.7983045525902668,
+            "p95": 4.0,
+            "max": 8.0,
+            "fraction_ge_80": 0.0
+          }
+        },
+        "1": {
+          "GR Active [Throughput %]": {
+            "n": 15925,
+            "mean": 54.23020408163265,
+            "p95": 100.0,
+            "max": 100.0,
+            "fraction_ge_80": 0.510392464678179
+          },
+          "SMs Active [Throughput %]": {
+            "n": 15925,
+            "mean": 24.189199372056514,
+            "p95": 53.0,
+            "max": 64.0,
+            "fraction_ge_80": 0.0
+          },
+          "SM Issue [Throughput %]": {
+            "n": 15925,
+            "mean": 9.273971742543171,
+            "p95": 24.0,
+            "max": 30.0,
+            "fraction_ge_80": 0.0
+          },
+          "Tensor Active [Throughput %]": {
+            "n": 15925,
+            "mean": 2.5256514913657773,
+            "p95": 7.0,
+            "max": 25.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Read Bandwidth [Throughput %]": {
+            "n": 15925,
+            "mean": 13.41287284144427,
+            "p95": 28.0,
+            "max": 60.0,
+            "fraction_ge_80": 0.0
+          },
+          "DRAM Write Bandwidth [Throughput %]": {
+            "n": 15925,
+            "mean": 0.9009733124018838,
+            "p95": 1.0,
+            "max": 3.0,
+            "fraction_ge_80": 0.0
+          }
+        }
+      },
+      "nsys_window_covered": true
+    }
+  ],
+  "nsys_diagnostic_event_count": 23
+}

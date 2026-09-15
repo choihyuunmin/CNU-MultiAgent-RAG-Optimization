@@ -1,0 +1,23 @@
+{
+  "scope": "near-simultaneous read-only host clock probe; not clock synchronization or an RTT estimate",
+  "observed_host_clock_difference_s": 42.044660329818726,
+  "measurement_note": "Latency uses local perf_counter durations, never cross-host wall-clock timestamp subtraction.",
+  "probes": [
+    {
+      "host_alias": "52",
+      "call_start_ms": 1788656389447,
+      "call_end_ms": 1788656389582,
+      "remote": {
+        "epoch_s": 1788656347.523455
+      }
+    },
+    {
+      "host_alias": "53",
+      "call_start_ms": 1788656389447,
+      "call_end_ms": 1788656389603,
+      "remote": {
+        "epoch_s": 1788656389.5681152
+      }
+    }
+  ]
+}

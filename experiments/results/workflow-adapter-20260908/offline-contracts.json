@@ -1,0 +1,155 @@
+{
+  "scope": "CPU synthetic payload/stream contracts; no GPU inference, no speed or accuracy claim",
+  "synthetic_checks": [
+    {
+      "users": 1,
+      "mode": "observe",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 1,
+      "mode": "budget",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 2,
+      "mode": "observe",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 2,
+      "mode": "budget",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 4,
+      "mode": "observe",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 4,
+      "mode": "budget",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 8,
+      "mode": "observe",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 8,
+      "mode": "budget",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 16,
+      "mode": "observe",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 16,
+      "mode": "budget",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 32,
+      "mode": "observe",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    },
+    {
+      "users": 32,
+      "mode": "budget",
+      "requests": 64,
+      "exact_fixture_outputs": 64,
+      "credits_released": true
+    }
+  ],
+  "historical_live_results_not_new_adapter_measurements": [
+    {
+      "users": 16,
+      "policy": "baseline",
+      "n": 128,
+      "success": 128,
+      "mean_s": 60.360430395041476
+    },
+    {
+      "users": 16,
+      "policy": "emit16",
+      "n": 128,
+      "success": 128,
+      "mean_s": 34.04455593102466
+    },
+    {
+      "users": 32,
+      "policy": "emit16",
+      "n": 128,
+      "success": 128,
+      "mean_s": 52.6114856857821
+    },
+    {
+      "users": 32,
+      "policy": "baseline",
+      "n": 128,
+      "success": 128,
+      "mean_s": 104.16182661719358
+    }
+  ],
+  "historical_aggregate_sha256": "1bbb07a3f62be27cde86cdcc48feda6a6157e51389c126c15dc3608e3f758c1e",
+  "quality_evidence_available_for_release": {
+    "unique_questions": 64,
+    "paired_complete": true,
+    "baseline_success_rate": 1,
+    "candidate_success_rate": 1,
+    "source_delta_lower": null,
+    "correctness_delta_lower": null,
+    "groundedness_delta_lower": null,
+    "guardrail_regressions": null,
+    "blinded_expert_answers": false,
+    "independent_holdout": false,
+    "thresholds_predeclared": false
+  },
+  "release_gate": {
+    "release_allowed": false,
+    "reasons": [
+      "insufficient_unique_questions",
+      "source_evidence_missing_or_invalid",
+      "correctness_evidence_missing_or_invalid",
+      "groundedness_evidence_missing_or_invalid",
+      "guardrail_evidence_missing_or_regressed",
+      "expert_answer_evaluation_missing",
+      "independent_holdout_missing",
+      "predeclared_thresholds_missing"
+    ],
+    "scope": "quality noninferiority under the supplied evaluation; not universal correctness"
+  },
+  "source_sha256": {
+    "scripts/evaluate_workflow_adapter_offline.py": "b61294df83973c682bc8ce32a2a37b0569d4f1acae564e33df069030cfd3d2f4",
+    "src/cnu_rag_optimization/adaptive.py": "b037ddd6266d5e75f2508d4d9d99b17cf677edd870e16adc9325773ee639ff49",
+    "src/cnu_rag_optimization/quality_gate.py": "c9994b69c451c05a1e3eda1cc4268e71ac0b1a13c374442d8a36446a1fd78e56",
+    "scripts/moleg_workflow_adapter.py": "1018c505d5c6f46603aec3d9f0bfd53dfc17046f014de697b7bd0fc0e2a4a85f",
+    "scripts/moleg_paper_runtime.py": "1c87c7af5d94bb88442e43a3c727aba5fdcd217537406ae9fa04ea79b87ffd0a",
+    "scripts/launch_moleg_scaling_app.py": "569d903f068d31b1a7ece2a6fec2f42b522d0cb43bb66cffa6f89c5cfc64a188"
+  }
+}

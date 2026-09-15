@@ -1,0 +1,52 @@
+{
+  "utc": "2026-09-07T13:19:54.478654+00:00",
+  "scope": "current inference host; configuration not changed by experiment",
+  "python": "3.12.3",
+  "kernel": "6.8.0-134-generic",
+  "gpu_query_columns": [
+    "index",
+    "name",
+    "memory.total",
+    "driver_version"
+  ],
+  "gpus": [
+    [
+      "0",
+      "NVIDIA H200 NVL",
+      "143771",
+      "580.126.09"
+    ],
+    [
+      "1",
+      "NVIDIA H200 NVL",
+      "143771",
+      "580.126.09"
+    ]
+  ],
+  "nsys_version": "NVIDIA Nsight Systems version 2025.3.2.474-253236389321v0",
+  "current_pod_verified_max_pipelines": 4,
+  "current_pod_source_hashes_match_archived": true,
+  "source_hashes": {
+    "api/concurrency.py": "56ea9292baf01d92b8bf066bdc3fab5c97fdbf4c827e7eabdf5dce674e31a79d",
+    "api/middleware/rate_limit.py": "85ec470988d5c9c1ba2afd79c0a1a0e67bef18e63a7ec24140013f41ede2bd48",
+    "api/router/generate.py": "93312eb9f44a8ee6c2ec82858cb31ed97c30775d31956a5a8064750ee4dc553d",
+    "core/query_loop/_helpers.py": "a1378a252953b55fb02f0744149a0079ee7dc9fd9fdf0ab7556d541dc9c10c1b",
+    "main_server.py": "b63f94d54cf93af43dcd0eb7cb5a57437e1cba6906c802290702c259a759a12b",
+    "config/settings.py": "049190161c47f26c719fd35fcf77dee531ef6d3439afb28391c4fa523a444c0a"
+  },
+  "script_hashes": {
+    "launch_moleg_scaling_app.py": "bbaa9f4fad5d8754ba481c65535e8913760151d0f5f51f3fecea35cc0ac021a8",
+    "moleg_paper_runtime.py": "ee59275a355688986bd85323777e73524cf98ef088df0b5de7a98f4fedbb3e05",
+    "evaluate_moleg_isolated.py": "5b11b6cdb6096dfc8bf5e347750dbe9f988ee7ef8d754c46aff97bec431b7189",
+    "evaluate_moleg_scaling.py": "aa2d95954ac86aae8558e4dc0321a43df8ab146fb833b7ad2685eb685452afa5",
+    "moleg_scaling_metrics.py": "5fcab93e2155352d6b54a8ae1c376493035b1056e1e9277d2843a8f52f16bb0f",
+    "moleg_paper_metrics.py": "d0d53462f2f26cb9986737d50b3d5c1da0b25608230a9a057542a66551a7ad61",
+    "summarize_moleg_scaling.py": "b5132d38ffdf4e5d5690a385a4703399c81ebe355cc4a9f0923033a427913737",
+    "audit_moleg_scaling.py": "c0d7d9ae18572ab7569098993e07db7e5c7a7924609f8277ad1d13a1f65674ba",
+    "monitor_moleg_resources.py": "58e022c475061af5091ad22a8daba9510067850753df6b8a5bb20622fbbfefae",
+    "manage_moleg_scaling_apps.py": "e0e9c3cd46378ecd70fef58a7418a0217ef2bc84d8b2e6838c33b9161e7b6fc4",
+    "summarize_moleg_resources.py": "f8ac5bbadf8ab868076ba4645018c32e8b9469b247b0560e6d784c2e742c5d22"
+  },
+  "production_vllm_or_k8s_restarted": false,
+  "temporary_operator_config_not_published": true
+}

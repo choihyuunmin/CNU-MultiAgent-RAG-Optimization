@@ -1,0 +1,24 @@
+{
+ "argv": [
+  "/data/project/vllm/.venv/bin/python3",
+  "/data/project/vllm/.venv/bin/vllm",
+  "serve",
+  "microsoft/phi-4",
+  "--port",
+  "8002",
+  "--gpu-memory-utilization",
+  "0.28",
+  "--max-model-len",
+  "16384",
+  "--max-num-seqs",
+  "4",
+  "--dtype",
+  "auto",
+  "--trust-remote-code",
+  "--enable-auto-tool-choice",
+  "--tool-call-parser",
+  "hermes",
+  "--enforce-eager"
+ ],
+ "cuda": "1"
+}

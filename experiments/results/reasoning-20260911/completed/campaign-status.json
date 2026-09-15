@@ -1,0 +1,31 @@
+{
+  "status": "completed_evaluation_not_released",
+  "started_utc": "2026-09-11T04:13:09.974429+00:00",
+  "planned_requests": 7200,
+  "completed_requests": 7200,
+  "scope": "300-question regression, not independent holdout",
+  "run_spec": {
+    "limit": 300,
+    "start_repeat": 0,
+    "repeats": 2,
+    "seed": 20260911
+  },
+  "release_allowed": false,
+  "heartbeat_utc": "2026-09-11T12:05:54.495504+00:00",
+  "sse_success": 7198,
+  "last_completed": {
+    "trial": 23,
+    "policy": "baseline",
+    "users": 1,
+    "repeat": 1
+  },
+  "serving_health_ok": true,
+  "data_health": {
+    "search_cluster_status": "yellow",
+    "database_select_one": true,
+    "ok": true
+  },
+  "serving_processes_unchanged": true,
+  "ended_utc": "2026-09-11T12:05:59.509096+00:00",
+  "temporary_environment_removed": true
+}

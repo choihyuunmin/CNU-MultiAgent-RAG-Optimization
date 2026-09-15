@@ -1,0 +1,213 @@
+{
+  "utc": "2026-09-09T08:00:53.313115+00:00",
+  "planned_requests": 10800,
+  "unique_questions": 300,
+  "source_label_questions": 180,
+  "reference_answer_questions": 98,
+  "scope": "regression dataset, not independent holdout",
+  "seed": 20260909,
+  "users": [
+    16,
+    32,
+    8,
+    4,
+    2,
+    1
+  ],
+  "repeats": 2,
+  "start_repeat": 1,
+  "existing_model_processes": 8,
+  "schedule": [
+    {
+      "repeat": 1,
+      "users": 1,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 1,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 1,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 2,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 2,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 2,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 4,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 4,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 4,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 8,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 8,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 8,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 1,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 1,
+      "users": 16,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 16,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 16,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 16,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 32,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 32,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 32,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 8,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 8,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 8,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 4,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 4,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 4,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 2,
+      "policy": "baseline"
+    },
+    {
+      "repeat": 2,
+      "users": 2,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 2,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 1,
+      "policy": "fixed16"
+    },
+    {
+      "repeat": 2,
+      "users": 1,
+      "policy": "budget"
+    },
+    {
+      "repeat": 2,
+      "users": 1,
+      "policy": "baseline"
+    }
+  ],
+  "sha256": {
+    "runtime.tar.gz": "89bc78f04ec3f97b63c556e176423c681e5d079afd489e68bb5463d483328ee2",
+    "source.tar.gz": "30d9cd3af7c2debc7aaf20356f5dc0fe5fe771c1de83e4939f9ec90206e428f2",
+    "cases.json": "8fc755439fbbc20c7c300cd7fd89b711337ed1cc8addf15915d6e0403b11b0ce",
+    "observe-final.json": "89186a8af803dffc04ebfb44aedaead70fb2116f7ffbefb44f8fe1de5af026bb",
+    "budget-final.json": "634a163c5d9941a7343ccca93f59bdd1d9d5cd1e8113b4fc867f56b178145524",
+    "WORKFLOW400_PROTOCOL_20260908.md": "4ce372cc276a8f4d0cadf2db5109ad4e5dbb28a7a00a09551584bbc4ce50caae",
+    "run-spec.json": "3c0a6d739113bd1d721b36004775e1b44c7cd67ae98625baf5b78c429ea4fd8a",
+    "WORKFLOW300_RECOVERY_PROTOCOL_20260909.md": "3dc955399c24d829e5c5d34f973872795073f356d5ab1cf523c6de322dcce9e8",
+    "recovery-lineage.json": "98dc9001bc04749377cfdc61d44394f6f148cd3c25e13bee5a280db4eab99932"
+  }
+}
