@@ -50,6 +50,9 @@ def main():
                              "changing models, prompts, retrieval arguments, or the return shape")
     parser.add_argument("--program-fingerprint",
                         help="expected SHA-256 of law_search/nodes.py; overlay fails closed on mismatch")
+    parser.add_argument("--no-ontology", action="store_true",
+                        help="skip the ontology-scoped search branch (loader returns None); "
+                             "retrieval falls back to the existing hybrid path, unchanged otherwise")
     args = parser.parse_args()
     if args.adapter_trace is None:
         args.adapter_trace = args.trace.with_suffix(".workflow.jsonl")
@@ -89,6 +92,13 @@ def main():
     from api.concurrency import generate_queue
     from moleg_unrestricted import remove_admission_limits
     remove_admission_limits(app, generate_queue)
+    if args.no_ontology:
+        # Disable only the ontology-scoped search branch: the loader returns None,
+        # so execute_search takes its existing "no ontology" fallback (hybrid
+        # results). Models, prompts, hybrid retrieval, and return shape unchanged.
+        import core.query_loop.law_search.nodes as _ls_nodes
+        _ls_nodes._get_ontology_searcher = lambda *a, **k: None
+        print({"no_ontology": True}, flush=True)
     program_harness = None
     program_harness_sink = None
     if args.program_overlap:
@@ -110,6 +120,7 @@ def main():
                 "base_profile": args.base_profile,
                 "legacy_preparation_overlap": False,
                 "program_overlap": args.program_overlap,
+                "no_ontology": args.no_ontology,
                 "adapter": adapter.snapshot(),
                 "serving_meter": adapter.serving_meter.snapshot()
                     if hasattr(adapter, "serving_meter") else None}
