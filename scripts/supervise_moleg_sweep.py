@@ -61,6 +61,8 @@ def launch_app(arm, root, python, app_root, app_env, serving_env, proxy_config, 
         argv += ["--structured-harness", str(root / arm["structured_harness"])]
     if arm.get("continuation_harness"):
         argv += ["--continuation-harness", str(root / arm["continuation_harness"])]
+    if arm.get("worker_experiment_base"):
+        argv += ["--worker-experiment-base", arm["worker_experiment_base"]]
     log = (apps / f"{name}.server.log").open("w")
     env = dict(os.environ, PYTHONPATH=str(root / "src"))
     proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT, env=env,

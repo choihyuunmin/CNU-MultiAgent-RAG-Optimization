@@ -1,6 +1,20 @@
 """Ordinary SDK calls with complete generation options and explicit stream close."""
 import inspect
 import time
+from urllib.parse import urlsplit
+
+_worker_experiment_base = None
+
+
+def configure_worker_experiment(base):
+    """Opt-in route for an owned loopback replica of the same worker model."""
+    global _worker_experiment_base
+    parsed = urlsplit(base)
+    if (parsed.scheme != 'http' or parsed.hostname != '127.0.0.1' or not parsed.port
+            or parsed.username or parsed.password or parsed.query or parsed.fragment
+            or parsed.path.rstrip('/') != '/v1'):
+        raise ValueError('worker experiment requires an explicit loopback /v1 endpoint')
+    _worker_experiment_base = base.rstrip('/')
 
 
 def chat_payload(kwargs, *, model, streaming, create, proxy=False):
@@ -27,11 +41,23 @@ def chat_payload(kwargs, *, model, streaming, create, proxy=False):
 def install_standard_transport():
     import infra.llm.client as llm
     from moleg_workflow_adapter import replace_aliases
+    worker = None
+    worker_aliases = set()
+    if _worker_experiment_base:
+        from openai import AsyncOpenAI
+        worker = AsyncOpenAI(base_url=_worker_experiment_base, api_key='isolated-experiment',
+                             timeout=120, max_retries=0)
+        worker_aliases = {llm.get_model_for_role(role) for role in ('tool', 'tool_synthesis')}
+
+    def destination(kwargs):
+        model = str(kwargs.get('model') or llm.MASTER_MODEL).strip()
+        routed = worker is not None and model in worker_aliases
+        client = worker if routed else llm._get_openai_client()
+        return client.chat.completions.create, 'openai/gpt-oss-20b' if routed else model, not routed
 
     async def chat(**kwargs):
-        create = llm._get_openai_client().chat.completions.create
-        payload = chat_payload(kwargs, model=str(kwargs.get("model") or llm.MASTER_MODEL).strip(),
-                               streaming=False, create=create, proxy=True)
+        create, model, proxy = destination(kwargs)
+        payload = chat_payload(kwargs, model=model, streaming=False, create=create, proxy=proxy)
         started = time.perf_counter()
         try:
             return await create(**payload)
@@ -39,9 +65,8 @@ def install_standard_transport():
             record_time(started)
 
     async def stream(**kwargs):
-        create = llm._get_openai_client().chat.completions.create
-        payload = chat_payload(kwargs, model=str(kwargs.get("model") or llm.MASTER_MODEL).strip(),
-                               streaming=True, create=create, proxy=True)
+        create, model, proxy = destination(kwargs)
+        payload = chat_payload(kwargs, model=model, streaming=True, create=create, proxy=proxy)
         source = None
         started = time.perf_counter()
         try:

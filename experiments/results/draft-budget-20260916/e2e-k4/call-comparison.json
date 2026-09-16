@@ -1,0 +1,311 @@
+{
+  "scope": "Observed calls only. Legacy nonstream hashes include _log_request_id, so differing hashes do not establish changed model inputs; streaming inputs are not hashed. Cumulative overlapping RPC durations are not additive end-to-end time.",
+  "requests": 64,
+  "missing_trace": 0,
+  "loads": [
+    {
+      "level": 1,
+      "arms": {
+        "baseline": {
+          "requests": 16,
+          "stages": {
+            "answer": {
+              "calls": 14,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 9.384346069127787,
+                "p50": 7.923489225038793,
+                "p95": 21.176805537514156,
+                "p99": 21.42499026830192,
+                "max": 21.487036450998858
+              }
+            },
+            "classification": {
+              "calls": 16,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.6233304184352164,
+                "p50": 0.5910199955105782,
+                "p95": 0.8719594139838591,
+                "p99": 0.8789860019693151,
+                "max": 0.8807426489656791
+              }
+            },
+            "preparation": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 3.293116687578731,
+                "p50": 3.1573771170224063,
+                "p95": 5.103767418477219,
+                "p99": 5.126059366145637,
+                "max": 5.1316323530627415
+              }
+            },
+            "retrieval": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 3.3367627662664745,
+                "p50": 3.141904085990973,
+                "p95": 4.788546776573639,
+                "p99": 4.899816393794026,
+                "max": 4.927633798099123
+              }
+            },
+            "selection": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 2.007409090983856,
+                "p50": 1.6611220965278335,
+                "p95": 3.715577644237783,
+                "p99": 4.516916320740711,
+                "max": 4.717250989866443
+              }
+            },
+            "unclassified": {
+              "calls": 2,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.9465437801263761,
+                "p50": 0.0,
+                "p95": 7.544604993541725,
+                "p99": 7.611193587468006,
+                "max": 7.627840735949576
+              }
+            }
+          }
+        },
+        "improved": {
+          "requests": 16,
+          "stages": {
+            "answer": {
+              "calls": 14,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 4.701362763385987,
+                "p50": 3.860818665008992,
+                "p95": 10.47905898548197,
+                "p99": 11.021041530719957,
+                "max": 11.156537167029455
+              }
+            },
+            "classification": {
+              "calls": 16,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.6200217055447865,
+                "p50": 0.590314834495075,
+                "p95": 0.8719937284768093,
+                "p99": 0.8771717752388213,
+                "max": 0.8784662869293243
+              }
+            },
+            "preparation": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 3.2864599421227467,
+                "p50": 3.1558900679810904,
+                "p95": 5.0757346924510784,
+                "p99": 5.091506574454252,
+                "max": 5.095449544955045
+              }
+            },
+            "retrieval": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 2.158023442781996,
+                "p50": 2.008357821556274,
+                "p95": 3.2656932703393977,
+                "p99": 3.3853005684388333,
+                "max": 3.4152023929636925
+              }
+            },
+            "selection": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 1.9939778574917,
+                "p50": 1.6642975945142098,
+                "p95": 3.741569773555966,
+                "p99": 4.571630695514614,
+                "max": 4.779145926004276
+              }
+            },
+            "unclassified": {
+              "calls": 2,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.8004693461261922,
+                "p50": 0.0,
+                "p95": 6.287653309991583,
+                "p99": 6.5662968116346745,
+                "max": 6.6359576870454475
+              }
+            }
+          }
+        }
+      },
+      "paired_requests": 16,
+      "same_stage_call_counts": 16,
+      "same_retrieval_execution_counts": 16,
+      "same_preparation_outputs": 16,
+      "same_nonstream_call_envelope_hashes": 0
+    },
+    {
+      "level": 4,
+      "arms": {
+        "baseline": {
+          "requests": 16,
+          "stages": {
+            "answer": {
+              "calls": 14,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 8.579318969997985,
+                "p50": 8.05164118646644,
+                "p95": 17.895979181252187,
+                "p99": 18.100500190694582,
+                "max": 18.151630443055183
+              }
+            },
+            "classification": {
+              "calls": 16,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.8422083148179809,
+                "p50": 0.7572004169924185,
+                "p95": 1.3197690889937803,
+                "p99": 1.5571548001607878,
+                "max": 1.61650122795254
+              }
+            },
+            "preparation": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 4.194109061798372,
+                "p50": 3.444432458956726,
+                "p95": 7.373874398734188,
+                "p99": 7.984398482152027,
+                "max": 8.137029503006488
+              }
+            },
+            "retrieval": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 3.452884821672342,
+                "p50": 3.213783534942195,
+                "p95": 5.2491376384859905,
+                "p99": 5.262108374922536,
+                "max": 5.265351059031673
+              }
+            },
+            "selection": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 3.1036632509349147,
+                "p50": 2.904559581016656,
+                "p95": 6.360241020505782,
+                "p99": 6.708498498506378,
+                "max": 6.795562868006527
+              }
+            },
+            "unclassified": {
+              "calls": 2,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.9865303206897806,
+                "p50": 0.0,
+                "p95": 7.810373133746907,
+                "p99": 8.006859769998119,
+                "max": 8.055981429060921
+              }
+            }
+          }
+        },
+        "improved": {
+          "requests": 16,
+          "stages": {
+            "answer": {
+              "calls": 14,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 5.660539109769161,
+                "p50": 4.310314917063806,
+                "p95": 14.23417346298811,
+                "p99": 14.396061651833588,
+                "max": 14.436533699044958
+              }
+            },
+            "classification": {
+              "calls": 16,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.8101927784300642,
+                "p50": 0.7749582370161079,
+                "p95": 1.0492951987253036,
+                "p99": 1.137817854079185,
+                "max": 1.1599485179176554
+              }
+            },
+            "preparation": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 4.193337165619596,
+                "p50": 3.493094420467969,
+                "p95": 7.125463230040623,
+                "p99": 7.435241189965745,
+                "max": 7.512685679947026
+              }
+            },
+            "retrieval": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 2.295425298900227,
+                "p50": 1.9942364969756454,
+                "p95": 3.6804970760131255,
+                "p99": 4.124725363985635,
+                "max": 4.235782435978763
+              }
+            },
+            "selection": {
+              "calls": 18,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 2.4663153102010256,
+                "p50": 2.110440054500941,
+                "p95": 4.310186859569512,
+                "p99": 4.519967167149297,
+                "max": 4.572412244044244
+              }
+            },
+            "unclassified": {
+              "calls": 2,
+              "cumulative_rpc_seconds_per_request": {
+                "n": 16,
+                "mean": 0.7317655366859981,
+                "p50": 0.0,
+                "p95": 5.5140511507343035,
+                "p99": 6.330226693343138,
+                "max": 6.534270578995347
+              }
+            }
+          }
+        }
+      },
+      "paired_requests": 16,
+      "same_stage_call_counts": 16,
+      "same_retrieval_execution_counts": 16,
+      "same_preparation_outputs": 16,
+      "same_nonstream_call_envelope_hashes": 0
+    }
+  ]
+}

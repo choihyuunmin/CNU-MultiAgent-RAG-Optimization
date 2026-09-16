@@ -1,0 +1,147 @@
+{
+  "complete": true,
+  "n": 96,
+  "unique_questions": 12,
+  "scope": "Matched isolated worker HTTP stage; not end-to-end or engine decode cost.",
+  "dynamic_k": false,
+  "levels": [
+    {
+      "concurrency": 1,
+      "arms": {
+        "0": {
+          "n": 24,
+          "ok": 24,
+          "arguments_exact": 24,
+          "latency_s": {
+            "n": 24,
+            "mean": 2.6329496094112983,
+            "p50": 2.4765317974961363,
+            "p95": 3.9241139881371057,
+            "p99": 3.9615731149713973,
+            "max": 3.9724286230048165
+          },
+          "wall_s": 63.20101239695214,
+          "successful_rps": 0.37974075239904537,
+          "counters": {
+            "spec_decode_num_drafts_total": null,
+            "spec_decode_num_draft_tokens_total": null,
+            "spec_decode_num_accepted_tokens_total": null,
+            "num_preemptions_total": 0.0
+          }
+        },
+        "4": {
+          "n": 24,
+          "ok": 24,
+          "arguments_exact": 24,
+          "latency_s": {
+            "n": 24,
+            "mean": 1.7107034191770556,
+            "p50": 1.671600308502093,
+            "p95": 2.20359935843735,
+            "p99": 2.2677628559723964,
+            "max": 2.2854374640155584
+          },
+          "wall_s": 41.069424569024704,
+          "successful_rps": 0.5843763396213063,
+          "counters": {
+            "spec_decode_num_drafts_total": 340.0,
+            "spec_decode_num_draft_tokens_total": 1356.0,
+            "spec_decode_num_accepted_tokens_total": 572.0,
+            "num_preemptions_total": 0.0
+          }
+        }
+      },
+      "comparisons": {
+        "4": {
+          "n": 12,
+          "baseline_mean": 2.6329496094112983,
+          "candidate_mean": 1.7107034191770556,
+          "speedup": 1.5391034938586228,
+          "reduction_pct": 35.02711130276618,
+          "reduction_95ci_pct": [
+            30.576432222292016,
+            39.11856326840332
+          ],
+          "delta": -0.9222461902342427,
+          "delta_95ci": [
+            -1.1800620286469592,
+            -0.6906590099960642
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)",
+          "identical_tool_output_pairs": 24,
+          "paired_requests": 24
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "arms": {
+        "0": {
+          "n": 24,
+          "ok": 24,
+          "arguments_exact": 24,
+          "latency_s": {
+            "n": 24,
+            "mean": 2.7666167328813267,
+            "p50": 2.7642082699458115,
+            "p95": 4.524122491304295,
+            "p99": 4.649878311698558,
+            "max": 4.6590524449711666
+          },
+          "wall_s": 18.290140835917555,
+          "successful_rps": 1.312182350879968,
+          "counters": {
+            "spec_decode_num_drafts_total": null,
+            "spec_decode_num_draft_tokens_total": null,
+            "spec_decode_num_accepted_tokens_total": null,
+            "num_preemptions_total": 0.0
+          }
+        },
+        "4": {
+          "n": 24,
+          "ok": 24,
+          "arguments_exact": 24,
+          "latency_s": {
+            "n": 24,
+            "mean": 1.725312607261003,
+            "p50": 1.6837071615736932,
+            "p95": 2.222687441325979,
+            "p99": 2.2691539621644186,
+            "max": 2.2801203900016844
+          },
+          "wall_s": 11.119133747881278,
+          "successful_rps": 2.1584415246891995,
+          "counters": {
+            "spec_decode_num_drafts_total": 340.0,
+            "spec_decode_num_draft_tokens_total": 1356.0,
+            "spec_decode_num_accepted_tokens_total": 574.0,
+            "num_preemptions_total": 0.0
+          }
+        }
+      },
+      "comparisons": {
+        "4": {
+          "n": 12,
+          "baseline_mean": 2.7666167328813267,
+          "candidate_mean": 1.725312607261003,
+          "speedup": 1.6035451901516167,
+          "reduction_pct": 37.638177823635324,
+          "reduction_95ci_pct": [
+            32.23365228147856,
+            42.174068583945626
+          ],
+          "delta": -1.0413041256203237,
+          "delta_95ci": [
+            -1.3657475755174042,
+            -0.7492950551615649
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)",
+          "identical_tool_output_pairs": 24,
+          "paired_requests": 24
+        }
+      }
+    }
+  ]
+}

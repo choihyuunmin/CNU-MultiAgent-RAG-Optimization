@@ -1,0 +1,28 @@
+{
+  "utc": "2026-09-16T06:57:48.000144+00:00",
+  "probe_scope": "runtime/GPU are local to this process; remote probes are TCP only",
+  "runtime": {
+    "version": "0.19.0",
+    "files": {
+      "vllm/config/speculative.py": "31045ada67a3bdbae7023b3867c2484fa4e0edc74f7a8d487c1fd5ca6da5ecd3",
+      "vllm/v1/spec_decode/ngram_proposer.py": "4d34bfdd9ffbd9ad54e698134c9628ad881b93c70518eac2d48f0e501f9c6763",
+      "vllm/v1/core/sched/scheduler.py": "9f3da2dfce94963e1e1cefc156e4239120f79c6eaf824b2829cac0ee7736b58a",
+      "vllm/v1/worker/gpu_model_runner.py": "3afc290d3df1be3df1b89b9b35942695f5896c7729f608d6c44580899212c301"
+    },
+    "dynamic_field_present": false,
+    "coordinated_dynamic_k_verified": false,
+    "status": "source_inspected_not_model_compatibility_verified"
+  },
+  "gpu": {
+    "nvidia_smi_available": true,
+    "query_ok": true,
+    "devices": [
+      "NVIDIA H200 NVL, 143771, 26800",
+      "NVIDIA H200 NVL, 143771, 3665"
+    ]
+  },
+  "connectivity": [],
+  "new_gpu_experiment_requests": 0,
+  "promote_to_full_experiment": false,
+  "status": "probe_only"
+}

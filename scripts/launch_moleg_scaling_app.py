@@ -57,6 +57,8 @@ def main():
                         help="opt-in fingerprinted context/structured decoding harness configuration")
     parser.add_argument("--continuation-harness", type=Path,
                         help="opt-in dependency health and continuation dispatch configuration")
+    parser.add_argument("--worker-experiment-base",
+                        help="owned loopback /v1 replica of the same gpt-oss worker, for serving A/B only")
     args = parser.parse_args()
     if args.adapter_trace is None:
         args.adapter_trace = args.trace.with_suffix(".workflow.jsonl")
@@ -83,6 +85,9 @@ def main():
         "MOLEG_TRACE_PATH": str(args.trace.resolve()),
         "MOLEG_STUDY_PROFILE": args.base_profile})
     import moleg_paper_runtime
+    if args.worker_experiment_base:
+        from moleg_model_transport import configure_worker_experiment
+        configure_worker_experiment(args.worker_experiment_base)
     # Optional speculative calls remain off in the normal execution path.
     moleg_paper_runtime.install(args.base_profile, allow_preparation_overlap=False)
     harness_close = None
@@ -145,6 +150,7 @@ def main():
                 "legacy_preparation_overlap": False,
                 "program_overlap": args.program_overlap,
                 "no_ontology": args.no_ontology,
+                "worker_experiment_base": args.worker_experiment_base,
                 "continuation": {name: window.snapshot() for name, window in continuation['windows'].items()}
                     if continuation else None,
                 "rerank_auth_repaired": continuation['rerank_auth_repaired'] if continuation else False,
