@@ -7,6 +7,7 @@ from .adaptive import (
 )
 from .application_adapter import ApplicationAdapter
 from .coflow import AdmissionTicket, CoflowAdmission, CoflowPolicy
+from .continuation import ContinuationWindow
 from .completion import (
     CompletionPolicy,
     CompletionRouter,
@@ -57,6 +58,7 @@ __all__ = [
     "ApplicationAdapter",
     "AdmissionTicket", "CoflowAdmission", "CoflowPolicy",
     "CompletionPolicy", "CompletionRouter", "CompletionTicket",
+    "ContinuationWindow",
     "ReceiverSpec", "ReplicaSpec",
     "InferenceOverlapAdapter", "ReadContract",
     "NetworkHarness",

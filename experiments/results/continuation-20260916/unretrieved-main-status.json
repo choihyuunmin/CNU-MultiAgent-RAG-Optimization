@@ -1,0 +1,19 @@
+{
+  "status": "remote_results_not_yet_retrieved",
+  "planned_requests": 1200,
+  "level": 200,
+  "arms": [
+    "baseline",
+    "fifo",
+    "improved"
+  ],
+  "repeats": 2,
+  "last_verified_utc": "2026-09-16T05:27:30Z",
+  "last_verified_trial": {
+    "arm": "improved",
+    "repeat": 1,
+    "status": "running"
+  },
+  "network_observation": "Both internal hosts timed out on SSH; GPU API port also timed out; GitHub connectivity succeeded. Cause not determined.",
+  "background_finalizer": "Configured to wait for timing completion, then run 160 prespecified and 40 posthoc judgments and export numeric summaries. Its final completion has not been verified."
+}

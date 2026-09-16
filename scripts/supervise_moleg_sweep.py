@@ -59,6 +59,8 @@ def launch_app(arm, root, python, app_root, app_env, serving_env, proxy_config, 
         argv += ["--no-ontology"]
     if arm.get("structured_harness"):
         argv += ["--structured-harness", str(root / arm["structured_harness"])]
+    if arm.get("continuation_harness"):
+        argv += ["--continuation-harness", str(root / arm["continuation_harness"])]
     log = (apps / f"{name}.server.log").open("w")
     env = dict(os.environ, PYTHONPATH=str(root / "src"))
     proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT, env=env,

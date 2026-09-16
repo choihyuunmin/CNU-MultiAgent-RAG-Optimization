@@ -1,0 +1,35 @@
+{
+  "scope": "Trace-based completion differences, not expert correctness. Questions cluster repetitions; two runs do not estimate all shared-server variation.",
+  "comparisons": [
+    {
+      "level": 100,
+      "candidate": "improved",
+      "metrics": {
+        "stage_clean_completion": {
+          "n": 100,
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        },
+        "dependency_clean_completion": {
+          "n": 100,
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    }
+  ]
+}

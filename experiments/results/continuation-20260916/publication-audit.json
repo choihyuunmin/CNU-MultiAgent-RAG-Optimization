@@ -1,0 +1,14 @@
+{
+  "status": "completed_pilots_published_main_not_retrieved",
+  "completed_new_requests": 1064,
+  "historical_rows_reaudited": 2896,
+  "unretrieved_additional_requests_planned": 1200,
+  "code_tests_passed": 280,
+  "completed_pilot_artifact_hashes_verified": true,
+  "private_content_field_check_passed": true,
+  "runtime_scope": "Isolated loopback apps; no production rollout",
+  "inference_core_version": "R1: authentication and 16-slot pilots; R2: strengthened dependency instrumentation and 32-slot pilot/main. Each run pins its own code hashes.",
+  "main_last_verified_utc": "2026-09-16T05:27:30Z",
+  "main_final_completion_verified": false,
+  "quality_judging_completion_verified": false
+}

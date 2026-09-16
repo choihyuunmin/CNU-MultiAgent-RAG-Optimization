@@ -24,6 +24,7 @@ def main():
     if not data['complete'] or data['n']!=audit['planned_requests']:
         raise ValueError('refuse to describe an unfinished study as complete')
     lines=['# 참조 ID 축약·복원 어댑터: 동시 요청 1~200 실측', '',
+           '> **완료율 정정:** 이 보고서의 원래 완료 수치는 내부 실패를 일부 누락했다. [재검사·수정 지표](STAGE_OUTCOME_CORRECTION_20260916.md)를 함께 확인한다.', '',
            '## 측정한 기능', '',
            '**모델에는 긴 문서 ID 대신 `0`, `1` 같은 짧은 번호를 전달하고, 모델이 고른 번호를 실제 문서 ID로 복원한다.** '
            '문서 본문·제목·점수는 줄이지 않는다. 후보가 16개 이상일 때만 적용하고, ID가 다른 곳에도 쓰이거나 복원이 불가능하면 원래 입력을 사용한다.', '',
@@ -37,8 +38,8 @@ def main():
            '- 모델·서빙 설정을 유지한 독립 loopback 앱 실험이다. 실제 검색 소스 124개 파일을 다시 확인했다.',
            '- 검색 도구·설정은 같지만 모델의 검색 인자와 반환 후보는 실행마다 달라질 수 있다. ID 변환 자체는 받은 후보를 삭제하지 않는다.', '',
            '## 응답시간과 완료율', '',
-           '각 조건의 두 반복을 합친 관측시간의 평균·p95다. 처리량은 정상 파이프라인 완료 수를 두 반복의 전체 실행 시간 합으로 나눈 값이다.', '',
-           '| 동시 요청 | 질문 수/회 | 평균 기존→개선(초) | 평균 단축 | p95 기존→개선(초) | 정상 완료율 기존→개선 |',
+           '각 조건의 두 반복을 합친 관측시간의 평균·p95다. 처리량은 기존 완료 판정(정정 전) 수를 두 반복의 전체 실행 시간 합으로 나눈 값이다.', '',
+           '| 동시 요청 | 질문 수/회 | 평균 기존→개선(초) | 평균 단축 | p95 기존→개선(초) | 응답 완료율 기존→개선(정정 전) |',
            '|---:|---:|---:|---:|---:|---:|']
     for load in data['loads']:
         a,b=load['arms']['baseline'],load['arms']['improved']
@@ -56,7 +57,7 @@ def main():
         lines.append(f"| {trial['repeat']+1} | {label} | {trial['pipeline_success']}/{trial['n']} | {number(times['mean'])} | {number(times['p95'])} |")
     lines += ['', '실행 순서대로 표시했다. 공유 서버에서 두 번 측정한 결과이므로, 합산 평균뿐 아니라 반복 간 완료율·시간 변동도 확인한다.', '',
               '## 처리량과 통계 구간', '',
-              '| 동시 요청 | 정상 처리량 기존→개선(req/s) | 30초 이내 정상 처리량 기존→개선(req/s) | 평균 단축률 95% 구간 |',
+              '| 동시 요청 | 이전 판정 처리량 기존→개선(req/s) | 30초 이내 이전 판정 처리량 기존→개선(req/s) | 평균 단축률 95% 구간 |',
               '|---:|---:|---:|---:|']
     for load in data['loads']:
         a,b=load['arms']['baseline'],load['arms']['improved'];ci=load['latency']['reduction_95ci_pct']
@@ -66,12 +67,12 @@ def main():
               '30초 이내 처리량은 내부 오류 없는 완료 기준이며 전문가 정답 기준의 처리량이 아니다.', '',
               '![동시 요청별 실측](../experiments/results/reference-scaling-20260916/scaling.png)', '',
               '## 검색 결과 변동', '',
-              '| 동시 요청 | 개선의 기존 응답 대비 법령 재현율 | 재현율 산정 쌍 | 기존 방식 자체 반복 재현율 | ID 목록 완전 일치 | 원천 법령 포함률 기존→개선 |',
+              '| 동시 요청 | 개선의 기존 응답 대비 근거 ID 재현율 | 재현율 산정 쌍 | 기존 방식 자체 반복 재현율 | ID 목록 완전 일치 | 원천 법령 포함률 기존→개선 |',
               '|---:|---:|---:|---:|---:|---:|']
     for load in data['loads']:
         a,b=load['arms']['baseline'],load['arms']['improved']
         lines.append(f"| {load['concurrency']} | {percent(load['candidate_recall_vs_baseline'])} | {load['scorable_recall_pairs']}/{a['n']} | {percent(load['baseline_repeat_recall'])} | {percent(load['exact_evidence_fraction'])} | {percent(a['source_law_hit'])}→{percent(b['source_law_hit'])} |")
-    lines += ['', '법령 ID 재현율은 기존 응답을 기준으로 한 일치 정도다. 기존 응답이 정답이라는 뜻은 아니다. '
+    lines += ['', '반환 근거 ID 재현율은 기존 응답을 기준으로 한 일치 정도다. 기존 응답이 정답이라는 뜻은 아니다. '
               '원천 법령 포함률은 라벨이 있는 질문의 known-item 지표이며 전문가 답변 정확도와 다르다. '
               '기존 응답에 법령이 없으면 재현율을 계산할 수 없어 그 쌍을 제외한다. 기존 응답에는 법령이 있는데 개선 응답이 비어 있으면 0점이다. '
               '고부하에서는 기존 방식의 실패로 산정 대상이 줄어들므로 재현율을 전체 요청의 정확도로 읽지 않는다. 완료율과 산정 쌍 수를 함께 제시한다.', '',
@@ -133,7 +134,7 @@ def main():
     highest=max(data['loads'],key=lambda load:load['concurrency'])
     a,b=highest['arms']['baseline'],highest['arms']['improved']
     lines[2:2]=['## 핵심 결과', '',
-                f"- 전체 {data['n']:,}요청 중 정상 파이프라인 완료 **{completed:,}건**.",
+                f"- 전체 {data['n']:,}요청 중 기존 완료 판정(정정 전) **{completed:,}건**.",
                 f"- 평균 응답시간은 {len(data['loads'])}개 부하 중 {faster}개에서 짧았다. 질문 단위 95% 구간의 하한이 0보다 큰 조건은 {positive_interval}개다.",
                 f"- 최대 동시 요청 {highest['concurrency']}: 평균 **{number(a['latency_including_failures']['mean'])}→{number(b['latency_including_failures']['mean'])}초**, p95 **{number(a['latency_including_failures']['p95'])}→{number(b['latency_including_failures']['p95'])}초**.",
                 '- 이 비교는 낮은 reasoning과 참조 ID 축약·복원을 함께 적용한 결과다. 전문가 정확도 유지와 지속적인 200명 처리 용량을 입증한 것은 아니다.', '']
@@ -141,7 +142,7 @@ def main():
         lo,hi=highest['latency']['reduction_95ci_pct']
         lines.insert(7, f"- 최대 부하의 평균 단축률 95% 구간은 **{number(lo)}~{number(hi)}%**로 0을 포함한다. 이 구간의 지연 개선 근거는 불충분하다.")
     if highest['concurrency']==200:
-        lines.insert(8, f"- 200개 구간의 기존 응답 대비 법령 재현율은 {percent(highest['candidate_recall_vs_baseline'])}다. 완료율 상승만으로 품질이 유지됐다고 판단하지 않는다.")
+        lines.insert(8, f"- 200개 구간의 기존 응답 대비 근거 ID 재현율은 {percent(highest['candidate_recall_vs_baseline'])}다. 완료율 상승만으로 품질이 유지됐다고 판단하지 않는다.")
     args.report.write_text('\n'.join(lines))
 
 

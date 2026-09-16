@@ -1,4 +1,4 @@
-"""Launch an isolated app without HTTP, pipeline, or model admission limits.
+"""Launch an isolated app; opt-in harnesses may control model dispatch.
 
 Run in the application's existing Python environment. All credentials come
 from operator files. Loopback binding is mandatory. Never edits deployed code,
@@ -55,6 +55,8 @@ def main():
                              "retrieval falls back to the existing hybrid path, unchanged otherwise")
     parser.add_argument("--structured-harness", type=Path,
                         help="opt-in fingerprinted context/structured decoding harness configuration")
+    parser.add_argument("--continuation-harness", type=Path,
+                        help="opt-in dependency health and continuation dispatch configuration")
     args = parser.parse_args()
     if args.adapter_trace is None:
         args.adapter_trace = args.trace.with_suffix(".workflow.jsonl")
@@ -90,6 +92,10 @@ def main():
                                           args.trace.with_suffix(".capture.jsonl"))
     from moleg_workflow_adapter import install, TraceASGI
     install(adapter, estimates, hooks)
+    continuation = None
+    if args.continuation_harness:
+        from moleg_continuation_harness import install as install_continuation
+        continuation = install_continuation(args.continuation_harness)
     args.adapter_trace.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(args.adapter_trace, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     adapter_sink = os.fdopen(fd, "w", buffering=1)
@@ -139,6 +145,9 @@ def main():
                 "legacy_preparation_overlap": False,
                 "program_overlap": args.program_overlap,
                 "no_ontology": args.no_ontology,
+                "continuation": {name: window.snapshot() for name, window in continuation['windows'].items()}
+                    if continuation else None,
+                "rerank_auth_repaired": continuation['rerank_auth_repaired'] if continuation else False,
                 "adapter": adapter.snapshot(),
                 "serving_meter": adapter.serving_meter.snapshot()
                     if hasattr(adapter, "serving_meter") else None}

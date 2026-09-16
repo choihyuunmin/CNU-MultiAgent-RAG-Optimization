@@ -1,0 +1,144 @@
+{
+  "complete": true,
+  "n": 400,
+  "audit_errors": [],
+  "scope": "trace-based dependency health, not expert answer correctness; timeouts retained",
+  "loads": [
+    {
+      "level": 100,
+      "arms": {
+        "baseline": {
+          "n": 200,
+          "wall_s": 283.14575019699987,
+          "ok": 200,
+          "pipeline_ok": 200,
+          "trace_complete": 200,
+          "stage_clean_completion": 200,
+          "dependency_clean_completion": 200,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 200,
+            "mean": 88.96912697893801,
+            "p50": 92.50237688201014,
+            "p95": 140.39721014976968,
+            "p99": 143.62169596501045,
+            "max": 144.7160220600199
+          },
+          "stage_clean_throughput_rps": 0.7063499976985321,
+          "dependency_clean_throughput_rps": 0.7063499976985321,
+          "source_law_hit": {
+            "n": 120,
+            "mean": 0.9666666666666667,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 200,
+            "rerank:200": 201
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        },
+        "improved": {
+          "n": 200,
+          "wall_s": 282.46303693100344,
+          "ok": 200,
+          "pipeline_ok": 200,
+          "trace_complete": 200,
+          "stage_clean_completion": 200,
+          "dependency_clean_completion": 200,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 200,
+            "mean": 81.81840912712971,
+            "p50": 83.27248815598432,
+            "p95": 137.84924040175392,
+            "p99": 139.43554514568532,
+            "max": 142.91792179294862
+          },
+          "stage_clean_throughput_rps": 0.708057245907377,
+          "dependency_clean_throughput_rps": 0.708057245907377,
+          "source_law_hit": {
+            "n": 120,
+            "mean": 0.9666666666666667,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 200,
+            "rerank:200": 200
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 628,
+            "mean": 13.279600987333216,
+            "p50": 6.237317671999335,
+            "p95": 39.94870963212452,
+            "p99": 41.55168766699732,
+            "max": 41.745259282994084
+          },
+          "dispatch_service_s": {
+            "n": 628,
+            "mean": 12.936775298449351,
+            "p50": 11.081881282560062,
+            "p95": 32.005743339890614,
+            "p99": 38.79127837852227,
+            "max": 47.29205380601343
+          },
+          "dispatch_calls": 628
+        }
+      },
+      "paired_latency_vs_baseline": {
+        "improved": {
+          "n": 100,
+          "baseline_mean": 88.96912697893801,
+          "candidate_mean": 81.81840912712971,
+          "speedup": 1.0873974198239114,
+          "reduction_pct": 8.037302483029995,
+          "reduction_95ci_pct": [
+            -1.4486820280217405,
+            16.01227955217521
+          ],
+          "delta": -7.150717851808295,
+          "delta_95ci": [
+            -15.160482574614578,
+            1.1711371759315083
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    }
+  ],
+  "input_sha256": {
+    "requests.jsonl": "6ddcde62714ff26f8b7853cf0ec664e6e166b1aaa38f69c115613935cebd68e0",
+    "private-responses.jsonl": "4e3def258ad912ad30f1eb0f2b4aa8748967819191af3193348c2947057e3333",
+    "summary.json": "2c30451cbd283fe3c7c3bffaf50bae0b21f6fd4d7181aa341afbcd71f3f71d3e",
+    "apps/baseline.trace.jsonl": "b3069f600b07fb4db1dadee66238389c4eb193e695f696c7e7e5fa0038d4818e",
+    "apps/improved.trace.jsonl": "f96d5e59c10f0d18bf5ba11ebd8371e65c27d0bf7a60e08c1405e25882cc25c7",
+    "apps/baseline.workflow.jsonl": "ecf91f3da0e5a1e3606cdd17a42d15c100f6b12f865026358935151e7059b80f",
+    "apps/improved.workflow.jsonl": "d1675696d65c43eae2b1caddcdf4036393ae0eafa9a324e0e78b70a0a25d9a8b"
+  }
+}

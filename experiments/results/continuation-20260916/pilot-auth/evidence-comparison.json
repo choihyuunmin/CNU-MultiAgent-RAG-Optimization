@@ -1,0 +1,51 @@
+{
+  "scope": "Returned evidence item IDs, not parent-law IDs or expert accuracy. Empty reference is unscorable; empty candidate against nonempty reference scores zero.",
+  "comparisons": {
+    "improved": [
+      {
+        "concurrency": 4,
+        "unique_questions": 32,
+        "candidate_recall_vs_baseline": 0.8827451814058956,
+        "scorable_recall_pairs": 56,
+        "candidate_precision_vs_baseline": 0.8367630385487529,
+        "exact_evidence_fraction": 0.671875,
+        "baseline_repeat_recall": 0.985969387755102,
+        "baseline_repeat_exact": 0.9375,
+        "source_hit_change": {
+          "n": 18,
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      },
+      {
+        "concurrency": 32,
+        "unique_questions": 32,
+        "candidate_recall_vs_baseline": 0.8959467120181406,
+        "scorable_recall_pairs": 56,
+        "candidate_precision_vs_baseline": 0.8514172335600907,
+        "exact_evidence_fraction": 0.640625,
+        "baseline_repeat_recall": 1.0,
+        "baseline_repeat_exact": 1.0,
+        "source_hit_change": {
+          "n": 18,
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    ]
+  }
+}

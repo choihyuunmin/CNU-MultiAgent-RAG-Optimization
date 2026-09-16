@@ -1,0 +1,97 @@
+{
+  "scope": "Returned evidence item IDs, not parent-law IDs or expert accuracy. Empty reference is unscorable; empty candidate against nonempty reference scores zero.",
+  "comparisons": {
+    "fifo": [
+      {
+        "concurrency": 4,
+        "unique_questions": 4,
+        "candidate_recall_vs_baseline": 1.0,
+        "scorable_recall_pairs": 8,
+        "candidate_precision_vs_baseline": 1.0,
+        "exact_evidence_fraction": 1.0,
+        "baseline_repeat_recall": 1.0,
+        "baseline_repeat_exact": 1.0,
+        "source_hit_change": {
+          "n": 3,
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      },
+      {
+        "concurrency": 64,
+        "unique_questions": 64,
+        "candidate_recall_vs_baseline": 0.9927203065134099,
+        "scorable_recall_pairs": 116,
+        "candidate_precision_vs_baseline": 0.9847564313081554,
+        "exact_evidence_fraction": 0.9296875,
+        "baseline_repeat_recall": 0.993103448275862,
+        "baseline_repeat_exact": 0.9375,
+        "source_hit_change": {
+          "n": 39,
+          "baseline_mean": 0.9743589743589743,
+          "candidate_mean": 0.9743589743589743,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    ],
+    "improved": [
+      {
+        "concurrency": 4,
+        "unique_questions": 4,
+        "candidate_recall_vs_baseline": 1.0,
+        "scorable_recall_pairs": 8,
+        "candidate_precision_vs_baseline": 1.0,
+        "exact_evidence_fraction": 1.0,
+        "baseline_repeat_recall": 1.0,
+        "baseline_repeat_exact": 1.0,
+        "source_hit_change": {
+          "n": 3,
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      },
+      {
+        "concurrency": 64,
+        "unique_questions": 64,
+        "candidate_recall_vs_baseline": 0.9886973180076628,
+        "scorable_recall_pairs": 116,
+        "candidate_precision_vs_baseline": 0.9864805692391899,
+        "exact_evidence_fraction": 0.9375,
+        "baseline_repeat_recall": 0.993103448275862,
+        "baseline_repeat_exact": 0.9375,
+        "source_hit_change": {
+          "n": 39,
+          "baseline_mean": 0.9743589743589743,
+          "candidate_mean": 0.9743589743589743,
+          "delta": 0.0,
+          "delta_95ci": [
+            0.0,
+            0.0
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    ]
+  }
+}
