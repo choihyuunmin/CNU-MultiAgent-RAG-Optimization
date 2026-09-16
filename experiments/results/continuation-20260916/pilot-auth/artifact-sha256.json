@@ -4,6 +4,8 @@
   "audited-requests.jsonl": "5851556a3ccc3950dd7991da4d26d6ca48318eee989b91ed7a5489c3b2665bdd",
   "configurations.json": "0f4fbbcbe482ce5112f8d48b8d7c5190c0f675477717dc0a945c96c4eef12aa5",
   "evidence-comparison.json": "acfa766bd537c6c3ce493e33a196aae99d4f5e0c8fcf19251dbf634017a953e3",
+  "judge-c32-repeat0-summary.json": "787410c1ef94cd52ddcabd433279536c96615abe8b48c9fac3dfc5579f3d225c",
+  "judge-c32-repeat1-summary.json": "1516983910bf11397b8dbfe7a9e87733fdea39ae8ee14180479928a8360536c5",
   "model-inventory-after.json": "1e1ffb5529b91aa80eb9b066c0dadaecd9aecf9331bcad1877f1dd25fb3498f3",
   "model-inventory-before.json": "1e1ffb5529b91aa80eb9b066c0dadaecd9aecf9331bcad1877f1dd25fb3498f3",
   "plan.json": "af69f3d9440414d2ea16ba78b7e1ed41c623233dc1ff7f1a006bef2628ab8571",

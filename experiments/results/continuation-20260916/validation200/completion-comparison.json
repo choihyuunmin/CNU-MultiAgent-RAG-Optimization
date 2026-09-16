@@ -1,0 +1,65 @@
+{
+  "scope": "Trace-based completion differences, not expert correctness. Questions cluster repetitions; two runs do not estimate all shared-server variation.",
+  "comparisons": [
+    {
+      "level": 200,
+      "candidate": "fifo",
+      "metrics": {
+        "stage_clean_completion": {
+          "n": 200,
+          "baseline_mean": 0.5975,
+          "candidate_mean": 0.98,
+          "delta": 0.38249999999999995,
+          "delta_95ci": [
+            0.3225,
+            0.4425
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        },
+        "dependency_clean_completion": {
+          "n": 200,
+          "baseline_mean": 0.5975,
+          "candidate_mean": 0.98,
+          "delta": 0.38249999999999995,
+          "delta_95ci": [
+            0.3225,
+            0.4425
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    },
+    {
+      "level": 200,
+      "candidate": "improved",
+      "metrics": {
+        "stage_clean_completion": {
+          "n": 200,
+          "baseline_mean": 0.5975,
+          "candidate_mean": 0.83,
+          "delta": 0.23249999999999993,
+          "delta_95ci": [
+            0.17,
+            0.295
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        },
+        "dependency_clean_completion": {
+          "n": 200,
+          "baseline_mean": 0.5975,
+          "candidate_mean": 0.83,
+          "delta": 0.23249999999999993,
+          "delta_95ci": [
+            0.17,
+            0.295
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    }
+  ]
+}

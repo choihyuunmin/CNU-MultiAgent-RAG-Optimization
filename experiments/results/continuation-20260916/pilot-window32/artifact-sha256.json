@@ -4,6 +4,8 @@
   "audited-requests.jsonl": "769e686599a3d53c6e373954d41f8588d504198b82906f70897bc35f386f33ba",
   "completion-comparison.json": "52c7520540c829a38f9cea5580c8f7369fc6073579b87e6d9c811d682c37c648",
   "evidence-comparison.json": "0e4b7912fb40e94ca73c5b0cb156f18a8c173f28d4e04cb9ff0c647d7cdc834a",
+  "judge-c100-repeat0-summary.json": "b275892c05b89d20f7083349f4582ddceaed919c245a89933ead4eef2b35ee02",
+  "judge-c100-repeat1-summary.json": "b9f7bbde2008c6b7f36e1b63460b9c22617b1f9ce7760ed06ebdc4bdee8e44a2",
   "model-inventory-after.json": "1e1ffb5529b91aa80eb9b066c0dadaecd9aecf9331bcad1877f1dd25fb3498f3",
   "model-inventory-before.json": "1e1ffb5529b91aa80eb9b066c0dadaecd9aecf9331bcad1877f1dd25fb3498f3",
   "plan.json": "6410dc748d39b63b5f60cc936daa832cf3d6f5dc74433aa885cfdc0a51d27520",

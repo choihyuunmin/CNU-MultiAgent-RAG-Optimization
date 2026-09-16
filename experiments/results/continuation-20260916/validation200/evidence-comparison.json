@@ -1,0 +1,53 @@
+{
+  "scope": "Returned evidence item IDs, not parent-law IDs or expert accuracy. Empty reference is unscorable; empty candidate against nonempty reference scores zero.",
+  "comparisons": {
+    "fifo": [
+      {
+        "concurrency": 200,
+        "unique_questions": 200,
+        "candidate_recall_vs_baseline": 0.7963280766852195,
+        "scorable_recall_pairs": 308,
+        "candidate_precision_vs_baseline": 0.6793891293891294,
+        "exact_evidence_fraction": 0.61,
+        "baseline_repeat_recall": 0.7798160173160174,
+        "baseline_repeat_exact": 0.64,
+        "source_hit_change": {
+          "n": 120,
+          "baseline_mean": 0.7666666666666667,
+          "candidate_mean": 0.925,
+          "delta": 0.15833333333333333,
+          "delta_95ci": [
+            0.1,
+            0.21666666666666667
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    ],
+    "improved": [
+      {
+        "concurrency": 200,
+        "unique_questions": 200,
+        "candidate_recall_vs_baseline": 0.6823760564831993,
+        "scorable_recall_pairs": 308,
+        "candidate_precision_vs_baseline": 0.6970039682539682,
+        "exact_evidence_fraction": 0.5775,
+        "baseline_repeat_recall": 0.7798160173160174,
+        "baseline_repeat_exact": 0.64,
+        "source_hit_change": {
+          "n": 120,
+          "baseline_mean": 0.7666666666666667,
+          "candidate_mean": 0.7791666666666667,
+          "delta": 0.012499999999999956,
+          "delta_95ci": [
+            -0.058333333333333334,
+            0.0875
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    ]
+  }
+}

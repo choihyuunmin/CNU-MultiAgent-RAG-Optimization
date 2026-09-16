@@ -1,0 +1,87 @@
+{
+  "expected": 48,
+  "completed": 48,
+  "judge_model": "microsoft/phi-4",
+  "repeat": 1,
+  "warning": "Automated single-model evidence support; not expert correctness. Judge has its own errors.",
+  "variants": {
+    "improved": {
+      "n": 16,
+      "valid": 16,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.25,
+      "mean_support_0_to_2": 1.25,
+      "insufficient_evidence_rate": 0.375
+    },
+    "baseline": {
+      "n": 16,
+      "valid": 16,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.25,
+      "mean_support_0_to_2": 1.1875,
+      "insufficient_evidence_rate": 0.5
+    },
+    "fifo": {
+      "n": 16,
+      "valid": 16,
+      "evidence_truncated_count": 0,
+      "mean_relevance_0_to_2": 1.6875,
+      "mean_support_0_to_2": 1.6875,
+      "insufficient_evidence_rate": 0.1875
+    }
+  },
+  "comparisons": {
+    "improved": {
+      "relevance": {
+        "n": 16,
+        "baseline_mean": 1.25,
+        "candidate_mean": 1.25,
+        "delta": 0.0,
+        "delta_95ci": [
+          -0.625,
+          0.625
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      },
+      "support": {
+        "n": 16,
+        "baseline_mean": 1.1875,
+        "candidate_mean": 1.25,
+        "delta": 0.0625,
+        "delta_95ci": [
+          -0.5,
+          0.625
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      }
+    },
+    "fifo": {
+      "relevance": {
+        "n": 16,
+        "baseline_mean": 1.25,
+        "candidate_mean": 1.6875,
+        "delta": 0.4375,
+        "delta_95ci": [
+          0.0,
+          0.875
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      },
+      "support": {
+        "n": 16,
+        "baseline_mean": 1.1875,
+        "candidate_mean": 1.6875,
+        "delta": 0.5,
+        "delta_95ci": [
+          0.0625,
+          0.9375
+        ],
+        "bootstrap_resamples": 4000,
+        "unit": "question (repetitions averaged)"
+      }
+    }
+  }
+}
