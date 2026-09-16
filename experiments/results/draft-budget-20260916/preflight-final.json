@@ -1,0 +1,41 @@
+{
+  "utc": "2026-09-16T06:41:57.956188+00:00",
+  "probe_scope": "runtime/GPU are local to this process; remote probes are TCP only",
+  "runtime": {
+    "version": null,
+    "files": {},
+    "dynamic_field_present": false,
+    "coordinated_dynamic_k_verified": false,
+    "status": "vllm_not_installed_here"
+  },
+  "gpu": {
+    "nvidia_smi_available": true,
+    "query_ok": true,
+    "devices": [
+      "NVIDIA GeForce RTX 3050, 6144, 5796"
+    ]
+  },
+  "connectivity": [
+    {
+      "host": "192.168.100.52",
+      "port": 22,
+      "reachable": false,
+      "error_type": "TimeoutError"
+    },
+    {
+      "host": "192.168.100.53",
+      "port": 22,
+      "reachable": false,
+      "error_type": "TimeoutError"
+    },
+    {
+      "host": "192.168.100.53",
+      "port": 8000,
+      "reachable": false,
+      "error_type": "TimeoutError"
+    }
+  ],
+  "new_gpu_experiment_requests": 0,
+  "promote_to_full_experiment": false,
+  "status": "connection_blocked"
+}
