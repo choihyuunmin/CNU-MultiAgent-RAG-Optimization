@@ -6,6 +6,20 @@ from urllib.parse import urlsplit
 _worker_experiment_base = None
 
 
+def transport_error_chain(exc):
+    """Keep exception types/errno for diagnosis without messages, URLs or keys."""
+    chain, seen = [], set()
+    while exc is not None and id(exc) not in seen and len(chain) < 8:
+        seen.add(id(exc))
+        item = {'type': type(exc).__name__, 'module': type(exc).__module__}
+        number = getattr(exc, 'errno', None)
+        if type(number) is int:
+            item['errno'] = number
+        chain.append(item)
+        exc = exc.__cause__ if exc.__cause__ is not None else exc.__context__
+    return chain
+
+
 def configure_worker_experiment(base):
     """Opt-in route for an owned loopback replica of the same worker model."""
     global _worker_experiment_base

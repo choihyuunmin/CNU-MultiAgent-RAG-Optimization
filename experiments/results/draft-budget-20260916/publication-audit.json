@@ -1,0 +1,37 @@
+{
+  "utc": "2026-09-16T08:17:47.409637+00:00",
+  "status": "completed_and_not_promoted",
+  "stage_replay_requests": 96,
+  "end_to_end_requests": 640,
+  "end_to_end_dependency_clean": 639,
+  "automatic_judgments": 100,
+  "new_method_C64_to_C200_requests": 0,
+  "code_tests_passed": 339,
+  "public_json_files_checked": 50,
+  "private_content_field_check_passed": true,
+  "credential_pattern_check_passed": true,
+  "measurement_code_commit": "d403766fc9ac199577b660b97a043ab9e29bd820",
+  "measurement_code_verification": [
+    {
+      "study": "e2e-k4",
+      "matched_git_files": 174,
+      "frozen_runner_files": [
+        "scripts/run_worker_draft_e2e.py"
+      ]
+    },
+    {
+      "study": "confirmation32-k4",
+      "matched_git_files": 174,
+      "frozen_runner_files": [
+        "scripts/run_worker_draft_e2e.py"
+      ]
+    }
+  ],
+  "measurement_runtime_unchanged": true,
+  "diagnostic_code_changed_after_frozen_measurement": true,
+  "original_model_PIDs_alive_and_healthy": 8,
+  "previous_six_model_argument_hashes_unchanged": true,
+  "owned_model_and_app_ports_closed": true,
+  "full_experiment_promoted": false,
+  "reason": "Positive latency results, but stricter evidence fidelity gate failed and one network failure was retained."
+}

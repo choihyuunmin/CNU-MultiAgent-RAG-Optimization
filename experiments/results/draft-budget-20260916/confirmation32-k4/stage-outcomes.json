@@ -1,0 +1,400 @@
+{
+  "complete": true,
+  "n": 576,
+  "audit_errors": [],
+  "scope": "trace-based dependency health, not expert answer correctness; timeouts retained",
+  "loads": [
+    {
+      "level": 4,
+      "arms": {
+        "baseline": {
+          "n": 96,
+          "wall_s": 592.9002085238462,
+          "ok": 96,
+          "pipeline_ok": 96,
+          "trace_complete": 96,
+          "stage_clean_completion": 96,
+          "dependency_clean_completion": 96,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 96,
+            "mean": 23.621216148929914,
+            "p50": 22.711214915965684,
+            "p95": 32.67964075820055,
+            "p99": 33.66323347026482,
+            "max": 35.015190274920315
+          },
+          "stage_clean_throughput_rps": 0.1619159491257607,
+          "dependency_clean_throughput_rps": 0.1619159491257607,
+          "source_law_hit": {
+            "n": 96,
+            "mean": 1.0,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 96,
+            "rerank:200": 96
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        },
+        "improved": {
+          "n": 96,
+          "wall_s": 462.21234232897405,
+          "ok": 96,
+          "pipeline_ok": 96,
+          "trace_complete": 96,
+          "stage_clean_completion": 95,
+          "dependency_clean_completion": 95,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 96,
+            "mean": 18.352629109153593,
+            "p50": 18.212065317493398,
+            "p95": 25.01845996294287,
+            "p99": 28.468316152296026,
+            "max": 28.937086855992675
+          },
+          "stage_clean_throughput_rps": 0.20553323937936926,
+          "dependency_clean_throughput_rps": 0.20553323937936926,
+          "source_law_hit": {
+            "n": 96,
+            "mean": 1.0,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 96,
+            "rerank:200": 96
+          },
+          "failed_model_stages": {
+            "retrieval": 1
+          },
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        }
+      },
+      "paired_latency_vs_baseline": {
+        "improved": {
+          "n": 32,
+          "baseline_mean": 23.621216148929914,
+          "candidate_mean": 18.352629109153593,
+          "speedup": 1.2870753290136807,
+          "reduction_pct": 22.304469873855325,
+          "reduction_95ci_pct": [
+            19.56479395971005,
+            24.94187818937069
+          ],
+          "delta": -5.268587039776321,
+          "delta_95ci": [
+            -6.114901677550644,
+            -4.436900152323384
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    },
+    {
+      "level": 16,
+      "arms": {
+        "baseline": {
+          "n": 96,
+          "wall_s": 385.7136370749213,
+          "ok": 96,
+          "pipeline_ok": 96,
+          "trace_complete": 96,
+          "stage_clean_completion": 96,
+          "dependency_clean_completion": 96,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 96,
+            "mean": 51.813946800277336,
+            "p50": 52.37661145848688,
+            "p95": 69.09507018321892,
+            "p99": 74.49529766787892,
+            "max": 75.18125948996749
+          },
+          "stage_clean_throughput_rps": 0.24888930743548715,
+          "dependency_clean_throughput_rps": 0.24888930743548715,
+          "source_law_hit": {
+            "n": 96,
+            "mean": 1.0,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 96,
+            "rerank:200": 96
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        },
+        "improved": {
+          "n": 96,
+          "wall_s": 278.3884126818739,
+          "ok": 96,
+          "pipeline_ok": 96,
+          "trace_complete": 96,
+          "stage_clean_completion": 96,
+          "dependency_clean_completion": 96,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 96,
+            "mean": 37.43981638073819,
+            "p50": 36.42856660758844,
+            "p95": 48.62427522390499,
+            "p99": 50.33404801730648,
+            "max": 53.59911214199383
+          },
+          "stage_clean_throughput_rps": 0.3448419389125338,
+          "dependency_clean_throughput_rps": 0.3448419389125338,
+          "source_law_hit": {
+            "n": 96,
+            "mean": 1.0,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 96,
+            "rerank:200": 96
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        }
+      },
+      "paired_latency_vs_baseline": {
+        "improved": {
+          "n": 32,
+          "baseline_mean": 51.813946800277336,
+          "candidate_mean": 37.43981638073819,
+          "speedup": 1.3839263065118625,
+          "reduction_pct": 27.741817227214593,
+          "reduction_95ci_pct": [
+            25.142671034825536,
+            29.907245620824234
+          ],
+          "delta": -14.374130419539142,
+          "delta_95ci": [
+            -16.20462737334953,
+            -12.332138577805168
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    },
+    {
+      "level": 32,
+      "arms": {
+        "baseline": {
+          "n": 96,
+          "wall_s": 357.00169687508605,
+          "ok": 96,
+          "pipeline_ok": 96,
+          "trace_complete": 96,
+          "stage_clean_completion": 96,
+          "dependency_clean_completion": 96,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 96,
+            "mean": 76.93207203222119,
+            "p50": 76.07647891150555,
+            "p95": 114.94051331747323,
+            "p99": 118.94293238705723,
+            "max": 119.75919319305103
+          },
+          "stage_clean_throughput_rps": 0.26890628487289836,
+          "dependency_clean_throughput_rps": 0.26890628487289836,
+          "source_law_hit": {
+            "n": 96,
+            "mean": 1.0,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 96,
+            "rerank:200": 96
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        },
+        "improved": {
+          "n": 96,
+          "wall_s": 233.97527473291848,
+          "ok": 96,
+          "pipeline_ok": 96,
+          "trace_complete": 96,
+          "stage_clean_completion": 96,
+          "dependency_clean_completion": 96,
+          "preparation_failed": 0,
+          "completed_with_missing_trace": 0,
+          "latency_including_failures": {
+            "n": 96,
+            "mean": 57.10454740875866,
+            "p50": 56.51840479800012,
+            "p95": 77.22661537773092,
+            "p99": 79.22355302846991,
+            "max": 79.98759513499681
+          },
+          "stage_clean_throughput_rps": 0.4102997639796918,
+          "dependency_clean_throughput_rps": 0.4102997639796918,
+          "source_law_hit": {
+            "n": 96,
+            "mean": 1.0,
+            "p50": 1.0,
+            "p95": 1.0,
+            "p99": 1.0,
+            "max": 1.0
+          },
+          "dependency_statuses": {
+            "guardrail:200": 96,
+            "rerank:200": 96
+          },
+          "failed_model_stages": {},
+          "dispatch_wait_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_service_s": {
+            "n": 0,
+            "mean": null,
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "max": null
+          },
+          "dispatch_calls": 0
+        }
+      },
+      "paired_latency_vs_baseline": {
+        "improved": {
+          "n": 32,
+          "baseline_mean": 76.93207203222119,
+          "candidate_mean": 57.10454740875866,
+          "speedup": 1.3472144605496232,
+          "reduction_pct": 25.772768235279344,
+          "reduction_95ci_pct": [
+            22.017651164442068,
+            28.724769574553566
+          ],
+          "delta": -19.827524623462523,
+          "delta_95ci": [
+            -24.08002744355675,
+            -15.44352195629636
+          ],
+          "bootstrap_resamples": 4000,
+          "unit": "question (repetitions averaged)"
+        }
+      }
+    }
+  ],
+  "input_sha256": {
+    "requests.jsonl": "913d2cd96f6bc77232046f01f5e5244e5fd42a66775beb7a80563a51d0d283bd",
+    "private-responses.jsonl": "e1a710c779d738891fa1b1f7449603f3c679052d8097a9763480e5901f43c56b",
+    "summary.json": "0445a9cfec4b50d8e2eb043dedf315e3cb4cd8389efca531e541883a469ffff0",
+    "apps/baseline.trace.jsonl": "498351fa288e6c8723cd51451d52a5671be7e35e0feaf8f53fa0a21f05836d50",
+    "apps/improved.trace.jsonl": "259b9c41815adc4507357166d041ec33de6270caeb1637a2bed0097b566d0b2e",
+    "apps/baseline.workflow.jsonl": "79ee3379f33345c0e6715bf0cc9ddc9e15d1c6972591110570160c9e7911a716",
+    "apps/improved.workflow.jsonl": "415a38150189184c2d686787fafef7e8c7d84f559c2f1d46a3d9e91535cb5ae4"
+  }
+}

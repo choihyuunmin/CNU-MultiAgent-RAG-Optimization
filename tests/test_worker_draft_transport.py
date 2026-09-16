@@ -9,6 +9,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 import moleg_model_transport as transport
 
 
+def test_error_chain_keeps_network_reason_but_never_exception_messages():
+    network = OSError(104, 'private URL and credential in message')
+    wrapped = RuntimeError('private SDK request')
+    wrapped.__cause__ = network
+    network.__context__ = wrapped  # Defensive cycle guard.
+    chain = transport.transport_error_chain(wrapped)
+    assert chain == [{'type': 'RuntimeError', 'module': 'builtins'},
+                     {'type': 'ConnectionResetError', 'module': 'builtins', 'errno': 104}]
+    assert 'private' not in str(chain)
+
+
 @pytest.mark.parametrize('endpoint', [
     'https://127.0.0.1:28160/v1', 'http://example.com:28160/v1',
     'http://user:secret@127.0.0.1:28160/v1', 'http://127.0.0.1/v1',

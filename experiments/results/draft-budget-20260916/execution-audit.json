@@ -1,0 +1,52 @@
+{
+  "e2e-k4": {
+    "planned_question_mismatches": [],
+    "measured_question_mismatches": [],
+    "plan_question_hash_format": "UTF-8 text",
+    "request_question_hash_format": "json.dumps(question, sort_keys=True, ensure_ascii=False)",
+    "achieved_concurrency_all_trials": true,
+    "rows": 64,
+    "kv_capacity_tokens_by_engine_start": {
+      "k0-r0.server.log": [
+        "158,608"
+      ],
+      "k4-r0.server.log": [
+        "158,608"
+      ],
+      "k4-r1.server.log": [
+        "158,608"
+      ],
+      "k0-r1.server.log": [
+        "158,608"
+      ]
+    }
+  },
+  "confirmation32-k4": {
+    "planned_question_mismatches": [],
+    "measured_question_mismatches": [],
+    "plan_question_hash_format": "UTF-8 text",
+    "request_question_hash_format": "json.dumps(question, sort_keys=True, ensure_ascii=False)",
+    "achieved_concurrency_all_trials": true,
+    "rows": 576,
+    "kv_capacity_tokens_by_engine_start": {
+      "k0-r0.server.log": [
+        "158,608"
+      ],
+      "k4-r0.server.log": [
+        "158,608"
+      ],
+      "k4-r1.server.log": [
+        "158,608"
+      ],
+      "k0-r1.server.log": [
+        "158,608"
+      ],
+      "k0-r2.server.log": [
+        "158,608"
+      ],
+      "k4-r2.server.log": [
+        "158,608"
+      ]
+    }
+  }
+}

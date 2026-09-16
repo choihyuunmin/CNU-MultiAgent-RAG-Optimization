@@ -1,0 +1,72 @@
+{
+  "utc": "2026-09-16T08:12:05.009771+00:00",
+  "original_models": [
+    {
+      "pid": 20748,
+      "port": 8000,
+      "original_pid_alive": true,
+      "argv_sha256": "6e6925495f980dc3482e5cf6dfb06ee870b84d68c279f21cbcf4658ab132c9e2",
+      "health_status": 200
+    },
+    {
+      "pid": 21261,
+      "port": 8001,
+      "original_pid_alive": true,
+      "argv_sha256": "aba1cf79f7a804da88b2bbf8693b356616633d76107536abb7f86bb832bcf0ba",
+      "health_status": 200
+    },
+    {
+      "pid": 21545,
+      "port": 8002,
+      "original_pid_alive": true,
+      "argv_sha256": "f9c1a9efd76994a23d750e2e8d3ca5dcc11b2c713d32b71aeef24fa64f75647d",
+      "health_status": 200
+    },
+    {
+      "pid": 20279,
+      "port": 8005,
+      "original_pid_alive": true,
+      "argv_sha256": "32cfa65da22147908221df9a8413f31846f5e184ab5edf7a8dade0e57912dc7b",
+      "health_status": 200
+    },
+    {
+      "pid": 21866,
+      "port": 8006,
+      "original_pid_alive": true,
+      "argv_sha256": "53ac5ed8fd3d55fbd6b5e822d1f3062b600c5fe04580c056283439debe90b1bb",
+      "health_status": 200
+    },
+    {
+      "pid": 19142,
+      "port": 8010,
+      "original_pid_alive": true,
+      "argv_sha256": "076a3b295c2b7b0e364f2952040d1c6598f7b16ebc0433ad8ad58d544929bdab",
+      "health_status": 200
+    },
+    {
+      "pid": 22269,
+      "port": 8020,
+      "original_pid_alive": true,
+      "argv_sha256": "226e4fa374233581d4045f41a4168d6c41a6109a4a40873015ba2e3d048a1085",
+      "health_status": 200
+    },
+    {
+      "pid": 13891,
+      "port": 8030,
+      "original_pid_alive": true,
+      "argv_sha256": "65ced0af958f56d43ee92840c123fbbb79a1cce11103cd15d51f31ccfb4ebff4",
+      "health_status": 200
+    }
+  ],
+  "owned_ports_closed": {
+    "28160": true,
+    "28760": true,
+    "28761": true
+  },
+  "measured_runtime_mismatches": [],
+  "actual_runner_unchanged": true,
+  "gpu_after": [
+    "0, 116356 MiB, 26800 MiB",
+    "1, 139492 MiB, 3665 MiB"
+  ]
+}

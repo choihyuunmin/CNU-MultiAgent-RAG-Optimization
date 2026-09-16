@@ -122,7 +122,7 @@ def install(profile="baseline", *, allow_preparation_overlap=True):
                 clients[base] = AsyncOpenAI(base_url=base, api_key=key, timeout=120, max_retries=0)
             routes[item["model_name"]] = (clients[base], model[len("openai/"):])
 
-    from moleg_model_transport import install_standard_transport, chat_payload
+    from moleg_model_transport import install_standard_transport, chat_payload, transport_error_chain
     install_standard_transport()
     original_chat = llm.acompletion_via_proxy
     original_stream = llm.acompletion_stream_via_proxy
@@ -151,20 +151,22 @@ def install(profile="baseline", *, allow_preparation_overlap=True):
                       finish_reason=response.choices[0].finish_reason)
             return response
         except Exception as e:
-            trace_add("errors", component="llm", error=type(e).__name__)
+            trace_add("errors", component="llm", error=type(e).__name__,
+                      transport_error_chain=transport_error_chain(e))
             raise
 
     async def stream(**kwargs):
         start = time.perf_counter()
         cli, payload = direct_kwargs(kwargs, True) if fast else (None, None)
-        source = await cli.chat.completions.create(**payload) if cli else original_stream(**kwargs)
+        source = None
         chunks, chars, reasoning_chars = 0, 0, 0
-        capture_path = os.environ.get('MOLEG_CAPTURE_PATH')
-        if capture_path:
-            with open(capture_path, 'a', encoding='utf-8') as f:
-                f.write(json.dumps({'session_id':(TRACE.get() or {}).get('session_id'),
-                    'profile':profile,'kwargs':kwargs}, ensure_ascii=False)+'\n')
         try:
+            source = await cli.chat.completions.create(**payload) if cli else original_stream(**kwargs)
+            capture_path = os.environ.get('MOLEG_CAPTURE_PATH')
+            if capture_path:
+                with open(capture_path, 'a', encoding='utf-8') as f:
+                    f.write(json.dumps({'session_id':(TRACE.get() or {}).get('session_id'),
+                        'profile':profile,'kwargs':kwargs}, ensure_ascii=False)+'\n')
             async for chunk in source:
                 chunks += 1
                 if chunk.choices:
@@ -172,13 +174,18 @@ def install(profile="baseline", *, allow_preparation_overlap=True):
                     delta = chunk.choices[0].delta.model_dump()
                     reasoning_chars += len(delta.get('reasoning') or delta.get('reasoning_content') or '')
                 yield chunk
+        except Exception as e:
+            trace_add("errors", component="llm_stream", error=type(e).__name__,
+                      transport_error_chain=transport_error_chain(e))
+            raise
         finally:
             trace_add("llm", model=kwargs.get("model"), elapsed_s=time.perf_counter()-start,
                       stream=True, chunks=chunks, characters=chars, reasoning_characters=reasoning_chars)
-            if cli:
-                await source.close()
-            else:
-                await source.aclose()
+            if source is not None:
+                if cli:
+                    await source.close()
+                else:
+                    await source.aclose()
 
     llm.acompletion_via_proxy = chat
     llm.acompletion_stream_via_proxy = stream

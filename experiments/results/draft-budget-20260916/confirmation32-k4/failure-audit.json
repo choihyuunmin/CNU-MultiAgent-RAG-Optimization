@@ -1,0 +1,24 @@
+{
+  "failures": [
+    {
+      "case_id": "q226",
+      "arm": "improved",
+      "repeat": 1,
+      "level": 4,
+      "elapsed_s": 18.722049194038846,
+      "pipeline_ok": true,
+      "source_law_hit": true,
+      "failed_model_stages": {
+        "retrieval": 1
+      },
+      "errors": [
+        {
+          "component": "llm",
+          "type": "APIConnectionError"
+        }
+      ],
+      "underlying_transport_cause_recorded": false
+    }
+  ],
+  "interpretation": "Failed model attempt retained despite successful fallback response. Underlying transport cause unavailable in frozen measurement logs; no causal attribution to speculative decoding. New type/errno diagnostic logging is a separate un-deployed code change; no hidden retries were added."
+}

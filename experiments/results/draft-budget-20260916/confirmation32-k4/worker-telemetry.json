@@ -1,0 +1,212 @@
+{
+  "scope": "Deltas for the owned loopback worker only, outside warmup. Means are per MODEL CALL, not per search request. Server request decode intervals are not synchronized engine windows or pure GPU kernel costs and cannot calibrate the draft-budget policy.",
+  "loads": [
+    {
+      "level": 4,
+      "arms": {
+        "baseline": {
+          "histograms": {
+            "request_queue_time_seconds": {
+              "count": 192.0,
+              "sum": 0.0018080284353345633,
+              "mean_per_model_call": 9.416814767367518e-06
+            },
+            "request_prefill_time_seconds": {
+              "count": 192.0,
+              "sum": 21.944677016115747,
+              "mean_per_model_call": 0.11429519279226952
+            },
+            "request_decode_time_seconds": {
+              "count": 192.0,
+              "sum": 1216.0645125162555,
+              "mean_per_model_call": 6.333669336022164
+            },
+            "request_generation_tokens": {
+              "count": 192.0,
+              "sum": 32725.0,
+              "mean_per_model_call": 170.44270833333334
+            },
+            "request_prompt_tokens": {
+              "count": 192.0,
+              "sum": 323151.0,
+              "mean_per_model_call": 1683.078125
+            }
+          },
+          "peak_observed_waiting_calls": 0.0,
+          "peak_observed_kv_fraction": 0.03631594875416122,
+          "preemptions": 0.0
+        },
+        "improved": {
+          "histograms": {
+            "request_queue_time_seconds": {
+              "count": 191.0,
+              "sum": 0.002184286597184837,
+              "mean_per_model_call": 1.1436055482643125e-05
+            },
+            "request_prefill_time_seconds": {
+              "count": 191.0,
+              "sum": 14.605023193871602,
+              "mean_per_model_call": 0.07646609002027017
+            },
+            "request_decode_time_seconds": {
+              "count": 191.0,
+              "sum": 714.2528290776536,
+              "mean_per_model_call": 3.7395436077364064
+            },
+            "request_generation_tokens": {
+              "count": 191.0,
+              "sum": 32283.0,
+              "mean_per_model_call": 169.02094240837695
+            },
+            "request_prompt_tokens": {
+              "count": 191.0,
+              "sum": 324308.0,
+              "mean_per_model_call": 1697.9476439790576
+            }
+          },
+          "peak_observed_waiting_calls": 0.0,
+          "peak_observed_kv_fraction": 0.03117118934732166,
+          "preemptions": 0.0
+        }
+      }
+    },
+    {
+      "level": 16,
+      "arms": {
+        "baseline": {
+          "histograms": {
+            "request_queue_time_seconds": {
+              "count": 192.0,
+              "sum": 1754.2689916047966,
+              "mean_per_model_call": 9.136817664608316
+            },
+            "request_prefill_time_seconds": {
+              "count": 192.0,
+              "sum": 15.913500799564645,
+              "mean_per_model_call": 0.08288281666439919
+            },
+            "request_decode_time_seconds": {
+              "count": 192.0,
+              "sum": 1211.5202463847818,
+              "mean_per_model_call": 6.3100012832540715
+            },
+            "request_generation_tokens": {
+              "count": 192.0,
+              "sum": 32173.0,
+              "mean_per_model_call": 167.56770833333334
+            },
+            "request_prompt_tokens": {
+              "count": 192.0,
+              "sum": 319027.0,
+              "mean_per_model_call": 1661.5989583333333
+            }
+          },
+          "peak_observed_waiting_calls": 12.0,
+          "peak_observed_kv_fraction": 0.04529405830727329,
+          "preemptions": 0.0
+        },
+        "improved": {
+          "histograms": {
+            "request_queue_time_seconds": {
+              "count": 192.0,
+              "sum": 635.8936761742225,
+              "mean_per_model_call": 3.3119462300740756
+            },
+            "request_prefill_time_seconds": {
+              "count": 192.0,
+              "sum": 8.646072689327411,
+              "mean_per_model_call": 0.04503162859024693
+            },
+            "request_decode_time_seconds": {
+              "count": 192.0,
+              "sum": 717.8679524390027,
+              "mean_per_model_call": 3.738895585619806
+            },
+            "request_generation_tokens": {
+              "count": 192.0,
+              "sum": 31869.0,
+              "mean_per_model_call": 165.984375
+            },
+            "request_prompt_tokens": {
+              "count": 192.0,
+              "sum": 319646.0,
+              "mean_per_model_call": 1664.8229166666667
+            }
+          },
+          "peak_observed_waiting_calls": 11.0,
+          "peak_observed_kv_fraction": 0.04196509633814183,
+          "preemptions": 0.0
+        }
+      }
+    },
+    {
+      "level": 32,
+      "arms": {
+        "baseline": {
+          "histograms": {
+            "request_queue_time_seconds": {
+              "count": 192.0,
+              "sum": 2197.404118571081,
+              "mean_per_model_call": 11.444813117557715
+            },
+            "request_prefill_time_seconds": {
+              "count": 192.0,
+              "sum": 15.579341750126332,
+              "mean_per_model_call": 0.08114240494857465
+            },
+            "request_decode_time_seconds": {
+              "count": 192.0,
+              "sum": 1204.9775417754427,
+              "mean_per_model_call": 6.275924696747097
+            },
+            "request_generation_tokens": {
+              "count": 192.0,
+              "sum": 31824.0,
+              "mean_per_model_call": 165.75
+            },
+            "request_prompt_tokens": {
+              "count": 192.0,
+              "sum": 317553.0,
+              "mean_per_model_call": 1653.921875
+            }
+          },
+          "peak_observed_waiting_calls": 20.0,
+          "peak_observed_kv_fraction": 0.044285281952990974,
+          "preemptions": 0.0
+        },
+        "improved": {
+          "histograms": {
+            "request_queue_time_seconds": {
+              "count": 192.0,
+              "sum": 690.3438501803903,
+              "mean_per_model_call": 3.5955408863561993
+            },
+            "request_prefill_time_seconds": {
+              "count": 192.0,
+              "sum": 8.384504537563771,
+              "mean_per_model_call": 0.04366929446647797
+            },
+            "request_decode_time_seconds": {
+              "count": 192.0,
+              "sum": 687.6249360399088,
+              "mean_per_model_call": 3.5813798752078583
+            },
+            "request_generation_tokens": {
+              "count": 192.0,
+              "sum": 31488.0,
+              "mean_per_model_call": 164.0
+            },
+            "request_prompt_tokens": {
+              "count": 192.0,
+              "sum": 321424.0,
+              "mean_per_model_call": 1674.0833333333333
+            }
+          },
+          "peak_observed_waiting_calls": 14.0,
+          "peak_observed_kv_fraction": 0.0444870372238475,
+          "preemptions": 0.0
+        }
+      }
+    }
+  ]
+}

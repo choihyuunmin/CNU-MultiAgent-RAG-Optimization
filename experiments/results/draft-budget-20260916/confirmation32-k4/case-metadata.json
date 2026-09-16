@@ -1,0 +1,13 @@
+{
+  "questions": 32,
+  "kinds": {
+    "article_subject_fallback": 4,
+    "named_law": 14,
+    "article_subject": 8,
+    "source_paraphrase": 6
+  },
+  "country_count": 27,
+  "source_labelled": 32,
+  "reference_answer_count": 14,
+  "private_cases_sha256": "2113a1d361257e10cc0bd089a4c9dc3d7d18ec862d652168772fb7d3c31c58f9"
+}
