@@ -1,0 +1,24 @@
+{
+  "planned_requests": 1800,
+  "observed_requests": 1800,
+  "all_question_pairs_valid": true,
+  "frozen_runtime_hashes_valid": true,
+  "application_source_matches_live_snapshot": true,
+  "model_inventory_unchanged": true,
+  "exported_sha256": {
+    "analysis-prior-vs-original.json": "9d7be1e388a6cba467418b7b7010a82ac38f778a841e50efd6cf700b6b07ecc1",
+    "analysis-vs-original.json": "58d3ba5f37754f60e3d313bfc35594f28847d49ce1fe3f2f7645d7697f521017",
+    "analysis-vs-prior.json": "ead9611ffbc372deef1030c4f18788f39ebe048f3cea26cd636cacaaa9576935",
+    "configurations.json": "af8c62ed6792dd72b93d19f2d36055bd5a4084f24e71a177c0df98c4659a28a0",
+    "judge-c100-summary.json": "7e1d62a151a1f5733252c94101da83a6bf092605a4cdad187555e76ecb525643",
+    "judge-c20-summary.json": "7344a9d934403e29d0b04e2cdacedce404c28e0f7669477401f07d9a84493605",
+    "judge-c4-summary.json": "9d912631a0ac23369a5e89816766a12bf74585433d8e79f88a31a1e812cf95b1",
+    "live-source-manifest.json": "eb067944dcd4bfa32a63766a6d9ebab30a3284df9493bf593c077b54c9f51118",
+    "model-inventory-after.json": "1e1ffb5529b91aa80eb9b066c0dadaecd9aecf9331bcad1877f1dd25fb3498f3",
+    "model-inventory-before.json": "1e1ffb5529b91aa80eb9b066c0dadaecd9aecf9331bcad1877f1dd25fb3498f3",
+    "plan.json": "05cd5ba911b6b8ea981d37722c4c41ea23146a8180dd7d9d272ddb182f19e6c2",
+    "replay-layout.json": "5c47b4619555e78606d13affe5347b544658e3835d43fb9b02829f09eb3c122a",
+    "replay-minified.json": "4ddbd44fab68d5cef58d8445a2f980bfe290e19dcbb123f1de59cb1de87bf8a4",
+    "stage-metrics.json": "43b543ba3dfce91b116d3855ae68bd70d82faba9d5a648fa149fd8a728b05924"
+  }
+}

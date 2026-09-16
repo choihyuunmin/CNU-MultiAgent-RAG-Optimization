@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "model": "google/gemma-4-31B-it",
+  "identity": "0ed3cad1ccf6e86659eb1168289cde4adf29c9955d0a5caec88c31aa67f4550a",
+  "calibration_cases": 36,
+  "heldout_cases": 18,
+  "topologies": [
+    "chain",
+    "fork_join",
+    "loop"
+  ],
+  "repeats": 2,
+  "workflow_concurrency": 4,
+  "timing_includes_fallbacks": true,
+  "runtime_semantic_oracle": false,
+  "gate": {
+    "min_cases": 12,
+    "min_reduction": 0.02,
+    "max_excess_loss": 0.01
+  },
+  "source_sha256": {
+    "evaluate_reference_topologies.py": "c3cecca8a0fe5daf5f6e578de7c2efa643aeea2c929385bdb1cb6b76983125e4",
+    "reference_harness.py": "74356d60ed79c20a012e3b0efdafdfee114710143c324062ce34ce169e66fc32"
+  }
+}

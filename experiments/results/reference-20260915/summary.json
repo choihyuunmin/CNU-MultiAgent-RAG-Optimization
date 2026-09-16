@@ -1,0 +1,279 @@
+{
+  "synthetic": true,
+  "trials": [
+    {
+      "phase": "calibration",
+      "topology": "single",
+      "mode": "original",
+      "repeat": 0,
+      "n": 36,
+      "ok": 36,
+      "exact": 36,
+      "mean_s": 10.342352705425583,
+      "wall_s": 99.31991004396696
+    },
+    {
+      "phase": "calibration",
+      "topology": "single",
+      "mode": "candidate",
+      "repeat": 0,
+      "n": 36,
+      "ok": 36,
+      "exact": 36,
+      "mean_s": 1.8090964949191806,
+      "wall_s": 17.032583135995083
+    },
+    {
+      "phase": "calibration",
+      "topology": "single",
+      "mode": "candidate",
+      "repeat": 1,
+      "n": 36,
+      "ok": 36,
+      "exact": 36,
+      "mean_s": 1.6662605136775204,
+      "wall_s": 15.665373133961111
+    },
+    {
+      "phase": "calibration",
+      "topology": "single",
+      "mode": "original",
+      "repeat": 1,
+      "n": 36,
+      "ok": 36,
+      "exact": 36,
+      "mean_s": 10.335249146472457,
+      "wall_s": 99.70109282294288
+    },
+    {
+      "phase": "heldout",
+      "topology": "chain",
+      "mode": "original",
+      "repeat": 0,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 18.5819272282598,
+      "wall_s": 88.79413285397459
+    },
+    {
+      "phase": "heldout",
+      "topology": "chain",
+      "mode": "calibrated",
+      "repeat": 0,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 3.9032856756627248,
+      "wall_s": 18.462458519963548
+    },
+    {
+      "phase": "heldout",
+      "topology": "fork_join",
+      "mode": "calibrated",
+      "repeat": 0,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 3.4803996915450424,
+      "wall_s": 16.108787275967188
+    },
+    {
+      "phase": "heldout",
+      "topology": "fork_join",
+      "mode": "original",
+      "repeat": 0,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 15.59044498298964,
+      "wall_s": 75.29880599409807
+    },
+    {
+      "phase": "heldout",
+      "topology": "loop",
+      "mode": "original",
+      "repeat": 0,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 17.97189881461155,
+      "wall_s": 86.72547715704422
+    },
+    {
+      "phase": "heldout",
+      "topology": "loop",
+      "mode": "calibrated",
+      "repeat": 0,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 3.7026387302256705,
+      "wall_s": 17.625584752997383
+    },
+    {
+      "phase": "heldout",
+      "topology": "chain",
+      "mode": "calibrated",
+      "repeat": 1,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 3.5815630192842542,
+      "wall_s": 16.4725000099279
+    },
+    {
+      "phase": "heldout",
+      "topology": "chain",
+      "mode": "original",
+      "repeat": 1,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 18.662381483940408,
+      "wall_s": 85.26162606000435
+    },
+    {
+      "phase": "heldout",
+      "topology": "fork_join",
+      "mode": "original",
+      "repeat": 1,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 15.629612863348383,
+      "wall_s": 71.1512487140717
+    },
+    {
+      "phase": "heldout",
+      "topology": "fork_join",
+      "mode": "calibrated",
+      "repeat": 1,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 3.489730359106842,
+      "wall_s": 16.13542145001702
+    },
+    {
+      "phase": "heldout",
+      "topology": "loop",
+      "mode": "calibrated",
+      "repeat": 1,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 3.699110784386802,
+      "wall_s": 17.59626997297164
+    },
+    {
+      "phase": "heldout",
+      "topology": "loop",
+      "mode": "original",
+      "repeat": 1,
+      "n": 18,
+      "ok": 18,
+      "exact": 18,
+      "mean_s": 18.047193609831286,
+      "wall_s": 83.62511201098096
+    }
+  ],
+  "topologies": [
+    {
+      "topology": "chain",
+      "arms": {
+        "original": {
+          "n": 36,
+          "ok": 36,
+          "exact": 36,
+          "mean_s": 18.622154356100104,
+          "p95_s": 24.979553967015818,
+          "rps": 0.20683027223357636,
+          "model_calls": 108,
+          "fallbacks": 0,
+          "transformed": 0,
+          "prompt_tokens": 140178,
+          "output_tokens": 29212
+        },
+        "calibrated": {
+          "n": 36,
+          "ok": 36,
+          "exact": 36,
+          "mean_s": 3.7424243474734897,
+          "p95_s": 4.822776506072842,
+          "rps": 1.0304864100295774,
+          "model_calls": 108,
+          "fallbacks": 0,
+          "transformed": 108,
+          "prompt_tokens": 92286,
+          "output_tokens": 4826
+        }
+      },
+      "mean_reduction_pct": 79.90337596870162
+    },
+    {
+      "topology": "fork_join",
+      "arms": {
+        "original": {
+          "n": 36,
+          "ok": 36,
+          "exact": 36,
+          "mean_s": 15.610028923169011,
+          "p95_s": 19.440847582998686,
+          "rps": 0.24581759338866074,
+          "model_calls": 108,
+          "fallbacks": 0,
+          "transformed": 0,
+          "prompt_tokens": 175136,
+          "output_tokens": 35238
+        },
+        "calibrated": {
+          "n": 36,
+          "ok": 36,
+          "exact": 36,
+          "mean_s": 3.4850650253259423,
+          "p95_s": 4.404180879006162,
+          "rps": 1.116479560901402,
+          "model_calls": 108,
+          "fallbacks": 0,
+          "transformed": 108,
+          "prompt_tokens": 114674,
+          "output_tokens": 4830
+        }
+      },
+      "mean_reduction_pct": 77.67419238952675
+    },
+    {
+      "topology": "loop",
+      "arms": {
+        "original": {
+          "n": 36,
+          "ok": 36,
+          "exact": 36,
+          "mean_s": 18.00954621222142,
+          "p95_s": 24.917789045954123,
+          "rps": 0.21132888460098853,
+          "model_calls": 96,
+          "fallbacks": 0,
+          "transformed": 0,
+          "prompt_tokens": 135228,
+          "output_tokens": 28230
+        },
+        "calibrated": {
+          "n": 36,
+          "ok": 36,
+          "exact": 36,
+          "mean_s": 3.700874757306236,
+          "p95_s": 4.979413557914086,
+          "rps": 1.022092683082281,
+          "model_calls": 96,
+          "fallbacks": 0,
+          "transformed": 96,
+          "prompt_tokens": 88786,
+          "output_tokens": 4536
+        }
+      },
+      "mean_reduction_pct": 79.45048301775203
+    }
+  ]
+}

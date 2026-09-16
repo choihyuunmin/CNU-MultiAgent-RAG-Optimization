@@ -53,6 +53,8 @@ def main():
     parser.add_argument("--no-ontology", action="store_true",
                         help="skip the ontology-scoped search branch (loader returns None); "
                              "retrieval falls back to the existing hybrid path, unchanged otherwise")
+    parser.add_argument("--structured-harness", type=Path,
+                        help="opt-in fingerprinted context/structured decoding harness configuration")
     args = parser.parse_args()
     if args.adapter_trace is None:
         args.adapter_trace = args.trace.with_suffix(".workflow.jsonl")
@@ -81,6 +83,11 @@ def main():
     import moleg_paper_runtime
     # Optional speculative calls remain off in the normal execution path.
     moleg_paper_runtime.install(args.base_profile, allow_preparation_overlap=False)
+    harness_close = None
+    if args.structured_harness:
+        from moleg_structured_harness import install as install_structured
+        harness_close = install_structured(args.structured_harness,
+                                          args.trace.with_suffix(".capture.jsonl"))
     from moleg_workflow_adapter import install, TraceASGI
     install(adapter, estimates, hooks)
     args.adapter_trace.parent.mkdir(parents=True, exist_ok=True)
@@ -89,6 +96,17 @@ def main():
     if args.emission == "immediate":
         install_immediate_emission()
     from main_server import app
+    if harness_close:
+        from contextlib import asynccontextmanager
+        original_lifespan = app.router.lifespan_context
+        @asynccontextmanager
+        async def lifespan(application):
+            try:
+                async with original_lifespan(application) as state:
+                    yield state
+            finally:
+                await harness_close()
+        app.router.lifespan_context = lifespan
     from api.concurrency import generate_queue
     from moleg_unrestricted import remove_admission_limits
     remove_admission_limits(app, generate_queue)

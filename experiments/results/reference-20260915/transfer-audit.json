@@ -1,0 +1,11 @@
+{
+  "offline_only": true,
+  "min_candidates": 16,
+  "selection_calls": 575,
+  "original_policy_bypass": 383,
+  "original_policy_encoded": 192,
+  "generic_compiled": 192,
+  "encoded_bytes_equal": 192,
+  "mapping_equal": 192,
+  "restored_values_equal": 192
+}

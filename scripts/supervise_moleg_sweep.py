@@ -57,6 +57,8 @@ def launch_app(arm, root, python, app_root, app_env, serving_env, proxy_config, 
         argv += ["--program-overlap", "--program-fingerprint", arm["fingerprint"]]
     if arm.get("no_ontology"):
         argv += ["--no-ontology"]
+    if arm.get("structured_harness"):
+        argv += ["--structured-harness", str(root / arm["structured_harness"])]
     log = (apps / f"{name}.server.log").open("w")
     env = dict(os.environ, PYTHONPATH=str(root / "src"))
     proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT, env=env,
@@ -64,11 +66,13 @@ def launch_app(arm, root, python, app_root, app_env, serving_env, proxy_config, 
     return proc, {"name": name, "pid": proc.pid, "port": arm["port"], "argv": argv}
 
 
-async def wait_ready(base, timeout_s=180):
+async def wait_ready(base, timeout_s=180, process=None):
     import httpx
     deadline = time.monotonic() + timeout_s
     async with httpx.AsyncClient(timeout=5, trust_env=False) as client:
         while time.monotonic() < deadline:
+            if process is not None and process.poll() is not None:
+                raise RuntimeError(f"app at {base} exited before readiness")
             try:
                 r = await client.get(base + "/__scaling_state")
                 if r.status_code == 200:
@@ -93,6 +97,49 @@ async def models_healthy(metrics, headers):
     return True
 
 
+async def wait_models_quiet(metrics, headers, timeout_s=180):
+    """Separate trials after timeouts; do not time residual work as the next arm."""
+    import httpx
+    started = time.monotonic()
+    clean_samples = 0
+    async with httpx.AsyncClient(timeout=6, trust_env=False, headers=headers) as client:
+        while time.monotonic() - started < timeout_s:
+            idle = bool(metrics)
+            for url in metrics.values():
+                try:
+                    response = await client.get(url)
+                    response.raise_for_status()
+                    values = parse_metrics(response.text)['values']
+                    idle = idle and values.get('num_requests_running') == 0 and values.get('num_requests_waiting') == 0
+                except Exception:
+                    idle = False
+            clean_samples = clean_samples + 1 if idle else 0
+            if clean_samples >= 2:
+                return time.monotonic() - started
+            await asyncio.sleep(2)
+    raise RuntimeError('model queues did not drain between trials')
+
+
+def sweep_schedule(levels, repeats, *, repeat_within_level=False):
+    """Complete both orders at a load before escalation when explicitly selected."""
+    if repeat_within_level:
+        return [(repeat, index, level) for index, level in enumerate(levels) for repeat in range(repeats)]
+    return [(repeat, index, level) for repeat in range(repeats) for index, level in enumerate(levels)]
+
+
+def load_level_pools(cases, pools, levels):
+    lookup = {case['case_id']: case for case in cases}
+    if len(lookup) != len(cases) or set(pools) != {str(x) for x in levels}:
+        raise ValueError('invalid frozen level pools')
+    result = {}
+    for level in levels:
+        ids = pools[str(level)]
+        if len(ids) < level or len(set(ids)) != len(ids) or any(x not in lookup for x in ids):
+            raise ValueError('missing or duplicate case in frozen level pool')
+        result[level] = [lookup[x] for x in ids]
+    return result
+
+
 async def scrape(observer, metrics, meta, in_flight, samples, sink):
     async def one(name, url):
         try:
@@ -113,6 +160,7 @@ async def run_trial(base, pool, level, arm, repeat, run_index, timeout, slo, sam
     meta = {"trial": run_index, "arm": arm, "repeat": repeat, "level": level, "requests": len(pool)}
     rows, samples = [], []
     in_flight = [0]
+    active_area, max_in_flight, last_change = 0.0, 0, None
     run_id = uuid.uuid4().hex[:12]
     stop = asyncio.Event()
     async with httpx.AsyncClient(timeout=httpx.Timeout(timeout, connect=10), trust_env=False,
@@ -127,6 +175,7 @@ async def run_trial(base, pool, level, arm, repeat, run_index, timeout, slo, sam
                     await scrape(observer, metrics, meta, in_flight, samples, telemetry_sink)
         await scrape(observer, metrics, meta, in_flight, samples, telemetry_sink)
         start = time.perf_counter()
+        last_change = start
         monitor_task = asyncio.create_task(monitor())
         queue = iter(enumerate(pool))
 
@@ -136,7 +185,12 @@ async def run_trial(base, pool, level, arm, repeat, run_index, timeout, slo, sam
             private_sink.write(json.dumps(raw, ensure_ascii=False) + "\n")
 
         async def invoke(index, case):
+            nonlocal active_area, max_in_flight, last_change
+            now = time.perf_counter()
+            active_area += in_flight[0] * (now - last_change)
+            last_change = now
             in_flight[0] += 1
+            max_in_flight = max(max_in_flight, in_flight[0])
             try:
                 row = await request(client, base, case, None, time.perf_counter(), timeout,
                                     run_id, index, capture)
@@ -144,6 +198,9 @@ async def run_trial(base, pool, level, arm, repeat, run_index, timeout, slo, sam
                 rows.append(row)
                 sink.write(json.dumps(row, ensure_ascii=False) + "\n")
             finally:
+                now = time.perf_counter()
+                active_area += in_flight[0] * (now - last_change)
+                last_change = now
                 in_flight[0] -= 1
 
         async def worker():
@@ -157,11 +214,17 @@ async def run_trial(base, pool, level, arm, repeat, run_index, timeout, slo, sam
             await monitor_task
             await scrape(observer, metrics, meta, in_flight, samples, telemetry_sink)
     ok = sum(r["ok"] for r in rows)
-    within_slo = sum(r["ok"] and r["elapsed_s"] <= slo for r in rows)
+    pipeline_ok = sum(r.get("pipeline_ok", False) for r in rows)
+    within_slo = sum(r.get("pipeline_ok", False) and r["elapsed_s"] <= slo for r in rows)
     summary = {**meta, "n": len(rows), "success": ok, "success_rate": ok / len(rows) if rows else 0,
+               "pipeline_success": pipeline_ok,
+               "pipeline_success_rate": pipeline_ok / len(rows) if rows else 0,
+               "pipeline_throughput_rps": pipeline_ok / wall if wall else 0,
                "wall_s": wall, "throughput_rps": ok / wall if wall else 0,
+               "max_outstanding": max_in_flight, "mean_outstanding": active_area / wall if wall else 0,
                "slo_s": slo, "slo_goodput_rps": within_slo / wall if wall else 0,
                "slo_attainment": within_slo / len(rows) if rows else 0,
+               "slo_success_definition": "SSE done and no detected pipeline error; not expert accuracy",
                "metrics": {k: describe([r.get(k) for r in rows]) for k in ("elapsed_s", "ttft_s")},
                "successful_elapsed_s": describe([r["elapsed_s"] for r in rows if r["ok"]]),
                "errors": dict(Counter(r.get("error_type", "pipeline") for r in rows if not r["ok"])),
@@ -185,6 +248,7 @@ async def execute(args):
     if len({c["question"] for c in cases}) != len(cases):
         raise ValueError("duplicate questions")
     selected = select_cases(cases, min(args.pool, len(cases)), args.seed)
+    frozen_pools = load_level_pools(cases, json.loads((root / args.level_pools).read_text()), args.levels) if args.level_pools else None
     headers = {"Authorization": "Bearer " + os.environ[args.api_key_env]} if args.api_key_env else {}
     metrics = dict(v.split("=", 1) for v in args.metrics)
     reference = args.reference or arms[-1]["name"]
@@ -207,7 +271,7 @@ async def execute(args):
     bases = {a["name"]: f"http://127.0.0.1:{a['port']}" for a in arms}
 
     try:
-        app_states = {name: await wait_ready(base) for name, base in bases.items()}
+        app_states = {name: await wait_ready(base, process=procs[name]) for name, base in bases.items()}
         write_json(out / "app-state-before.json", app_states)
         state["status"] = "running"
         write_json(status, state)
@@ -216,38 +280,39 @@ async def execute(args):
         with (out / "requests.jsonl").open("x", buffering=1) as sink, \
                 (out / "private-responses.jsonl").open("x", buffering=1) as private_sink, \
                 (out / "telemetry.jsonl").open("x", buffering=1) as telemetry_sink:
-            for repeat in range(args.repeats):
-                for li, level in enumerate(args.levels):
-                    n = min(args.max_requests, max(args.min_requests, level))
-                    rng = random.Random(args.seed + repeat * 1000 + level)
-                    pool = [selected[i % len(selected)] for i in range(n)]
-                    rng.shuffle(pool)
-                    order = [a["name"] for a in arms]
-                    if (li + repeat) % 2:
-                        order = order[::-1]
-                    ref_summary = None
-                    for name in order:
-                        entry = await run_trial(bases[name], pool, level, name, repeat, len(summaries),
-                                                args.timeout, args.slo, args.sample_interval,
-                                                sink, private_sink, telemetry_sink, metrics, headers)
-                        summaries.append(entry)
-                        if name == reference:
-                            ref_summary = entry
-                        write_json(out / "summary.json", {"complete": False, "trials": summaries})
-                    state["completed_levels"].append(level)
+            for repeat, li, level in sweep_schedule(args.levels, args.repeats, repeat_within_level=args.repeat_within_level):
+                n = min(args.max_requests, max(args.min_requests, level))
+                rng = random.Random(args.seed + repeat * 1000 + level)
+                pool = list(frozen_pools[level]) if frozen_pools else [selected[i % len(selected)] for i in range(n)]
+                rng.shuffle(pool)
+                order = [a["name"] for a in arms]
+                if (li + repeat) % 2:
+                    order = order[::-1]
+                ref_summary = None
+                for name in order:
+                    drain_s = await wait_models_quiet(metrics, headers) if args.drain_between_trials else 0
+                    state['current'] = {'level':level, 'repeat':repeat, 'arm':name, 'requests':len(pool), 'started_utc':utc()}
                     write_json(status, state)
-                    # Auto-stop escalation: reference arm collapsed at this level.
-                    if ref_summary and (ref_summary["success_rate"] < args.collapse_success
-                            or (ref_summary["successful_elapsed_s"]["mean"] or 0) >= args.timeout * 0.9):
-                        state["hardware_limit_level"] = level
-                        collapsed = True
-                        break
-                    if not await models_healthy(metrics, headers):
-                        state["hardware_limit_level"] = level
-                        state["stop_reason"] = "model_health_failed"
-                        collapsed = True
-                        break
-                if collapsed:
+                    entry = await run_trial(bases[name], pool, level, name, repeat, len(summaries),
+                                            args.timeout, args.slo, args.sample_interval,
+                                            sink, private_sink, telemetry_sink, metrics, headers)
+                    entry['pre_trial_drain_s'] = drain_s
+                    summaries.append(entry)
+                    if name == reference:
+                        ref_summary = entry
+                    write_json(out / "summary.json", {"complete": False, "trials": summaries})
+                state["completed_levels"].append(level)
+                write_json(status, state)
+                # Auto-stop escalation: reference arm collapsed at this level.
+                if ref_summary and (ref_summary["pipeline_success_rate"] < args.collapse_success
+                        or (ref_summary["successful_elapsed_s"]["mean"] or 0) >= args.timeout * 0.9):
+                    state["hardware_limit_level"] = level
+                    collapsed = True
+                    break
+                if not await models_healthy(metrics, headers):
+                    state["hardware_limit_level"] = level
+                    state["stop_reason"] = "model_health_failed"
+                    collapsed = True
                     break
         write_json(out / "summary.json", {"complete": True, "trials": summaries,
                                           "hardware_limit_level": state["hardware_limit_level"]})
@@ -294,6 +359,9 @@ def main():
     p.add_argument("--proxy-config", type=Path, required=True)
     p.add_argument("--arms", default="arms.json", help="relative to --directory")
     p.add_argument("--cases-file", default="cases.json")
+    p.add_argument("--level-pools", help="optional frozen case-ID lists per concurrency level")
+    p.add_argument("--repeat-within-level", action="store_true")
+    p.add_argument("--drain-between-trials", action="store_true")
     p.add_argument("--run-subdir", default="")
     p.add_argument("--levels", type=int, nargs="+", required=True)
     p.add_argument("--repeats", type=int, default=1)

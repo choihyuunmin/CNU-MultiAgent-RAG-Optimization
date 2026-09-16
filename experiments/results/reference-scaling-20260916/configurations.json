@@ -1,0 +1,110 @@
+{
+  "baseline.adapter.json": {
+    "mode": "observe",
+    "stage_hooks": [
+      {
+        "module": "core.agent_orchestrator.orchestrator",
+        "function": "classify_and_decompose",
+        "stage": "classification"
+      },
+      {
+        "module": "core.agent_orchestrator.orchestrator",
+        "function": "classify_intent_with_confidence",
+        "stage": "classification"
+      },
+      {
+        "module": "agent.validation_agent",
+        "function": "run_preparation",
+        "stage": "preparation"
+      },
+      {
+        "module": "agent.law_search_agent",
+        "function": "run_search",
+        "stage": "retrieval"
+      },
+      {
+        "module": "agent.law_analysis_agent",
+        "function": "run_select_laws",
+        "stage": "selection"
+      },
+      {
+        "module": "agent.law_analysis_agent",
+        "function": "run_generate_comment",
+        "stage": "answer"
+      }
+    ]
+  },
+  "combined.adapter.json": {
+    "mode": "observe",
+    "reasoning_policies": {
+      "worker agent": {
+        "effort": "low",
+        "first_output_timeout_s": 60,
+        "max_reasoning_characters": 32768
+      }
+    },
+    "stage_hooks": [
+      {
+        "module": "core.agent_orchestrator.orchestrator",
+        "function": "classify_and_decompose",
+        "stage": "classification"
+      },
+      {
+        "module": "core.agent_orchestrator.orchestrator",
+        "function": "classify_intent_with_confidence",
+        "stage": "classification"
+      },
+      {
+        "module": "agent.validation_agent",
+        "function": "run_preparation",
+        "stage": "preparation"
+      },
+      {
+        "module": "agent.law_search_agent",
+        "function": "run_search",
+        "stage": "retrieval"
+      },
+      {
+        "module": "agent.law_analysis_agent",
+        "function": "run_select_laws",
+        "stage": "selection"
+      },
+      {
+        "module": "agent.law_analysis_agent",
+        "function": "run_generate_comment",
+        "stage": "answer"
+      }
+    ]
+  },
+  "observe.harness.json": {
+    "capture": false,
+    "fingerprints": {
+      "agent.law_analysis_agent": "190a4174b86efcbcd6124f7a41fa3cb5b4683b9d1ee8211ad4aff84c1bf019ca",
+      "agent.law_search_agent": "aad440463cc81222284a6e8885dca9379323620abae6230895b3ca2599539013"
+    }
+  },
+  "portable.harness.json": {
+    "capture": false,
+    "short_ids": true,
+    "generic_reference_codec": true,
+    "min_short_id_candidates": 16,
+    "fingerprints": {
+      "agent.law_analysis_agent": "190a4174b86efcbcd6124f7a41fa3cb5b4683b9d1ee8211ad4aff84c1bf019ca",
+      "agent.law_search_agent": "aad440463cc81222284a6e8885dca9379323620abae6230895b3ca2599539013"
+    }
+  },
+  "arms.json": [
+    {
+      "name": "baseline",
+      "port": 28610,
+      "adapter_config": "baseline.adapter.json",
+      "structured_harness": "observe.harness.json"
+    },
+    {
+      "name": "improved",
+      "port": 28611,
+      "adapter_config": "combined.adapter.json",
+      "structured_harness": "portable.harness.json"
+    }
+  ]
+}

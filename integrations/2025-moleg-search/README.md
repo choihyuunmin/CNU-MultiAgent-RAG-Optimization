@@ -1,5 +1,56 @@
 # 2025-moleg-search integration notes
 
+## 참조 ID 축약·복원 어댑터
+
+모델에 긴 법령 ID `918273_54` 대신 짧은 번호 `0`을 전달하고, 선택 결과의 `0`을
+실제 법령 ID로 되돌린다. 본문·제목·점수는 유지한다. 후보가 16개 이상일 때만 적용하며,
+중복 ID·다른 필드에서 언급한 ID·복원 오류는 별도로 처리한다.
+[입력·출력 예시와 동작 설명](../../docs/REFERENCE_HARNESS_20260915.md).
+
+### Adaptive selection IDs (2026-09-15)
+
+The [structured adapter configuration](structured-adaptive.json) enables short,
+request-local candidate IDs only when at least 16 candidates are present. It
+restores original IDs before the existing selection parser, preserves every
+evidence field and the input layout, and falls back on invalid returned IDs.
+It does not cache answers. Source fingerprints must match the verified app
+revision; inspect and revalidate a new revision before changing those pins.
+
+Add these options to the existing isolated launcher command (retain the required
+`--app-root`, `--app-env`, `--serving-env`, `--proxy-config`, `--trace` and `--port`):
+
+```sh
+--adapter-config integrations/2025-moleg-search/workflow-combined.json \
+--structured-harness integrations/2025-moleg-search/structured-adaptive.json
+```
+
+The workflow configuration controls worker reasoning separately. Use
+`workflow-combined-baseline.json` to evaluate the ID adapter without low reasoning.
+Raw capture is disabled in the reusable configuration. The study's private
+configuration enables capture for replay; aggregate metadata is recorded in the
+ordinary private application trace. No inference engine restart is needed.
+
+The [study protocol](../../docs/STRUCTURED_HARNESS_PROTOCOL_20260915.md) separates
+baseline, prior low reasoning and the new adapter. JSON whitespace minification,
+typed search dispatch and compact output grammar are exploratory options and are
+disabled in the selected configuration. Reversible representation changes can
+still change model decisions; fidelity and answer support require evaluation.
+
+### Portable compiler binding
+
+[structured-portable.json](structured-portable.json) selects the generic
+`ReferenceContract` compiler through a thin MOLEG envelope binding. It retains
+the separately measured 16-candidate policy. In an offline audit of all 575
+captured selection calls, the 192 eligible calls produced the same encoded input
+bytes, mappings and restored output values as the measured specialized adapter.
+Unseen references in other prompt fields are conservatively bypassed.
+
+Use the portable file as `--structured-harness` to select this binding. The
+1,800-request timings used `structured-adaptive.json`; this offline equality
+audit is not an additional end-to-end timing experiment. Calibration from the
+synthetic topology study is not reused for legal retrieval. See
+[generic design, evaluation and limits](../../docs/REFERENCE_HARNESS_20260915.md).
+
 ## Current execution (2026-09-11)
 
 The app launcher now removes global HTTP/pipeline admission limits and uses an
