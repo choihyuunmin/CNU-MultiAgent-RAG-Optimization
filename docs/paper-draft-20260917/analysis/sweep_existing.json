@@ -1,0 +1,675 @@
+{
+ "levels": [
+  {
+   "C": 1,
+   "run": "main",
+   "first": "original",
+   "pairs": 200,
+   "mean_original": 18.27087586,
+   "mean_capability": 18.073765715,
+   "saving": 0.19711014499999993,
+   "pct": 1.0788215436980146,
+   "ci": [
+    -1.4739506969999996,
+    1.900065444999999
+   ],
+   "median": 0.2816975000000001,
+   "pos": 130,
+   "neg": 70,
+   "sign_p": 2.6528755595268476e-05,
+   "sd": 12.397360505715852,
+   "rps": [
+    0.054721059401851735,
+    0.05531840861339027
+   ],
+   "p95": [
+    39.722574,
+    38.450559999999996
+   ],
+   "slo60": [
+    0.985,
+    0.985
+   ],
+   "wall": [
+    3654.899999856949,
+    3615.4329998493195
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.9738505747126436,
+   "n_nonempty": 174,
+   "exact_set": 0.885
+  },
+  {
+   "C": 2,
+   "run": "main",
+   "first": "capability",
+   "pairs": 200,
+   "mean_original": 20.139277359999998,
+   "mean_capability": 20.681013905,
+   "saving": -0.5417365450000001,
+   "pct": -2.6899502664181005,
+   "ci": [
+    -2.205310009625,
+    0.9929492097499999
+   ],
+   "median": 0.2599445,
+   "pos": 117,
+   "neg": 83,
+   "sign_p": 0.019396944540338374,
+   "sd": 11.448922983278548,
+   "rps": [
+    0.09904731341647043,
+    0.09639125597034076
+   ],
+   "p95": [
+    45.656914,
+    45.792461
+   ],
+   "slo60": [
+    0.98,
+    0.975
+   ],
+   "wall": [
+    2019.236999988556,
+    2074.8769998550415
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.9771893814997263,
+   "n_nonempty": 174,
+   "exact_set": 0.895
+  },
+  {
+   "C": 5,
+   "run": "revised",
+   "first": "original",
+   "pairs": 200,
+   "mean_original": 25.759314319999998,
+   "mean_capability": 25.311103215000003,
+   "saving": 0.44821110500000005,
+   "pct": 1.7399962570121708,
+   "ci": [
+    -1.4177392993749995,
+    2.1870857445
+   ],
+   "median": 0.5908394999999997,
+   "pos": 122,
+   "neg": 78,
+   "sign_p": 0.0022794385018057293,
+   "sd": 12.888626373413006,
+   "rps": [
+    0.19100408938850796,
+    0.19469305668104095
+   ],
+   "p95": [
+    54.806578,
+    57.991065
+   ],
+   "slo60": [
+    0.955,
+    0.95
+   ],
+   "wall": [
+    1047.098000049591,
+    1027.2579998970032
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.9763409961685824,
+   "n_nonempty": 174,
+   "exact_set": 0.86
+  },
+  {
+   "C": 10,
+   "run": "revised",
+   "first": "capability",
+   "pairs": 200,
+   "mean_original": 35.37015578,
+   "mean_capability": 34.5349328,
+   "saving": 0.83522298,
+   "pct": 2.36137772532027,
+   "ci": [
+    -1.4101263334999996,
+    3.7630636969999984
+   ],
+   "median": 0.32251200000000063,
+   "pos": 108,
+   "neg": 92,
+   "sign_p": 0.2888204971747661,
+   "sd": 18.59950884511812,
+   "rps": [
+    0.27854804045975395,
+    0.2819228265265932
+   ],
+   "p95": [
+    75.970117,
+    69.02693
+   ],
+   "slo60": [
+    0.895,
+    0.905
+   ],
+   "wall": [
+    718.0090000629425,
+    709.4139997959137
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.9824662813102117,
+   "n_nonempty": 173,
+   "exact_set": 0.885
+  },
+  {
+   "C": 20,
+   "run": "revised",
+   "first": "original",
+   "pairs": 200,
+   "mean_original": 59.041243689999995,
+   "mean_capability": 55.86559505,
+   "saving": 3.1756486400000004,
+   "pct": 5.378695368739108,
+   "ci": [
+    1.0482223136250002,
+    5.454252048749999
+   ],
+   "median": 1.3385310000000028,
+   "pos": 116,
+   "neg": 84,
+   "sign_p": 0.028125407232926402,
+   "sd": 15.790841404033971,
+   "rps": [
+    0.3200532567867215,
+    0.3190505057484442
+   ],
+   "p95": [
+    107.206129,
+    106.586469
+   ],
+   "slo60": [
+    0.545,
+    0.605
+   ],
+   "wall": [
+    624.8960001468658,
+    626.8599998950958
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.9728790366721402,
+   "n_nonempty": 174,
+   "exact_set": 0.885
+  },
+  {
+   "C": 50,
+   "run": "high",
+   "first": "original",
+   "pairs": 200,
+   "mean_original": 110.851111925,
+   "mean_capability": 120.39656923000001,
+   "saving": -9.545457305,
+   "pct": -8.611061395088482,
+   "ci": [
+    -14.160128377749999,
+    -5.025629853375001
+   ],
+   "median": -6.080150999999991,
+   "pos": 72,
+   "neg": 128,
+   "sign_p": 9.129815585318742e-05,
+   "sd": 32.85914998492934,
+   "rps": [
+    0.342059265184939,
+    0.3642973977616707
+   ],
+   "p95": [
+    168.462328,
+    192.00591200000002
+   ],
+   "slo60": [
+    0.155,
+    0.155
+   ],
+   "wall": [
+    584.694000005722,
+    549.0020000934601
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.9676891615541923,
+   "n_nonempty": 163,
+   "exact_set": 0.855
+  },
+  {
+   "C": 100,
+   "run": "high",
+   "first": "capability",
+   "pairs": 200,
+   "mean_original": 163.93158689,
+   "mean_capability": 156.21930831,
+   "saving": 7.7122785799999996,
+   "pct": 4.704571416840507,
+   "ci": [
+    3.097380048875001,
+    12.287397754874998
+   ],
+   "median": 6.870171000000017,
+   "pos": 150,
+   "neg": 50,
+   "sign_p": 8.393020875604761e-13,
+   "sd": 33.318143881092944,
+   "rps": [
+    0.48020475948969904,
+    0.47471884771083234
+   ],
+   "p95": [
+    262.025167,
+    248.27954699999998
+   ],
+   "slo60": [
+    0.09,
+    0.085
+   ],
+   "wall": [
+    416.4889998435974,
+    421.30200004577637
+   ],
+   "failures": [
+    0,
+    0
+   ],
+   "recall_nonempty": 0.924719887955182,
+   "n_nonempty": 136,
+   "exact_set": 0.81
+  }
+ ],
+ "engine": [
+  {
+   "C": 50,
+   "arm": "capability",
+   "file": "scale-data/high/cnu-high-main/c050/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 742.0,
+    "queue_s": 11925.103984729329,
+    "e2e_s": 24535.649001836777,
+    "preempt": 2.0,
+    "max_waiting": 47.0,
+    "max_running": 66.0,
+    "max_kv": 0.9998992240249924,
+    "span_s": 549.8151731491089
+   },
+   "receiver-2": {
+    "requests": 298.0,
+    "queue_s": 1924.5606043728767,
+    "e2e_s": 3456.250723361969,
+    "preempt": 0.0,
+    "max_waiting": 19.0,
+    "max_running": 4.0,
+    "max_kv": 0.06812220883249454,
+    "span_s": 549.8078157901764
+   }
+  },
+  {
+   "C": 50,
+   "arm": "original",
+   "file": "scale-data/high/cnu-high-main/c050/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 751.0,
+    "queue_s": 11029.855630778708,
+    "e2e_s": 20182.789441108704,
+    "preempt": 4.0,
+    "max_waiting": 55.0,
+    "max_running": 63.0,
+    "max_kv": 0.9998992240249924,
+    "span_s": 585.4828200340271
+   },
+   "receiver-2": {
+    "requests": 508.0,
+    "queue_s": 5394.327821125684,
+    "e2e_s": 6790.188920497894,
+    "preempt": 0.0,
+    "max_waiting": 69.0,
+    "max_running": 4.0,
+    "max_kv": 0.035715129604688034,
+    "span_s": 585.4785783290863
+   }
+  },
+  {
+   "C": 100,
+   "arm": "capability",
+   "file": "scale-data/high/cnu-high-main/c100/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 752.0,
+    "queue_s": 22886.706818793726,
+    "e2e_s": 33448.62973713875,
+    "preempt": 4.0,
+    "max_waiting": 134.0,
+    "max_running": 147.0,
+    "max_kv": 1.0,
+    "span_s": 422.1208555698395
+   },
+   "receiver-2": {
+    "requests": 274.0,
+    "queue_s": 4260.846784645633,
+    "e2e_s": 5523.857881784439,
+    "preempt": 0.0,
+    "max_waiting": 30.0,
+    "max_running": 4.0,
+    "max_kv": 0.026807022518371526,
+    "span_s": 422.1159267425537
+   }
+  },
+  {
+   "C": 100,
+   "arm": "original",
+   "file": "scale-data/high/cnu-high-main/c100/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 759.0,
+    "queue_s": 23000.001255446405,
+    "e2e_s": 32639.018965244293,
+    "preempt": 5.0,
+    "max_waiting": 137.0,
+    "max_running": 142.0,
+    "max_kv": 1.0,
+    "span_s": 417.2580797672272
+   },
+   "receiver-2": {
+    "requests": 479.0,
+    "queue_s": 8843.358051473624,
+    "e2e_s": 10112.059186697006,
+    "preempt": 0.0,
+    "max_waiting": 139.0,
+    "max_running": 4.0,
+    "max_kv": 0.028378346447390235,
+    "span_s": 417.25035572052
+   }
+  },
+  {
+   "C": 1,
+   "arm": "capability",
+   "file": "scale-data/scale/cnu-scale-main/c001/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 743.0,
+    "queue_s": 0.3914672628743574,
+    "e2e_s": 1670.5304663181305,
+    "preempt": 0.0,
+    "max_waiting": 1.0,
+    "max_running": 2.0,
+    "max_kv": 0.3755920588531694,
+    "span_s": 3616.16055393219
+   },
+   "receiver-2": {
+    "requests": 311.0,
+    "queue_s": 0.015394176705740392,
+    "e2e_s": 1179.4076249599457,
+    "preempt": 0.0,
+    "max_waiting": 0,
+    "max_running": 1.0,
+    "max_kv": 0.028697337019446656,
+    "span_s": 3616.1614627838135
+   }
+  },
+  {
+   "C": 1,
+   "arm": "original",
+   "file": "scale-data/scale/cnu-scale-main/c001/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 744.0,
+    "queue_s": 0.3723389537772164,
+    "e2e_s": 1686.5630090236664,
+    "preempt": 0.0,
+    "max_waiting": 1.0,
+    "max_running": 2.0,
+    "max_kv": 0.37357653935301827,
+    "span_s": 3655.728903532028
+   },
+   "receiver-2": {
+    "requests": 520.0,
+    "queue_s": 0.020229715562891215,
+    "e2e_s": 1164.319685459137,
+    "preempt": 0.0,
+    "max_waiting": 0,
+    "max_running": 2.0,
+    "max_kv": 0.028673708088183147,
+    "span_s": 3655.7140712738037
+   }
+  },
+  {
+   "C": 2,
+   "arm": "capability",
+   "file": "scale-data/scale/cnu-scale-main/c002/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 747.0,
+    "queue_s": 0.2677446611924097,
+    "e2e_s": 1902.1792886257172,
+    "preempt": 0.0,
+    "max_waiting": 1.0,
+    "max_running": 4.0,
+    "max_kv": 0.3920185427794014,
+    "span_s": 2075.70671415329
+   },
+   "receiver-2": {
+    "requests": 298.0,
+    "queue_s": 0.009535014221910387,
+    "e2e_s": 1244.5948123931885,
+    "preempt": 0.0,
+    "max_waiting": 0,
+    "max_running": 2.0,
+    "max_kv": 0.03452186857588435,
+    "span_s": 2075.700035095215
+   }
+  },
+  {
+   "C": 2,
+   "arm": "original",
+   "file": "scale-data/scale/cnu-scale-main/c002/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 747.0,
+    "queue_s": 0.5504416569601744,
+    "e2e_s": 1950.9841513633728,
+    "preempt": 0.0,
+    "max_waiting": 2.0,
+    "max_running": 4.0,
+    "max_kv": 0.4346467802075985,
+    "span_s": 2020.0784468650818
+   },
+   "receiver-2": {
+    "requests": 506.0,
+    "queue_s": 0.014753628172911704,
+    "e2e_s": 1163.9041929244995,
+    "preempt": 0.0,
+    "max_waiting": 0,
+    "max_running": 3.0,
+    "max_kv": 0.027397745799957463,
+    "span_s": 2020.0729188919067
+   }
+  },
+  {
+   "C": 5,
+   "arm": "capability",
+   "file": "scale-data/scale/cnu-scale-revised/c005/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 748.0,
+    "queue_s": 1.5804405065719038,
+    "e2e_s": 2858.0019018650055,
+    "preempt": 0.0,
+    "max_waiting": 3.0,
+    "max_running": 8.0,
+    "max_kv": 0.5188954953139171,
+    "span_s": 1028.1228377819061
+   },
+   "receiver-2": {
+    "requests": 299.0,
+    "queue_s": 7.427098683780059,
+    "e2e_s": 1468.1106057167053,
+    "preempt": 0.0,
+    "max_waiting": 1.0,
+    "max_running": 4.0,
+    "max_kv": 0.0588596677772264,
+    "span_s": 1028.112697839737
+   }
+  },
+  {
+   "C": 5,
+   "arm": "original",
+   "file": "scale-data/scale/cnu-scale-revised/c005/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 750.0,
+    "queue_s": 2.078744109137915,
+    "e2e_s": 2985.526074409485,
+    "preempt": 0.0,
+    "max_waiting": 2.0,
+    "max_running": 7.0,
+    "max_kv": 0.5352212032651416,
+    "span_s": 1047.9293148517609
+   },
+   "receiver-2": {
+    "requests": 504.0,
+    "queue_s": 16.13444107864052,
+    "e2e_s": 1309.2697429656982,
+    "preempt": 0.0,
+    "max_waiting": 2.0,
+    "max_running": 4.0,
+    "max_kv": 0.033813000637981094,
+    "span_s": 1047.9227366447449
+   }
+  },
+  {
+   "C": 10,
+   "arm": "capability",
+   "file": "scale-data/scale/cnu-scale-revised/c010/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 744.0,
+    "queue_s": 30.400370707386173,
+    "e2e_s": 4848.748712062836,
+    "preempt": 0.0,
+    "max_waiting": 3.0,
+    "max_running": 12.0,
+    "max_kv": 0.7005945782525447,
+    "span_s": 710.2354989051819
+   },
+   "receiver-2": {
+    "requests": 298.0,
+    "queue_s": 132.83772591734305,
+    "e2e_s": 1489.3439524173737,
+    "preempt": 0.0,
+    "max_waiting": 4.0,
+    "max_running": 4.0,
+    "max_kv": 0.03631766735190567,
+    "span_s": 710.2287950515747
+   }
+  },
+  {
+   "C": 10,
+   "arm": "original",
+   "file": "scale-data/scale/cnu-scale-revised/c010/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 748.0,
+    "queue_s": 29.454667731013615,
+    "e2e_s": 4721.010389089584,
+    "preempt": 0.0,
+    "max_waiting": 4.0,
+    "max_running": 13.0,
+    "max_kv": 0.7390910007054319,
+    "span_s": 718.8275651931763
+   },
+   "receiver-2": {
+    "requests": 503.0,
+    "queue_s": 447.8799595548189,
+    "e2e_s": 1778.2121376991272,
+    "preempt": 0.0,
+    "max_waiting": 10.0,
+    "max_running": 4.0,
+    "max_kv": 0.042024054252026155,
+    "span_s": 718.8215568065643
+   }
+  },
+  {
+   "C": 20,
+   "arm": "capability",
+   "file": "scale-data/scale/cnu-scale-revised/c020/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 749.0,
+    "queue_s": 185.47575832065195,
+    "e2e_s": 10216.411298751831,
+    "preempt": 0.0,
+    "max_waiting": 8.0,
+    "max_running": 27.0,
+    "max_kv": 0.9840773959488058,
+    "span_s": 627.6758961677551
+   },
+   "receiver-2": {
+    "requests": 286.0,
+    "queue_s": 400.20385945716407,
+    "e2e_s": 1717.0898876190186,
+    "preempt": 0.0,
+    "max_waiting": 10.0,
+    "max_running": 4.0,
+    "max_kv": 0.03784173341839747,
+    "span_s": 627.6632690429688
+   }
+  },
+  {
+   "C": 20,
+   "arm": "original",
+   "file": "scale-data/scale/cnu-scale-revised/c020/original-metrics.jsonl",
+   "receiver-1": {
+    "requests": 749.0,
+    "queue_s": 382.4778722798801,
+    "e2e_s": 10296.145190477371,
+    "preempt": 0.0,
+    "max_waiting": 9.0,
+    "max_running": 26.0,
+    "max_kv": 0.997480600624811,
+    "span_s": 625.7274508476257
+   },
+   "receiver-2": {
+    "requests": 516.0,
+    "queue_s": 1125.433197466482,
+    "e2e_s": 2572.310336112976,
+    "preempt": 0.0,
+    "max_waiting": 21.0,
+    "max_running": 4.0,
+    "max_kv": 0.03862148815009092,
+    "span_s": 625.7225210666656
+   }
+  },
+  {
+   "C": 50,
+   "arm": "capability",
+   "file": "scale-data/scale/cnu-scale-revised/c050/capability-metrics.jsonl",
+   "receiver-1": {
+    "requests": 362.0,
+    "queue_s": 4093.3819313032436,
+    "e2e_s": 9342.62514925003,
+    "preempt": 1.0,
+    "max_waiting": 50.0,
+    "max_running": 67.0,
+    "max_kv": 0.9970774967247809,
+    "span_s": 225.48768091201782
+   },
+   "receiver-2": {
+    "requests": 129.0,
+    "queue_s": 551.5351781449863,
+    "e2e_s": 1114.6993825435638,
+    "preempt": 0.0,
+    "max_waiting": 14.0,
+    "max_running": 4.0,
+    "max_kv": 0.033151390562604854,
+    "span_s": 225.4907364845276
+   }
+  }
+ ]
+}

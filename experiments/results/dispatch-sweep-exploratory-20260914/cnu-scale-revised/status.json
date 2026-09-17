@@ -1,0 +1,50 @@
+{
+  "state": "stopped",
+  "completed": [
+    {
+      "concurrency": 5,
+      "mode": "original",
+      "requests": 200,
+      "transport_ok": 200
+    },
+    {
+      "concurrency": 5,
+      "mode": "capability",
+      "requests": 200,
+      "transport_ok": 200
+    },
+    {
+      "concurrency": 10,
+      "mode": "capability",
+      "requests": 200,
+      "transport_ok": 200
+    },
+    {
+      "concurrency": 10,
+      "mode": "original",
+      "requests": 200,
+      "transport_ok": 200
+    },
+    {
+      "concurrency": 20,
+      "mode": "original",
+      "requests": 200,
+      "transport_ok": 200
+    },
+    {
+      "concurrency": 20,
+      "mode": "capability",
+      "requests": 200,
+      "transport_ok": 200
+    }
+  ],
+  "started": 1789315136.182732,
+  "current": {
+    "concurrency": 50,
+    "mode": "capability",
+    "completed_requests": 81
+  },
+  "reason": "engine pressure safety threshold reached",
+  "error_type": "RuntimeError",
+  "updated": 1789320129.6226306
+}

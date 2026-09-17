@@ -1,0 +1,97 @@
+{
+  "state": "stopped",
+  "started": 1789662273.0880888,
+  "completed": [
+    {
+      "level": 8,
+      "round": 1,
+      "method": "original",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 830.3243985079462
+    },
+    {
+      "level": 8,
+      "round": 1,
+      "method": "capability",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 840.0216822660295
+    },
+    {
+      "level": 8,
+      "round": 2,
+      "method": "capability",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 792.5088378479704
+    },
+    {
+      "level": 8,
+      "round": 2,
+      "method": "original",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 818.6698844869388
+    },
+    {
+      "level": 16,
+      "round": 1,
+      "method": "original",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 690.8254264540737
+    },
+    {
+      "level": 16,
+      "round": 1,
+      "method": "capability",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 686.8258925169939
+    },
+    {
+      "level": 16,
+      "round": 2,
+      "method": "capability",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 683.2352280339692
+    },
+    {
+      "level": 16,
+      "round": 2,
+      "method": "original",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 707.3511346339947
+    },
+    {
+      "level": 32,
+      "round": 1,
+      "method": "original",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 611.3782506890129
+    },
+    {
+      "level": 32,
+      "round": 1,
+      "method": "capability",
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 678.090940222959
+    }
+  ],
+  "total_planned_requests": 4000,
+  "current": {
+    "level": 32,
+    "round": 2,
+    "method": "capability",
+    "completed_requests": 0,
+    "phase": "idle_preflight"
+  },
+  "reason": "engines remain busy before test; no inference sent; arrange a quiet measurement window",
+  "error_type": "RuntimeError",
+  "updated": 1789670139.6988099
+}
