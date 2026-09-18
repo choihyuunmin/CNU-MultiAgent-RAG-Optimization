@@ -1,0 +1,96 @@
+{
+  "state": "complete",
+  "started": 1789719224.4798234,
+  "completed": [
+    {
+      "round": 1,
+      "method": "original",
+      "preflight": {
+        "idle_wait_seconds": 1.2406309040961787,
+        "quiet_samples": 2,
+        "gauges": {
+          "receiver-1": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-2": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-3": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-4": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          }
+        }
+      },
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 1207.7402229220606
+    },
+    {
+      "round": 1,
+      "method": "direct",
+      "preflight": {
+        "idle_wait_seconds": 1.2418796040583402,
+        "quiet_samples": 2,
+        "gauges": {
+          "receiver-1": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-2": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-3": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-4": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          }
+        }
+      },
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 1281.344211713993
+    },
+    {
+      "round": 2,
+      "method": "original",
+      "preflight": {
+        "idle_wait_seconds": 1.2180426000850275,
+        "quiet_samples": 2,
+        "gauges": {
+          "receiver-1": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-2": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-3": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-4": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          }
+        }
+      },
+      "requests": 200,
+      "transport_ok": 200,
+      "wall_seconds": 1300.6832167550456
+    }
+  ],
+  "total_planned_requests": 600,
+  "current": null,
+  "updated": 1789723018.3114665
+}

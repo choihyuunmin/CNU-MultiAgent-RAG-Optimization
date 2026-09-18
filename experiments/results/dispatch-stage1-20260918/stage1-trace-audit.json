@@ -1,0 +1,142 @@
+{
+ "cells": [
+  {
+   "round": 1,
+   "method": "original",
+   "preflight": {
+    "idle_wait_seconds": 1.2406309040961787,
+    "quiet_samples": 2,
+    "gauges": {
+     "receiver-1": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-2": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-3": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-4": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     }
+    }
+   },
+   "requests": 200,
+   "transport_ok": 200,
+   "wall_seconds": 1207.7402229220606
+  },
+  {
+   "round": 1,
+   "method": "direct",
+   "preflight": {
+    "idle_wait_seconds": 1.2418796040583402,
+    "quiet_samples": 2,
+    "gauges": {
+     "receiver-1": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-2": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-3": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-4": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     }
+    }
+   },
+   "requests": 200,
+   "transport_ok": 200,
+   "wall_seconds": 1281.344211713993
+  },
+  {
+   "round": 2,
+   "method": "original",
+   "preflight": {
+    "idle_wait_seconds": 1.2180426000850275,
+    "quiet_samples": 2,
+    "gauges": {
+     "receiver-1": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-2": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-3": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     },
+     "receiver-4": {
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0
+     }
+    }
+   },
+   "requests": 200,
+   "transport_ok": 200,
+   "wall_seconds": 1300.6832167550456
+  }
+ ],
+ "agreement": [
+  {
+   "round": 1,
+   "a": "direct",
+   "b": "original",
+   "kind": "cross-arm",
+   "pairs": 200,
+   "exact_set": 0.9,
+   "nonempty_recall": 0.978544061302682,
+   "nonempty": 174
+  }
+ ],
+ "latency": [
+  {
+   "round": 1,
+   "a": "direct",
+   "b": "original",
+   "kind": "cross-arm",
+   "pairs": 200,
+   "mean_a": 25.5053028,
+   "mean_b": 23.926806045,
+   "mean_saving_a_minus_b": 1.5784967550000002,
+   "ci": [
+    0.30862212499999997,
+    3.0396996400000003
+   ],
+   "median": -0.2796445000000001,
+   "pos": 91,
+   "neg": 109,
+   "sign_p": 0.22924659725971577
+  }
+ ],
+ "hashes": [
+  {
+   "round": 1,
+   "a": "direct",
+   "b": "original",
+   "questions_with_branches": 174,
+   "equal_prepared": 168,
+   "equal_handler_output_given_equal_prepared": 88,
+   "equal_next_stage_object": 88,
+   "equal_law_id_list": 129,
+   "audit": {
+    "different": 86,
+    "first_difference_output": 80,
+    "equal": 88,
+    "unverifiable": 26,
+    "first_difference_prepared": 6
+   }
+  }
+ ]
+}

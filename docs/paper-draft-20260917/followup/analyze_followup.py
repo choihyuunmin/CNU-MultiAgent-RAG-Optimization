@@ -58,6 +58,8 @@ def main(root, logs, output):
     for r in rounds:
         for i, a in enumerate(arms):
             for b in arms[i+1:]:
+                if (r, a) not in cells or (r, b) not in cells:
+                    continue  # an arm may be absent from a round (e.g. an original-only repeat round)
                 A, B = cells[r, a], cells[r, b]
                 qs = [q for q in A if q in B and valid(A[q]) and valid(B[q])]
                 same = [set(uniq(A[q]["law_ids"])) == set(uniq(B[q]["law_ids"])) for q in qs]
@@ -90,9 +92,12 @@ def main(root, logs, output):
                 if lo is not None and lo <= t <= hi: return r
         case = {}
         for e in events:
-            if e.get("event") == "llm_finished" and e.get("application_request_id") and e.get("case_id"):
-                r = rnd(e["_t"])
-                if r: case[r, e["application_request_id"]] = re.sub(r"-r\d+-c\d+$", "", e["case_id"])
+            # Old bundled adapter: per-call llm_finished events. Public adapter (stage 1): calls listed in request_finished.
+            calls = [e] if e.get("event") == "llm_finished" else (e.get("calls") or []) if e.get("event") == "request_finished" else []
+            for c in calls:
+                if c.get("application_request_id") and c.get("case_id"):
+                    r = rnd(e["_t"])
+                    if r: case[r, c["application_request_id"]] = re.sub(r"-r\d+-c\d+$", "", c["case_id"])
         for r in rounds:
             selected = [e for e in events if rnd(e['_t']) == r]
             for branch in join_branch_events(selected):
@@ -102,6 +107,8 @@ def main(root, logs, output):
     for r in rounds:
         for i, a in enumerate(arms):
             for b in arms[i+1:]:
+                if (r, a) not in cells or (r, b) not in cells:
+                    continue
                 n_eq_prepared = n_eq_output = n_eq_result = n_eq_ids = 0; n_q = 0
                 audit = defaultdict(int)
                 for q in cells[r, a]:

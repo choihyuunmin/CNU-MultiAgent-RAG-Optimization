@@ -1,0 +1,31 @@
+{
+ "stage": "1",
+ "load_evidence": {
+  "concurrency": 4,
+  "unique_questions": 200,
+  "rounds": 1,
+  "paired_complete": true,
+  "original_failures": 0,
+  "candidate_failures": 0,
+  "mean_gain_lower": -0.12844423720952017,
+  "p95_ratio_upper": 1.3373249067977582,
+  "scope": "end_to_end",
+  "question_and_round_resampling": false
+ },
+ "gate": {
+  "release_allowed": false,
+  "reasons": [
+   "thresholds_not_predeclared",
+   "execution_equivalence_not_verified",
+   "missing_or_duplicate_loads",
+   "c4:insufficient_samples",
+   "c4:pairing_or_resampling_missing",
+   "c4:mean_latency_target_not_established",
+   "c4:tail_latency_target_not_established",
+   "c4:quality_evidence_missing"
+  ],
+  "quality": {},
+  "scope": "predeclared workload only; no universal speed or correctness guarantee"
+ },
+ "note": "stage 1 is a connectivity/tracing check at concurrency 4; the gate requires loads 1-100, >=4 rounds, predeclared thresholds, independent quality evidence"
+}
