@@ -2,7 +2,6 @@
 
 ## Current validation target
 
-Use the [direct-dispatch validation plan](../../docs/DISPATCH_VALIDATION_PROTOCOL_20260918.md).
 Compare the original path with validated direct execution without changing the
 model, prompts, inference options, or serving configuration.
 
