@@ -1,0 +1,52 @@
+{
+  "trial": "cnu-deptrial-20260918",
+  "base_commit": "b4366dd",
+  "adapter_zip_sha256": "16cbf00db05c993d2973b998642802c3054b9c4e08e6cd0dad85e74962c4cf34",
+  "package_files_sha256": {
+    "__init__.py": "944975012c9b900a76fdd5dbf0b3e386dbdcc070f7120f154fb88e3ee2ef536a",
+    "adaptive.py": "4a989d433a2754a71226b29a686945366243016032b5b9c62bf58ba2dc2ce277",
+    "admission.py": "4d66deac44f81166bcaeae9e200dc1a5710822f269e414a131d741a84840df2a",
+    "application_adapter.py": "dbc8aa6cbaab421811a7f7a4d601cb19d7df93515a17ee4c3914ba9a407c62e5",
+    "budget.py": "fbc79497b660f6faf31479f88716b3210461760e30a30f1974dbfcf2989493ca",
+    "coflow.py": "5e0e724553ca8de34d128e4747b6f04729f75b68dbeb82bef56a69dd86b7b257",
+    "compiled_harness.py": "f338a618cfd809826ad137f772e81fc797a23af2befb9b5e537ae685338dab28",
+    "completion.py": "f3c29a9bb879da2e29bd2e17998f985d8c5370f77450fd19a0b39948d71e383d",
+    "confidence.py": "c233a511d719bbfc6253bb03ebb8cd70bbb5f190183ec9d99fa8a4387ca522da",
+    "config.py": "86c3f294be3fcf17fd5b380ff6d14df1f93e13fd23da0db7a7a05ad0d1ea1500",
+    "continuation.py": "3e1cc8b67a5539ed13ae5d54fa908ea3c012c271f147694a0ef5e0d6ca8e8fd3",
+    "evidence.py": "6c1e32a3405ca7826013fc14dd1a832c8fbd42bbb25710778da87fa83b03c0e0",
+    "hedged_stream.py": "2792359d75b023f8a0d396b0836b736c5d632711a6183b82f829d181e7e9631f",
+    "inference_overlap.py": "dd409f8a24a283fc3156769b6e18fa217b5caf363ceb9f014a7e6c7a2721da98",
+    "link_state.py": "78dae78892c1e220484975b94abde27d6a53f2c3825eca3eb22caf70bf459314",
+    "network_harness.py": "67861730e97c5ebed294721496afae9e85c75146897f0b45b0790ccdb2e61bd5",
+    "parallel.py": "e1c6eccade422e389b832269348ace899a0ad586f7e6283fb7884d0fc1e3ba01",
+    "performance_gate.py": "9085f3810092bbfb28cc38d3187705bbc8c40b7990af663216c5f745370f8743",
+    "program_harness.py": "d693354c3a546b4a192af525a0ad915af5da69a7934228842197bee56bec8295",
+    "quality_gate.py": "c9994b69c451c05a1e3eda1cc4268e71ac0b1a13c374442d8a36446a1fd78e56",
+    "reasoning.py": "b415f3bbca4407e008b2bdc6b36751ef6f08c04295797346ac94de1add630587",
+    "reference_harness.py": "74356d60ed79c20a012e3b0efdafdfee114710143c324062ce34ce169e66fc32",
+    "regression.py": "89e428c08ef4d2ef6cc970f50cff6614846ea89455c25838a9af51c2c22c25a4",
+    "routing.py": "e4c8398445a5141a67592e8523e365414e31dfe87925d9e5ca49efc7200eb471",
+    "selector.py": "d580e45baf142b142575792b67807fa376a1be261f209e9039f3ea40c201effa",
+    "singleflight.py": "9edbf757595b5435017184dbd9120cfb70fb22e301e56994e7ff38fe79ae65e7",
+    "speculation_budget.py": "6c7c3544357288600abb69fc1d94ad02dab3810c0abf0cd6dbab6d2a1966ce89",
+    "stream_tools.py": "1b597e8f19c4d9b3ba5fb062e72cdb4ee175d0109b8c2899d1f7abc62df8f7fb",
+    "structured_harness.py": "b9afc64f727528898645ea508d77a454c22deaca4e2e72c48d1bc39107e64c26",
+    "telemetry.py": "eb08a3aa7aa96ae6bf436179e986e414854302830a3eb110e291d9b24df2bdbb",
+    "trace_equivalence.py": "f1f9a3b12a53b8602ee4e295ad31fbc3e28d85f4a451d87bbe882143503d5729",
+    "transport.py": "009f0237c4355fabaef280186078374d6d23435ecc882913cb8b7e641b507976",
+    "typed_dispatch.py": "da035115a1167b0b612d341626cf41f4e9f7c26cfedd70e2f1228ba6ab7098b9",
+    "verified.py": "31d5a7f2a668940995f24f5577ce9e73bc6e31626cb7bf03037340edc9400db6"
+  },
+  "script_sha256": {
+    "serve_dependency_trial.py": "c3ebaaeaa4efdec0165bcb39362ef7be7ebed5d49fcf19ffb20dc9e327222753",
+    "moleg_program_overlay.py": "da999cd242d843cdd2cc05d4985ac8e150df837f51af09143d4939ee477d87c6",
+    "program_harness_attachment.py": "1c5a982ebe9df383e813f37d9bbdbee0904710946861464a1275ec2a082bc33e",
+    "run_followup_trial.py": "2e093f5549a5de5636b58d53884b63ff6af3a67bfc4ec2b4678fef45a1209abc"
+  },
+  "nodes_sha256": "75c550ca5b0727669624bdb6a81a1fd480890026f113201ce0b653fd6e942d12",
+  "notes": [
+    "dependency-scheduling trial: barrier (original join) vs ready (start ontology read when its predecessor finishes) at concurrency 4",
+    "scripts from commit 290fd7c; package from base_commit; same frozen image, models, prompts, engines and questions as stage 1"
+  ]
+}

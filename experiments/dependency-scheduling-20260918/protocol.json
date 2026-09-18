@@ -1,0 +1,42 @@
+{
+  "count_per_cell": 200,
+  "order": [
+    [
+      "barrier",
+      "ready"
+    ],
+    [
+      "ready",
+      "barrier"
+    ]
+  ],
+  "seed": 20260912,
+  "concurrency": 4,
+  "timeout_seconds": 600.0,
+  "total_planned_requests": 800,
+  "question_sha256": "64a3c5b8b75e673f5734c3e8695e6c72a007b9f85ac4326700b4ec5a952fbd6b",
+  "code_sha256": {
+    "topology.json": "6da1ab98fd119468bf2337fd70710e3f500bea6aa7126d87cc8c46c8ba73ee05",
+    "collect_vllm_metrics.py": "28b4c873cf950ebfdfe7961c9886d5d8fe8c8b23a58d4e38a04f6d494466553d",
+    "serve_dependency_trial.py": "c3ebaaeaa4efdec0165bcb39362ef7be7ebed5d49fcf19ffb20dc9e327222753",
+    "run_scaling_experiment.py": "f7c3a4ceb03534934e1ae2cd77010387131c653fb3891e906bc33f5afdd5102f",
+    "smoke20.jsonl": "c461780d3785ec6772d3f51fd8180fff11e9ed8558af970d3619fc1fed9f4390",
+    "moleg_program_overlay.py": "da999cd242d843cdd2cc05d4985ac8e150df837f51af09143d4939ee477d87c6",
+    "run_capability_scale.py": "191df59b1ec6b7b535c84d98386b3f59e0878ecef4730bed2ff3b42413874d25",
+    "questions.jsonl": "64a3c5b8b75e673f5734c3e8695e6c72a007b9f85ac4326700b4ec5a952fbd6b",
+    "run_followup_trial.py": "2e093f5549a5de5636b58d53884b63ff6af3a67bfc4ec2b4678fef45a1209abc",
+    "adapter.zip": "16cbf00db05c993d2973b998642802c3054b9c4e08e6cd0dad85e74962c4cf34",
+    "review-inventory.json": "8871e848303f43023ab7d2bb1cfe6ede9d687392d1d724ad485585e14f6ab3da",
+    "program_harness_attachment.py": "1c5a982ebe9df383e813f37d9bbdbee0904710946861464a1275ec2a082bc33e",
+    "run_rag_experiment.py": "92541d3f15e93d28f362d329b701949e605a21346d2e877cff075954f60dfc46"
+  },
+  "idle_gate": {
+    "timeout_seconds": 300,
+    "max_running_allowed": 0
+  },
+  "design": "follow-up: two application instances per arm in one round; handler-output and next-stage-object hashes recorded",
+  "quality": "baseline agreement only; no expert labels or acceptance margin",
+  "settings": "same frozen image, models, engine, prompts, questions and application capacity",
+  "safety": "idle preflight; telemetry loss/queue>256 for 30s; 4 errors/last20; no progress 660.0s; cell limit3600s",
+  "limitations": "shared engines; serial positions not fully balanced; few runs"
+}
