@@ -1,7 +1,0 @@
-{
-  "source": "previous 300-question frozen app snapshot, 124 files; not a new production snapshot",
-  "source_unchanged": true,
-  "configuration": "existing GPU-host app .env, verified search and DB connectivity",
-  "new_kubernetes_snapshot": false,
-  "operator_env_sha256": "bae4ddb802c9c4582782c78d58a6804f27850750b5ff13a18d7734adc7a92de0"
-}

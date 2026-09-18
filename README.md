@@ -29,4 +29,11 @@
 - `scripts/`: 실험 실행, 계측 및 결과 분석 도구
 - `tests/`: 기능 검증 테스트
 - `docs/`: 설계와 실험 방법 문서
-- `experiments/`: 실험 설정과 결과 자료
+
+## 이전 실험 자료
+
+이전 실험의 결과 데이터·로그·그래프·결과 보고서와 논문 분석 산출물은 현재
+브랜치에서 삭제했습니다. 구현 코드·테스트·새 검증 계획과 논문 원고는 보존했습니다.
+과거 문서와 원고에 남은 결과 참조는 새 검증 결과를 뜻하지 않습니다.
+삭제된 자료는 [삭제 전 커밋](https://github.com/choihyuunmin/CNU-MultiAgent-RAG-Optimization/tree/5e5c99070ca66530de5f585b628f2b2d758dd2f9)에서 확인하거나 복구할 수 있습니다.
+결과 폴더에 있던 실행 코드는 `scripts/run_draft_budget_confirmation_legacy.py`로 옮겼습니다.
