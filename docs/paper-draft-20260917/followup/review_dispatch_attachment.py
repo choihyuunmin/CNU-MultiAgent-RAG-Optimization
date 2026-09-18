@@ -13,7 +13,7 @@ import secrets
 import time
 import uuid
 
-from cnu_rag_optimization.capability_rpc import CapabilityRPC
+from cnu_rag_optimization.typed_dispatch import try_typed_single_tool_dispatch
 
 _branch = contextvars.ContextVar("review_search_branch", default=None)
 
@@ -52,6 +52,10 @@ def digest_any(value):
 def install(search, mode, *, emit):
     if mode not in {"original", "direct", "capability"}:
         raise ValueError("unsupported review arm")
+    # Signed execution is an optional legacy ablation. Original/direct need
+    # only public package code and must not import an unpublished prototype.
+    if mode == 'capability':
+        from cnu_rag_optimization.capability_rpc import CapabilityRPC
     original_search, original_handler = search.run_search, search.tool_search_laws
 
     async def measured_handler(arguments, request_id):
@@ -93,10 +97,10 @@ def install(search, mode, *, emit):
         state = {"branch_id": uuid.uuid4().hex, "expected": freeze(expected),
                  "prepared_hash": digest(expected), "handler_ms": 0.0, "handler_calls": 0,
                  "execute_started_ns": None, "verify_dispatch_ms": None, "output_hashes": []}
-        token = _branch.set(state)
         emit({"event": "review_prepared", "request_id": request_id,
               "branch_id": state["branch_id"], "method": mode,
               "prepared_hash": state["prepared_hash"]})
+        token = _branch.set(state)
         started = time.perf_counter_ns()
         status, effective = "error", mode
         setup_ms = issue_ms = copy_validate_ms = 0.0
@@ -121,12 +125,13 @@ def install(search, mode, *, emit):
                     state["execute_started_ns"] = time.perf_counter_ns()
                     value = await rpc.execute(envelope, scope=scope)
                 else:
-                    copied = freeze(expected)
-                    if not validate(copied):
-                        raise ValueError("invalid copied search arguments")
-                    copy_validate_ms = (time.perf_counter_ns()-started)/1e6
                     state["execute_started_ns"] = time.perf_counter_ns()
-                    value = await handler(copied)
+                    dispatched = await try_typed_single_tool_dispatch(
+                        available_tools={'search': handler}, candidate_tool='search',
+                        arguments=expected, argument_validator=validate)
+                    if not dispatched.dispatched:
+                        raise ValueError('validated dispatch rejected: ' + dispatched.reason)
+                    value = dispatched.value
                 laws, ids, source = search._parse_search_payload(value)
                 result = {"search_tool_result": value, "laws_list": laws,
                           "search_law_ids": ids, "search_source": source,
@@ -136,6 +141,9 @@ def install(search, mode, *, emit):
             return result
         finally:
             total_ms = (time.perf_counter_ns()-started)/1e6
+            # Reset context even if the trace sink fails. A failed invocation
+            # must not leak its branch state into the caller's next operation.
+            _branch.reset(token)
             emit({"event": "review_boundary", "request_id": request_id,
                   "branch_id": state["branch_id"], "method": mode, "effective_method": effective,
                   "status": status, "total_ms": total_ms, "handler_ms": state["handler_ms"],
@@ -147,6 +155,5 @@ def install(search, mode, *, emit):
                   "result_hash": digest_any(result) if result is not None else None,
                   "law_ids_hash": digest_any(list(result.get("search_law_ids", []))) if isinstance(result, dict) else None,
                   "timing_note": "includes common tracing; excludes prepared-trace setup; search timed separately; hashing after timer"})
-            _branch.reset(token)
 
     search.run_search = wrapped

@@ -8,6 +8,7 @@ import argparse
 import asyncio
 import hashlib
 import json
+import math
 import os
 import sys
 import time
@@ -67,6 +68,8 @@ def read_records(path):
 
 
 async def run(args):
+    if not 1 <= args.concurrency <= 100 or not math.isfinite(args.timeout) or args.timeout <= 0:
+        raise ValueError('concurrency must be 1..100 and timeout must be positive')
     from collect_vllm_metrics import parse_prometheus
     sys.path.insert(0, "/app/src")
     from config import settings
@@ -80,15 +83,20 @@ async def run(args):
         raise ValueError("wrong frozen question count")
     topology = json.loads(Path(args.topology).read_text())
     topology["receivers"] = {k: v for k, v in topology["receivers"].items() if "metrics" in v}
-    endpoints = dict(v.split("=", 1) for v in args.endpoint)
+    endpoint_pairs = [v.split('=', 1) for v in args.endpoint]
+    endpoints = dict(endpoint_pairs)
+    if len(endpoints) != len(endpoint_pairs):
+        raise ValueError('duplicate endpoint name')
     schedule = [tuple(x.strip() for x in o.split(",") if x.strip()) for o in args.order]
     if args.smoke:
         schedule = schedule[:1]
     for methods in schedule:
+        if len(set(methods)) != len(methods):
+            raise ValueError('duplicate arm in one round')
         if set(methods) - set(endpoints):
             raise ValueError("order names an arm without an endpoint")
-    protocol = {"count_per_cell": count, "order": schedule, "seed": 20260912,
-                "concurrency": 1 if args.smoke else 4, "timeout_seconds": 180,
+    protocol = {"count_per_cell": count, "order": schedule, "seed": args.seed,
+                "concurrency": 1 if args.smoke else args.concurrency, "timeout_seconds": args.timeout,
                 "total_planned_requests": count*sum(map(len, schedule)),
                 "question_sha256": hashlib.sha256(questions.read_bytes()).hexdigest(),
                 "code_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -98,7 +106,7 @@ async def run(args):
                           "handler-output and next-stage-object hashes recorded",
                 "quality": "baseline agreement only; no expert labels or acceptance margin",
                 "settings": "same frozen image, models, engine, prompts, questions and application capacity",
-                "safety": "idle preflight; telemetry loss/queue>256 for 30s; 4 errors/last20; no progress 240s; cell limit3600s",
+                "safety": f'idle preflight; telemetry loss/queue>256 for 30s; 4 errors/last20; no progress {max(240, args.timeout + 60)}s; cell limit3600s',
                 "limitations": "shared engines; serial positions not fully balanced; few runs"}
     save(root/"protocol.json", protocol)
     status = {"state": "running", "started": time.time(), "completed": [],
@@ -132,9 +140,9 @@ async def run(args):
                                "--base-url", endpoints[mode], "--endpoint", "/api/generate/stream",
                                "--questions", str(questions), "--output-dir", str(cell/"responses"),
                                "--run-id", "review-trial", "--variant", mode,
-                               "--concurrency", "1" if args.smoke else "4", "--repeats", "1",
-                               "--warmup", "0", "--timeout", "180", "--store-responses",
-                               "--seed", "20260912"]
+                               "--concurrency", "1" if args.smoke else str(args.concurrency), "--repeats", "1",
+                               "--warmup", "0", "--timeout", str(args.timeout), "--store-responses",
+                               "--seed", str(args.seed)]
                     with (cell/f"{mode}-client.log").open("wb") as log:
                         child = await asyncio.create_subprocess_exec(*command, stdout=log, stderr=log)
                         last_count, last_progress = 0, time.monotonic()
@@ -153,8 +161,9 @@ async def run(args):
                                 reason = response_failure_reason(completed)
                                 if reason:
                                     raise RuntimeError(reason)
-                                if time.monotonic()-last_progress > 240:
-                                    raise RuntimeError("no completed request for 240 seconds")
+                                progress_limit = max(240, args.timeout + 60)
+                                if time.monotonic()-last_progress > progress_limit:
+                                    raise RuntimeError(f'no completed request for {progress_limit} seconds')
                                 if time.monotonic()-started > 3600:
                                     raise RuntimeError("cell wall time exceeded 3600 seconds")
                                 status["current"].update(completed_requests=done, phase="requests",
@@ -204,6 +213,9 @@ if __name__ == "__main__":
                    help="comma-separated arm names for one round; repeat for more rounds")
     p.add_argument("--output", required=True)
     p.add_argument("--smoke", action="store_true")
+    p.add_argument('--concurrency', type=int, default=4)
+    p.add_argument('--timeout', type=float, default=180)
+    p.add_argument('--seed', type=int, default=20260912)
     p.add_argument("--idle-timeout", type=int, default=180)
     p.add_argument("--idle-max-running", type=int, default=0,
                    help="tolerate this many running requests per engine at preflight (stuck request); waiting must be 0")

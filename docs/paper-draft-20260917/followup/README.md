@@ -30,11 +30,14 @@ sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf delete pods,configmap -n mo
 ```
 
 ## 결과 해석
-- `analyze_followup.py` 출력의 `same-arm instances` 행(original-a vs original-b, capability-a vs capability-b)이
-  09-16의 arm 간 값(89–92%)과 비슷하면 인스턴스 효과가 확인된 것이고, 95%에 가깝고 cross-arm만 낮으면
-  디스패치 자체의 효과다.
-- `hashes` 행: 준비 해시가 같은 문항에서 핸들러 출력 해시·다음 단계 객체 해시가 같은 비율. 준비 해시가
-  같은데 출력 해시가 다르면 검색 핸들러 자체가 비결정적이라는 뜻이다.
+- 같은 방식 인스턴스 간 차이와 다른 방식 간 차이를 비교한다. 1회 순차 실행만으로
+  인스턴스/시간/방식 효과를 분리하거나 디스패치의 무영향을 입증할 수 없다.
+- 2026-09-18 수정: 이벤트를 분기 ID로 연결한다. 이전 요약기는 병렬 완료 순서가
+  뒤집히면 입력/출력을 잘못 연결했다. 과거 조건부 해시 통계는 원로그 재분석 전 사용하지 않는다.
+- `hashes.audit`: 누락·실패는 `unverifiable`, 동일 인자 다중 분기는
+  `ambiguous_repeated_inputs`로 분리한다. 이를 불일치나 일치로 대신하지 않는다.
+- 준비 인자 동일·출력 차이는 검색 이후 경로를 조사할 근거지만, 인덱스/설정/시간을
+  통제하지 않은 상태에서 핸들러 자체의 비결정성으로 단정하지 않는다.
 - 수치는 워크스테이션의 `docs/paper-draft-20260917/analysis/` 스크립트와 같은 규약(중복 제거 법령 ID,
   nonempty 참조 재현율)으로 계산된다.
 
@@ -44,3 +47,8 @@ sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf delete pods,configmap -n mo
 - `run_followup_trial.py` — 임의 arm 이름·순서를 받는 클라이언트 러너 (안전 점검 동일)
 - `launch_followup_remote.py` — 감독 스크립트
 - `analyze_followup.py` — 표준 라이브러리만 쓰는 요약기
+
+새 검증 계획: [전체 응답 시간·품질 동시 검증](../../DISPATCH_VALIDATION_PROTOCOL_20260918.md).
+요약기는 이제 공개 패키지의 `trace_equivalence`를 사용한다. `pip install -e .`로
+패키지를 준비한다. `run_followup_trial.py --concurrency N --timeout 600`으로 부하와
+타임아웃을 명시할 수 있으며 기본값(4, 180초)은 과거 실행 재현용으로 유지한다.

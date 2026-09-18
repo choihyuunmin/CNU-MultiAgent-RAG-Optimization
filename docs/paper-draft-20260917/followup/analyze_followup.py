@@ -7,9 +7,13 @@ application logs, handler-output / next-stage-object hash equality for branches 
 prepared-argument hashes are equal between two arms.
 """
 import argparse, json, math, random, re, statistics
+import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'src'))
+from cnu_rag_optimization.trace_equivalence import join_branch_events, compare_branch_sets
 
 
 def valid(r):
@@ -89,41 +93,32 @@ def main(root, logs, output):
             if e.get("event") == "llm_finished" and e.get("application_request_id") and e.get("case_id"):
                 r = rnd(e["_t"])
                 if r: case[r, e["application_request_id"]] = re.sub(r"-r\d+-c\d+$", "", e["case_id"])
-        handler_out = {}
-        for e in events:
-            if e.get("event") == "review_handler":
-                r = rnd(e["_t"]); q = case.get((r, e.get("request_id")))
-                if r and q: handler_out[e["branch_id"]] = e.get("output_hash")
-        for e in events:
-            if e.get("event") == "review_boundary":
-                r = rnd(e["_t"]); q = case.get((r, e.get("request_id")))
-                if r and q in cells.get((r, arm), {}):
-                    branches[r, arm, q].append({"prepared": None, "output": handler_out.get(e["branch_id"]),
-                        "result": e.get("result_hash"), "law_ids": e.get("law_ids_hash"), "status": e.get("status")})
-        for e in events:
-            if e.get("event") == "review_prepared":
-                r = rnd(e["_t"]); q = case.get((r, e.get("request_id")))
-                if r and q:
-                    for b in branches.get((r, arm, q), []):
-                        if b["prepared"] is None: b["prepared"] = e.get("prepared_hash"); break
+        for r in rounds:
+            selected = [e for e in events if rnd(e['_t']) == r]
+            for branch in join_branch_events(selected):
+                q = case.get((r, branch['request_id']))
+                if q in cells.get((r, arm), {}):
+                    branches[r, arm, q].append(branch)
     for r in rounds:
         for i, a in enumerate(arms):
             for b in arms[i+1:]:
                 n_eq_prepared = n_eq_output = n_eq_result = n_eq_ids = 0; n_q = 0
+                audit = defaultdict(int)
                 for q in cells[r, a]:
                     ba, bb = branches.get((r, a, q), []), branches.get((r, b, q), [])
-                    if not ba or not bb or len(ba) != len(bb): continue
-                    n_q += 1
-                    pa = sorted((x["prepared"] or "", x["output"] or "", x["result"] or "", x["law_ids"] or "") for x in ba)
-                    pb = sorted((x["prepared"] or "", x["output"] or "", x["result"] or "", x["law_ids"] or "") for x in bb)
-                    if [x[0] for x in pa] == [x[0] for x in pb]:
+                    if ba and bb: n_q += 1
+                    comparison = compare_branch_sets(ba, bb)
+                    audit[comparison['status']] += 1
+                    if comparison['first_difference']:
+                        audit['first_difference_' + comparison['first_difference']] += 1
+                    if comparison.get('prepared_equal'):
                         n_eq_prepared += 1
-                        hashed = all(x[1] and x[2] and x[3] for x in pa+pb)  # None hashes are not comparable
-                        n_eq_output += hashed and [x[1] for x in pa] == [x[1] for x in pb]
-                        n_eq_result += hashed and [x[2] for x in pa] == [x[2] for x in pb]
-                        n_eq_ids += hashed and [x[3] for x in pa] == [x[3] for x in pb]
+                        n_eq_output += comparison['output']
+                        n_eq_result += comparison['result']
+                        n_eq_ids += comparison['law_ids']
                 result["hashes"].append({"round": r, "a": a, "b": b, "questions_with_branches": n_q, "equal_prepared": n_eq_prepared,
                     "equal_handler_output_given_equal_prepared": n_eq_output, "equal_next_stage_object": n_eq_result, "equal_law_id_list": n_eq_ids})
+                result['hashes'][-1]['audit'] = dict(audit)
     output.write_text(json.dumps(result, indent=1)+"\n")
     for row in result["agreement"]:
         print(f"round {row['round']} {row['a']:13s} vs {row['b']:13s} [{row['kind']:19s}] exact-set {row['exact_set']*100:5.1f}%  recall {row['nonempty_recall']*100:6.2f}% (n={row['nonempty']})")
