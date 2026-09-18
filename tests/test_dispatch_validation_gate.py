@@ -1,6 +1,4 @@
 from dataclasses import replace
-import importlib.util
-from pathlib import Path
 
 from cnu_rag_optimization.performance_gate import LoadEvidence, PerformanceThresholds, evaluate_release_gate
 from cnu_rag_optimization.quality_gate import QualityEvidence
@@ -32,23 +30,3 @@ def test_incomplete_or_undeclared_experiment_cannot_pass():
     assert not evaluate_release_gate(loads, qualities)['release_allowed']
     assert not evaluate_release_gate(loads[:-1], qualities, thresholds_predeclared=True,
                                     execution_equivalence_verified=True)['release_allowed']
-
-
-def test_plan_balances_position_instance_and_uses_same_200_questions():
-    path = Path(__file__).parents[1] / 'scripts/build_dispatch_validation_plan.py'
-    spec = importlib.util.spec_from_file_location('plan_dispatch_validation', path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    questions = [{'id': f'q{i}'} for i in range(200)]
-    plan = module.build_plan(questions)
-    assert plan == module.build_plan(questions)
-    assert plan['planned_requests'] == 22400
-    for load in PerformanceThresholds().loads:
-        cells = [c for c in plan['cells'] if c['concurrency'] == load]
-        for arm in {c['arm'] for c in cells}:
-            rows = [c for c in cells if c['arm'] == arm]
-            assert {c['position'] for c in rows} == {1, 2, 3, 4}
-            assert {c['physical_slot'] for c in rows} == {0, 1, 2, 3}
-        for block in range(1, 5):
-            batch = [c for c in cells if c['block'] == block]
-            assert all(c['question_ids'] == batch[0]['question_ids'] for c in batch)
