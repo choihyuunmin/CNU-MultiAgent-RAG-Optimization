@@ -7,3 +7,16 @@ build/
 *.egg-info/
 .env
 experiments/private/
+
+# Local editor and LaTeX build artifacts
+.DS_Store
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.out
+*.bak
+*.swp
+*~
