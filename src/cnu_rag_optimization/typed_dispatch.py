@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
+import json
 from typing import Generic, TypeVar
 
 from .config import OptimizationPolicy
@@ -45,13 +46,21 @@ async def try_typed_single_tool_dispatch(
         return TypedDispatchResult(False, None, "candidate_mismatch")
     if arguments is None:
         return TypedDispatchResult(False, None, "arguments_missing")
-    if argument_validator is not None:
-        try:
-            valid = argument_validator(arguments)
-        except Exception:
-            valid = False
-        if not valid:
+    if argument_validator is None:
+        return TypedDispatchResult(False, None, "validator_missing")
+    # A shallow dict copy shares nested lists with other agents. Reject values
+    # whose JSON round trip changes their type/value; validate a separate copy
+    # so a validator cannot mutate the object that will actually be executed.
+    try:
+        snapshot = json.loads(json.dumps(dict(arguments), allow_nan=False))
+        if snapshot != dict(arguments):
+            return TypedDispatchResult(False, None, "arguments_not_lossless_json")
+        validation_copy = json.loads(json.dumps(snapshot, allow_nan=False))
+        valid = argument_validator(validation_copy)
+        if valid is not True or validation_copy != snapshot:
             return TypedDispatchResult(False, None, "arguments_invalid")
+    except Exception:
+        return TypedDispatchResult(False, None, "arguments_invalid")
 
-    value = await handler(dict(arguments))
+    value = await handler(snapshot)
     return TypedDispatchResult(True, value, "typed_dispatch")

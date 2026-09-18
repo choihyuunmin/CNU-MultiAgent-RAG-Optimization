@@ -1,6 +1,24 @@
 """CNU multi-agent RAG inference optimization primitives."""
 
 from .budget import cap_comparison_documents, compact_documents, llm_options
+from .adaptive import (
+    ServingPressure, TokenReservation,
+    WorkflowAdapter, WorkflowTrace, diagnose_trace,
+)
+from .application_adapter import ApplicationAdapter
+from .coflow import AdmissionTicket, CoflowAdmission, CoflowPolicy
+from .continuation import ContinuationWindow
+from .completion import (
+    CompletionPolicy,
+    CompletionRouter,
+    CompletionTicket,
+    ReceiverSpec,
+    ReplicaSpec,
+)
+from .inference_overlap import InferenceOverlapAdapter, ReadContract
+from .network_harness import NetworkHarness
+from .program_harness import ProgramHarness
+from .quality_gate import QualityEvidence, QualityThresholds, evaluate_quality_gate
 from .confidence import (
     ConfidenceRoutingDecision,
     ConfidenceRoutingFeatures,
@@ -35,6 +53,17 @@ from .verified import (
 )
 
 __all__ = [
+    "ServingPressure", "TokenReservation",
+    "WorkflowAdapter", "WorkflowTrace", "diagnose_trace",
+    "ApplicationAdapter",
+    "AdmissionTicket", "CoflowAdmission", "CoflowPolicy",
+    "CompletionPolicy", "CompletionRouter", "CompletionTicket",
+    "ContinuationWindow",
+    "ReceiverSpec", "ReplicaSpec",
+    "InferenceOverlapAdapter", "ReadContract",
+    "NetworkHarness",
+    "ProgramHarness",
+    "QualityEvidence", "QualityThresholds", "evaluate_quality_gate",
     "LLMCallMetrics",
     "HTTPTransportPolicy",
     "ConfidenceRoutingDecision",

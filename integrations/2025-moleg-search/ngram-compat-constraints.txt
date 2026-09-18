@@ -1,0 +1,7 @@
+# Verified on the server with CPU proposer import/JIT and 14,400 checks.
+# Not yet validated with a 31B model-serving restart or full n-gram E2E run.
+vllm==0.19.0
+torch==2.10.0
+numpy==2.4.4
+numba==0.65.1
+llvmlite==0.47.0
