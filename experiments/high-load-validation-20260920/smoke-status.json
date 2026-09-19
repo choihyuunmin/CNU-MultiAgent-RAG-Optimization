@@ -1,0 +1,71 @@
+{
+  "state": "complete",
+  "started": 1789830992.578981,
+  "completed": [
+    {
+      "level": 1,
+      "round": 1,
+      "method": "original",
+      "preflight": {
+        "idle_wait_seconds": 1.341434916947037,
+        "quiet_samples": 2,
+        "gauges": {
+          "receiver-1": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-2": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-3": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-4": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          }
+        },
+        "max_running_allowed": 1
+      },
+      "requests": 1,
+      "transport_ok": 1,
+      "wall_seconds": 34.80309248401318
+    },
+    {
+      "level": 1,
+      "round": 1,
+      "method": "direct",
+      "preflight": {
+        "idle_wait_seconds": 1.23019726597704,
+        "quiet_samples": 2,
+        "gauges": {
+          "receiver-1": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-2": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-3": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          },
+          "receiver-4": {
+            "vllm:num_requests_running": 0.0,
+            "vllm:num_requests_waiting": 0.0
+          }
+        },
+        "max_running_allowed": 1
+      },
+      "requests": 1,
+      "transport_ok": 1,
+      "wall_seconds": 45.59895802696701
+    }
+  ],
+  "total_planned_requests": 2,
+  "current": null,
+  "updated": 1789831075.8225036
+}
