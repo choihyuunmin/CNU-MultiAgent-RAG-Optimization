@@ -6,6 +6,7 @@ from .adaptive import (
     WorkflowAdapter, WorkflowTrace, diagnose_trace,
 )
 from .application_adapter import ApplicationAdapter
+from .call_overlap import CallContract, CallOverlapAdapter
 from .coflow import AdmissionTicket, CoflowAdmission, CoflowPolicy
 from .continuation import ContinuationWindow
 from .completion import (
@@ -53,6 +54,8 @@ from .verified import (
 )
 
 __all__ = [
+    "CallContract",
+    "CallOverlapAdapter",
     "ServingPressure", "TokenReservation",
     "WorkflowAdapter", "WorkflowTrace", "diagnose_trace",
     "ApplicationAdapter",

@@ -1,0 +1,54 @@
+{
+  "count_per_cell": 200,
+  "order": [
+    [
+      "original",
+      "direct",
+      "overlap"
+    ],
+    [
+      "direct",
+      "overlap",
+      "original"
+    ],
+    [
+      "overlap",
+      "original",
+      "direct"
+    ],
+    [
+      "original",
+      "overlap",
+      "direct"
+    ]
+  ],
+  "seed": 20260912,
+  "concurrency": 4,
+  "timeout_seconds": 600.0,
+  "total_planned_requests": 2400,
+  "question_sha256": "64a3c5b8b75e673f5734c3e8695e6c72a007b9f85ac4326700b4ec5a952fbd6b",
+  "code_sha256": {
+    "questions.jsonl": "64a3c5b8b75e673f5734c3e8695e6c72a007b9f85ac4326700b4ec5a952fbd6b",
+    "review_dispatch_attachment.py": "aee0b229dde3a1c995f8b22f35865ec5aef2ee8fa330c85d3b141c2d6b903b18",
+    "run_scaling_experiment.py": "f7c3a4ceb03534934e1ae2cd77010387131c653fb3891e906bc33f5afdd5102f",
+    "serve_ext.py": "3de0a90154b1c3da3273f167092ddae5c07d49d6b4fce40ccd6b891cc51735c6",
+    "run_capability_scale.py": "191df59b1ec6b7b535c84d98386b3f59e0878ecef4730bed2ff3b42413874d25",
+    "run_rag_experiment.py": "92541d3f15e93d28f362d329b701949e605a21346d2e877cff075954f60dfc46",
+    "collect_vllm_metrics.py": "28b4c873cf950ebfdfe7961c9886d5d8fe8c8b23a58d4e38a04f6d494466553d",
+    "run_followup_trial.py": "2e093f5549a5de5636b58d53884b63ff6af3a67bfc4ec2b4678fef45a1209abc",
+    "moleg_call_overlap.py": "789f391709fe0a054ae6da64b982d5b2431a206f22a4286f75376d001342e966",
+    "adapter.zip": "f101d444d97569ff1491a53d86bef359bcaf10237d15ddb714a2030afbe23cfd",
+    "smoke20.jsonl": "c461780d3785ec6772d3f51fd8180fff11e9ed8558af970d3619fc1fed9f4390",
+    "review-inventory.json": "e2372b827b256306c7ffc6b1c0f99f220b5b2e2e4359aa3a2b95387905da1015",
+    "topology.json": "6da1ab98fd119468bf2337fd70710e3f500bea6aa7126d87cc8c46c8ba73ee05"
+  },
+  "idle_gate": {
+    "timeout_seconds": 300,
+    "max_running_allowed": 0
+  },
+  "design": "follow-up: two application instances per arm in one round; handler-output and next-stage-object hashes recorded",
+  "quality": "baseline agreement only; no expert labels or acceptance margin",
+  "settings": "same frozen image, models, engine, prompts, questions and application capacity",
+  "safety": "idle preflight; telemetry loss/queue>256 for 30s; 4 errors/last20; no progress 660.0s; cell limit3600s",
+  "limitations": "shared engines; serial positions not fully balanced; few runs"
+}
