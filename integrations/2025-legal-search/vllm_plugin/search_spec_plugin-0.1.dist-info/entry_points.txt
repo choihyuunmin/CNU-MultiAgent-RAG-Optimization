@@ -1,0 +1,2 @@
+[vllm.general_plugins]
+search_spec = search_spec_plugin:register

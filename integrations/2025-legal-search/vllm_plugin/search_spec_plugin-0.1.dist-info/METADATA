@@ -1,0 +1,4 @@
+Metadata-Version: 2.1
+Name: search-spec-plugin
+Version: 0.1
+Summary: Experimental stage-aware prompt-lookup speculation policies for vLLM (research only)
