@@ -16,7 +16,7 @@ Python adapters for reducing the response latency of multi-agent RAG (retrieval-
 
 ## How it is applied
 
-The current validation target is the **checked direct-dispatch adapter**. It removes a redundant tool-formatting model call without changing models, prompts, or serving options, and evaluates end-to-end response time and output quality together. Raw responses, logs, and other private material from validation runs are not kept in this repository.
+The current validation target is the **checked direct-dispatch adapter**. It removes a redundant tool-formatting model call without changing models, prompts, or serving options, and evaluates end-to-end response time and output quality together. Analysis summaries of validation runs are published under `experiments/`; raw responses, logs, and other private material are not kept in this repository.
 
 The common modules do not depend on a particular domain or agent framework. The integrating system supplies its task dependencies, model-call functions, reference-ID fields, and quality criteria. Applicability, performance, and quality must be validated on each system.
 
@@ -27,3 +27,4 @@ The common modules do not depend on a particular domain or agent framework. The 
 - `integrations/`: integration code for individual search systems
 - `scripts/`: server entry points and overlays used for validation runs
 - `tests/`: unit tests
+- `experiments/`: validation studies (design, analysis output, and the harness used), one folder per study

@@ -1,0 +1,40 @@
+{
+ "questions": 174,
+ "pooled_pairs": 1395,
+ "judges": [
+  "master",
+  "tool_synthesis"
+ ],
+ "calls": 600,
+ "failures": {},
+ "score_distribution": {
+  "master": {
+   "1": 559,
+   "2": 617,
+   "0": 219
+  },
+  "tool_synthesis": {
+   "1": 499,
+   "2": 413,
+   "0": 483
+  }
+ },
+ "inter_judge": {
+  "pairs": 1395,
+  "exact": 0.5390681003584229,
+  "relevant_flag": 0.753405017921147,
+  "kappa_relevant_flag": 0.37494138610147243
+ },
+ "repeat": {
+  "master": {
+   "pairs": 249,
+   "exact": 0.8072289156626506,
+   "relevant_flag": 0.9598393574297188
+  },
+  "tool_synthesis": {
+   "pairs": 249,
+   "exact": 0.678714859437751,
+   "relevant_flag": 0.8353413654618473
+  }
+ }
+}

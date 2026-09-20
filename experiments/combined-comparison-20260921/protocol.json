@@ -1,0 +1,71 @@
+{
+  "count_per_cell": 200,
+  "levels": [
+    20,
+    50,
+    100
+  ],
+  "arms": [
+    "original",
+    "direct",
+    "reduce",
+    "combined"
+  ],
+  "rounds": 4,
+  "order_per_level": [
+    [
+      "original",
+      "direct",
+      "reduce",
+      "combined"
+    ],
+    [
+      "direct",
+      "reduce",
+      "combined",
+      "original"
+    ],
+    [
+      "reduce",
+      "combined",
+      "original",
+      "direct"
+    ],
+    [
+      "combined",
+      "original",
+      "direct",
+      "reduce"
+    ]
+  ],
+  "seed": 20260912,
+  "timeout_seconds": 600,
+  "total_planned_requests": 9600,
+  "question_sha256": "64a3c5b8b75e673f5734c3e8695e6c72a007b9f85ac4326700b4ec5a952fbd6b",
+  "code_sha256": {
+    "topology.json": "6da1ab98fd119468bf2337fd70710e3f500bea6aa7126d87cc8c46c8ba73ee05",
+    "run_rag_experiment.py": "05e96a2fba720391694cc1b54c62b15ab30bf6b1ce77bb28400d5b7e3730fc3f",
+    "selection_budget_attachment.py": "968957f3892829750fdf658f0bfe7f2c546174c42878941144dae833a1c60780",
+    "review-inventory.json": "02818df3bb1542f8f97485b790ae8939360fd1f7ae16889c355e0817f7551b0e",
+    "questions.jsonl": "64a3c5b8b75e673f5734c3e8695e6c72a007b9f85ac4326700b4ec5a952fbd6b",
+    "judge_laws.py": "85399b5dcaee8813ddaed19df7d74b187586799a9ee96aa9d4d7ee1d3f5412e5",
+    "smoke.jsonl": "ded0d7349747b6035b3d5b9dca6375233d7aa2ca60cc024f7524f458bace4023",
+    "collect_vllm_metrics.py": "fdb94118aa5076b4c13823e5ebee42fce03e3dc6f7a11feae92ced303c11fdb8",
+    "run_scaling_experiment.py": "db568520087e4e752adccae3c764d3e2304a4ff6248b990769e25847521ad35f",
+    "serve_cc.py": "ed9dc86e5efc6518654445ab1ce871fb031b6daa3118b570667c46a8c80b194a",
+    "review_dispatch_attachment.py": "bb907d46967f42e3ced8bca22d44f56fda274a95a6b1255878c6bd1c305b646b",
+    "run_capability_scale.py": "a93a936f2fa00228e8c619931807a702446e1fbb9160ef95f9f246cf8788f6c6",
+    "adapter.zip": "3ff4a0b80af785e696f5a79af3f13f749fa2c7bac2c63bceeadbce6df8d2768d",
+    "run_sweep_trial.py": "9b3b49cfe0d8761d24ea2b8575583db9a2fa0bdf0c3137c7c8dab10b07bacc5a"
+  },
+  "application_capacity": 100,
+  "idle_gate": {
+    "timeout_seconds": 600,
+    "max_running_allowed": 1
+  },
+  "design": "closed-loop 200-question batches; per level, arms in rotated rounds; separate load client",
+  "quality": "baseline agreement only; no expert labels or acceptance margin",
+  "settings": "same frozen image, models, engine, prompts, questions; app admission raised to capacity",
+  "safety": "idle preflight; telemetry loss/queue>256 for 30s; 4 errors/last20; no progress 240s; cell limit 3600s",
+  "limitations": "shared engines; one instance per arm; few rounds; production shares the GPU stack"
+}
