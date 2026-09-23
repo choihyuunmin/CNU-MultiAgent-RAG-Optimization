@@ -212,6 +212,51 @@ requests that the original path ends with an empty or fallback response under qu
 model opinions with fair inter-judge agreement (kappa 0.37 on the relevant/not-relevant split) and are not
 a substitute for expert labels; they do not assess answer text, only the returned provisions.
 
+## Time series within a run (engine gauges sampled about once per second)
+
+The load client scraped the engine metrics endpoints about every 1.1 s during every cell. The
+`timeseries/` folder holds one table per cell in 1-second bins (orchestration and worker engines: KV cache
+usage, running and waiting requests, cumulative queue time, completed engine requests, preemptions; client:
+cumulative started and completed requests, requests in flight), and `figures/` holds the plots produced
+from them by `harness/timeseries_cc.py`. Time is seconds since the first request of each run; the arms ran
+one after another on the shared engines, so the comparison aligns runs by run-relative time.
+
+- `figures/timeseries-C100-r4-original-vs-combined.pdf`: original vs combined at concurrency 100, round 4
+  (adjacent positions in the rotation). Panels: (a) orchestration KV cache usage, (b) running and waiting
+  requests at the orchestration engine, (c) cumulative queue time at the orchestration engine, (d) client
+  requests started and completed.
+- `figures/timeseries-C100-r4-worker-original-vs-combined.pdf`: the worker engine during the same two runs.
+- `figures/timeseries-C100-all-rounds-original-vs-combined.pdf` and `-four-arms.pdf`: all four rounds per
+  arm (thin lines) with their per-second mean (thick), and the same for all four arms.
+- `figures/timeseries-C50-...` and `timeseries-C20-...`: the two lower loads.
+
+What the traces show at concurrency 100 (ranges over the four rounds; `timeseries/timeseries-summary.json`):
+
+| Indicator (orchestration engine unless stated) | Original | Combined |
+|---|---|---|
+| Run length (s) | 400–458 | 350–388 |
+| KV cache first at ≥99% (s after start) | 50–69 (207 in round 4 after an early stall) | 26–40 |
+| Waiting-request peak (requests, at s) | 103–144 (at 143–197 s) | 67–86 (at 53–184 s) |
+| Seconds with a non-empty waiting queue | 317–336 | 196–257 |
+| Mean running requests | 18.7–21.4 | 24.8–27.5 |
+| Total queue time accumulated in the run (s) | 18,300–26,000 | 6,900–8,500 |
+| 100th client completion (s after start) | 225–244 | 176–192 |
+
+- The original path shows two waves. Right after the first batch of 100 requests is classified and prepared,
+  all of them ask the worker engine to form the tool call; that engine admits four requests at a time, its
+  waiting queue climbs to 105–142, and for about 20 s (t ≈ 25–45 s) the orchestration engine has nothing to
+  do (KV usage and running requests fall to zero). The same stall repeats at t ≈ 250–290 s for the second
+  batch. The combined path never idles the orchestration engine: the worker queue stays at 20–40
+  (synthesis calls only) and the search results reach selection immediately.
+- Once the search results arrive, the original path's selection calls carry the full 12K-character JSON and
+  the orchestration queue builds to 100–145 waiting requests for most of the run; queue time accumulates
+  fastest between t ≈ 180 and 250 s. With the reduced input the queue peaks at 67–86 and drains earlier, so
+  the cumulative queue time levels off at about a third of the original's.
+- At concurrency 50 the original path's waiting queue peaks at 51–54 (combined 29–38) and accumulates
+  10,000–11,700 s of queue time (combined 2,600–5,000 s). At concurrency 20 the original path still queues
+  up to 10–11 requests for about 150 s of each run (430–470 s of queue time in total), while the combined
+  path's orchestration queue is essentially empty and its KV cache stays around 31–37%.
+
 ## Limitations and data notes
 
 - Shared engines, one instance per arm, finite 200-request batches; four rounds per load.
@@ -231,6 +276,9 @@ a substitute for expert labels; they do not assess answer text, only the returne
 - `judge-summary.json`: judge call counts, score distributions, repeat and inter-judge agreement.
 - `protocol.json`, `status.json`: client protocol and completion record; `review-inventory.json`: package
   and script hashes.
+- `timeseries/`: per-cell 1-second tables of engine gauges and client progress, plus `timeseries-summary.json`.
+- `figures/`: time-series plots (PDF and PNG) described above.
 - `harness/`: server entry point (`serve_cc.py`), manifest generator, remote supervisor, load client,
-  metrics collector, analysis (`analyze_cc.py`), and the judge (`judge_laws.py`).
+  metrics collector, analysis (`analyze_cc.py`), the judge (`judge_laws.py`), and the time-series
+  extraction and plotting script (`timeseries_cc.py`).
 - Raw responses, Pod logs, per-pair judgments, and the question file are not kept in this repository.
