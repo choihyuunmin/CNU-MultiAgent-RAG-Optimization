@@ -1,0 +1,86 @@
+{
+  "as_of": "2026-09-28 Asia/Seoul",
+  "historical_application_deployment": {
+    "source": "192.168.100.52:/home/axops/cnu-cc-20260921/pods.private.json and review-inventory.json",
+    "image_digest": "localhost/moleg-rag@sha256:3fb7072537de6dac09d0a60b171e8f6f10f20dbbbd108d0265d731878ba93c53",
+    "per_arm_pod": {"node": "moleg-gpu", "cpu_limit": "2", "memory_limit": "8Gi", "gpu_requested": 0},
+    "client_pod": {"node": "moleg-gpu", "cpu_limit": "2", "memory_limit": "2Gi", "gpu_requested": 0},
+    "application_capacity": 100,
+    "generate_concurrency_env": 100,
+    "status": "2026-09-21 deployment manifest; the diagnostic Pods copied the same image and resource limits"
+  },
+  "model_services": {
+    "status": "2026-09-09 startup log and the same still-running host processes on 2026-09-28",
+    "runtime": "host virtualenv, not a container image",
+    "vllm_version": "0.19.0",
+    "startup_log": "192.168.100.53:/data/project/vllm/logs/vllm_multiagent_20260909_161421.log",
+    "gpu_hardware_current": {"count": 2, "model": "NVIDIA H200 NVL", "memory_per_gpu_mib": 143771},
+    "gpu_sharing_current": "GPU 0 has orchestration engine PID 20843 plus other compute PIDs; GPU 1 has worker/synthesis engine PID 21967 plus retrieval, safeguard and other compute PIDs. nvidia-smi process occupancy is total GPU memory, not vLLM KV use or a historical snapshot.",
+    "orchestration": {
+      "alias": "orchestrator", "port": 8000, "gpu_index": 0,
+      "model": "google/gemma-4-31B-it", "revision": "fcf2302760ae9c6e528a8dbba9dd636e56848237",
+      "model_dtype": "torch.bfloat16", "quantization": null,
+      "max_model_len": 32768, "max_num_seqs": 128,
+      "max_num_seqs_basis": "vLLM 0.19.0 SchedulerConfig.DEFAULT_MAX_NUM_SEQS; no CLI override",
+      "max_num_batched_tokens": 8192, "tensor_parallel_size": 1,
+      "prefix_caching": true, "chunked_prefill": true, "kv_cache_dtype_configured": "auto",
+      "available_kv_cache_memory_gib_at_startup": 24.23,
+      "resolved_num_gpu_blocks_current": 9924, "block_size_tokens_current": 16,
+      "reported_gpu_kv_cache_tokens_at_startup": 26464,
+      "reported_max_concurrency_at_max_context": 2.54,
+      "gpu_memory_utilization_setting": 0.63,
+      "note": "Available KV memory is a startup budget; blocks and tokens are engine capacity, not per-request usage. Exact allocated bytes were not exposed."
+    },
+    "worker": {
+      "aliases": ["worker agent", "retrieval tool"], "port": 8006, "gpu_index": 1,
+      "model": "openai/gpt-oss-20b", "revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+      "model_dtype": "torch.bfloat16", "quantization": "mxfp4",
+      "max_model_len": 65536, "max_num_seqs": 4, "max_num_batched_tokens": 8192,
+      "tensor_parallel_size": 1, "prefix_caching": true, "chunked_prefill": true,
+      "kv_cache_dtype_configured": "auto", "available_kv_cache_memory_gib_at_startup": 31.0,
+      "resolved_num_gpu_blocks_current": 84643, "block_size_tokens_current": 16,
+      "reported_gpu_kv_cache_tokens_at_startup": 677136,
+      "reported_max_concurrency_at_max_context": 18.33,
+      "gpu_memory_utilization_setting": 0.33,
+      "note": "The worker shares GPU 1 with other host model processes; its KV-use fraction is separate from total GPU memory occupancy."
+    },
+    "other_alias_routes_from_historical_topology": {
+      "comparison_sft": "receiver-3 :8030", "guideline agent": "receiver-4 :8020",
+      "translate agent1-4": "receiver-5; no metrics endpoint in archived topology"
+    },
+    "other_aliases_current_model_info_only": {
+      "comparison_sft": "moleg/gemma4-e4b-comparison-v3 -> :8030; current process loads local gemma4-e4b-comparison-v4/final",
+      "guideline agent": "OpenLLM-Korea/kanana-safeguard-8b -> :8020",
+      "translate agent1": "Ollama gpt-oss:20b -> :11434",
+      "translate agent2": "Ollama translategemma:4b -> :11434",
+      "translate agent3": "Ollama llama3.2:3b -> :11434",
+      "translate agent4": "Ollama exaone3.5:7.8b -> :11434"
+    }
+  },
+  "application_runtime_current_confirmed": {
+    "client_timeout_s": 600, "graph_timeout_s": 240, "multi_branch_subtask_timeout_s": 120,
+    "llm_timeout_s": 120, "llm_connect_timeout_s": 10, "openai_sdk_max_retries": 2,
+    "tool_handler_timeout_s": 60, "opensearch_timeout_s": 300,
+    "embedding_timeout_s": 120, "reranker_timeout_s": 5,
+    "max_search_results_after_filter": 10, "title_search_k": 30,
+    "selection_content_max_chars_combined": 300,
+    "sources": ["frozen application source verified by topology.json SHA-256 on Pod start",
+                "2026-09-21 Pod manifest", "diagnostic Pod config.settings and tool_loop read-only inspection"]
+  },
+  "search_index_current_only": {
+    "as_of": "2026-09-28 09:34-10:09 Asia/Seoul (separate read-only queries; not one atomic snapshot)",
+    "index_counts_are_documents_not_distinct_laws_or_provisions": {
+      "world-law-translation": 468104,
+      "world-law-origin": 3183227,
+      "moleg-title": 19583
+    },
+    "title_index_distinct_law_id_count": 19583,
+    "title_index_distinct_law_id_method": "exact composite aggregation over keyword law_id, 21 pages; equals title document count",
+    "distinct_provision_count": null,
+    "country_count_in_title_index": 58,
+    "country_count_method": "terms aggregation on keyword country, size 1000, sum_other_doc_count 0",
+    "deduplication_scope": "Title index law_id only; do not add article/translation/origin document counts or assume each article document is one unique provision.",
+    "historical_2026_09_21_index_snapshot": "not preserved in the experiment package",
+    "source": "read-only OpenSearch _count and _mapping queries from the frozen application Pod"
+  }
+}
