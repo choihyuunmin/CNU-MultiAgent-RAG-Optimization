@@ -11,12 +11,11 @@ Python adapters for reducing the response latency of multi-agent RAG (retrieval-
 - **Checked direct dispatch**: when the application has already selected exactly one tool and prepared its arguments, the handler is invoked directly through local code after schema and copy checks, instead of asking a model to restate the call.
 - **Verified call overlap**: a deterministic model call whose inputs are already fixed is started alongside the preceding call, and its result is used at the original call site only when the inputs match exactly. Otherwise the original call runs unchanged.
 - **Selection-input budget**: search results passed to the document-selection stage are reduced by dropping fields the selection instructions never reference and by capping long text fields, while every document and ID is kept.
-- **Inference-acceleration experiments**: serving techniques such as speculative decoding, where the original model verifies proposed tokens, are compared under identical conditions.
 - **Performance and quality validation**: the original and the modified paths are compared repeatedly on the same questions, reporting mean and 95th-percentile response time, throughput, error-free completion rate, and agreement of the retrieved evidence.
 
 ## How it is applied
 
-The current validation target is the **checked direct-dispatch adapter**. It removes a redundant tool-formatting model call without changing models, prompts, or serving options, and evaluates end-to-end response time and output quality together. Analysis summaries of validation runs are published under `experiments/`; raw responses, logs, and other private material are not kept in this repository.
+The current validation target is the **checked direct-dispatch adapter**. It removes a redundant tool-formatting model call without changing models, prompts, or serving options, and evaluates end-to-end response time and output quality together.
 
 The common modules do not depend on a particular domain or agent framework. The integrating system supplies its task dependencies, model-call functions, reference-ID fields, and quality criteria. Applicability, performance, and quality must be validated on each system.
 
@@ -27,4 +26,3 @@ The common modules do not depend on a particular domain or agent framework. The 
 - `integrations/`: integration code for individual search systems
 - `scripts/`: server entry points and overlays used for validation runs
 - `tests/`: unit tests
-- `experiments/`: validation studies (design, analysis output, and the harness used), one folder per study
